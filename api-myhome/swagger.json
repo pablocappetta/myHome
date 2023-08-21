@@ -1,294 +1,472 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.2",
   "info": {
-    "description": "API para el proyecto de la app Desarrollo de Aplicaciones I de UADE",
+    "title": "myHome API Documentation",
     "version": "1.0.0",
-    "title": "API",
-    "contact": {
-      "email": "pcappetta@uade.edu.ar"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    "description": "API endpoints for the myHome application"
   },
-  "schemes": ["http"],
-  "host": "localhost:8000",
-  "basePath": "/api",
+  "servers": [
+    {
+      "url": "https://www.google.com.ar",
+      "description": "Production server"
+    }
+  ],
   "paths": {
-    "/mensajes/": {
-      "get": {
-        "summary": "Obtener todos los registros de la db",
-        "description": "Obtener todos los registros de la db",
-        "produces": ["application/json"],
-        "parameters": [],
-        "tags": ["Mensajes"],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/registrosResponse"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid status value",
-            "schema": {
-              "$ref": "#/definitions/InvalidResponse"
-            }
-          }
-        }
-      },
+    "/realtors": {
       "post": {
-        "summary": "Agrega registros a la DB",
-        "description": "Agrega registros a la DB",
-        "produces": ["application/json"],
-        "consumes": ["application/json"],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Datos requeridos en body",
-            "required": true,
-            "type": "object",
-            "properties": {
-              "nombre": {
-                "type": "string"
-              },
-              "apellido": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "telefono": {
-                "type": "string"
-              },
-              "mensaje": {
-                "type": "string"
+        "summary": "Register a new realtor agency",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Realtor"
               }
             }
           }
-        ],
-        "tags": ["Mensajes"],
+        },
         "responses": {
           "201": {
-            "description": "Mensaje enviado con exito"
+            "description": "Successfully registered the agency"
           },
           "400": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/InvalidResponse"
-            }
+            "description": "Invalid input data"
           }
         }
       }
     },
-    "/mensajes/{id}": {
-      "delete": {
-        "summary": "Borra un registro de la DB",
-        "description": "Borra un registro de la DB",
-        "produces": ["application/json"],
-        "consumes": ["application/json"],
+    "/realtors/login": {
+      "post": {
+        "summary": "Log in as a realtor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RealtorLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Realtor logged in successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/realtors/{realtorId}": {
+      "get": {
+        "summary": "Get realtor details by ID",
         "parameters": [
           {
             "in": "path",
-            "name": "id",
-            "description": "ID del registro",
+            "name": "realtorId",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
-        "tags": ["Mensajes"],
         "responses": {
-          "204": {
-            "description": "Mensaje borrado con exito"
+          "200": {
+            "description": "Realtor details retrieved successfully"
           },
-          "400": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/InvalidResponse"
-            }
+          "404": {
+            "description": "Realtor not found"
           }
         }
       }
     },
-    "/usuarios/": {
+    "/homes": {
       "get": {
-        "summary": "Obtener todos los usuarios de la db",
-        "description": "Obtener todos los usuarios de la db",
-        "produces": ["application/json"],
-        "parameters": [],
-        "tags": ["Usuarios"],
+        "summary": "Get list of homes",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "homeType",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/registrosResponse"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid status value",
-            "schema": {
-              "$ref": "#/definitions/InvalidResponse"
-            }
+            "description": "List of homes retrieved successfully"
           }
         }
       },
       "post": {
-        "summary": "Agrega usuarios a la DB",
-        "description": "Agrega usuarios a la DB",
-        "produces": ["application/json"],
-        "consumes": ["application/json"],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Datos requeridos en body",
-            "required": true,
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "lastname": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
+        "summary": "Add a new home",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/home"
               }
             }
           }
-        ],
-        "tags": ["Usuarios"],
+        },
         "responses": {
-          "200": {
-            "description": "Usuario agregado con exito"
+          "201": {
+            "description": "home added successfully"
           },
           "400": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/InvalidResponse"
-            }
+            "description": "Invalid input data"
           }
         }
       }
     },
-    "/usuarios/{id}": {
+    "/homes/{homeId}": {
       "get": {
-        "summary": "Obtener un usuario de la db",
-        "description": "Obtener un usuario de la db usando un ID",
-        "produces": ["application/json"],
-        "tags": ["Usuarios"],
+        "summary": "Get home details by ID",
         "parameters": [
           {
             "in": "path",
-            "name": "id",
-            "description": "ID del usuario",
+            "name": "homeId",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "home details retrieved successfully"
+          },
+          "404": {
+            "description": "home not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update home details",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/registrosResponse"
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/home"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "home details updated successfully"
           },
           "400": {
-            "description": "Invalid status value",
+            "description": "Invalid input data"
+          },
+          "404": {
+            "description": "home not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a home",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
             "schema": {
-              "$ref": "#/definitions/InvalidResponse"
+              "type": "integer",
+              "format": "int64"
             }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "home deleted successfully"
+          },
+          "404": {
+            "description": "home not found"
           }
         }
       }
     },
-    "/usuarios/jwt": {
+    "/users/me": {
+      "get": {
+        "summary": "Get current user's profile",
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized access"
+          }
+        }
+      }
+    },
+    "/users/me/favorites": {
+      "get": {
+        "summary": "Get current user's favorite homes",
+        "responses": {
+          "200": {
+            "description": "List of favorite homes retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized access"
+          }
+        }
+      },
       "post": {
-        "summary": "Valida el JWT",
-        "description": "Valida el JWT",
-        "produces": ["application/json"],
-        "consumes": ["application/json"],
+        "summary": "Add home to favorites",
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "Datos requeridos en body",
+            "in": "path",
+            "name": "homeId",
             "required": true,
-            "type": "object",
-            "properties": {
-              "jwt": {
-                "type": "string"
-              }
+            "schema": {
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
-        "tags": ["Usuarios"],
+        "responses": {
+          "201": {
+            "description": "home added to favorites"
+          },
+          "404": {
+            "description": "home not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove home from favorites",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "home removed from favorites"
+          },
+          "404": {
+            "description": "home not found"
+          }
+        }
+      }
+    },
+    "/users/me/favorites/{homeId}": {
+      "get": {
+        "summary": "Check if home is in favorites",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Mensaje enviado con exito"
+            "description": "home is in favorites"
+          },
+          "404": {
+            "description": "home not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update home in favorites",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "home updated in favorites"
+          },
+          "404": {
+            "description": "home not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove home from favorites",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "home removed from favorites"
+          },
+          "404": {
+            "description": "home not found"
+          }
+        }
+      }
+    },
+    "/homes/{homeId}/contact": {
+      "post": {
+        "summary": "Contact realtor for home inquiry",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Inquiry sent successfully"
           },
           "400": {
-            "description": "Error",
+            "description": "Invalid input data"
+          }
+        }
+      }
+    },
+    "/homes/{homeId}/reserve": {
+      "post": {
+        "summary": "Reserve a home for rent",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
             "schema": {
-              "$ref": "#/definitions/InvalidResponse"
+              "type": "integer",
+              "format": "int64"
             }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Reservation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "home reserved successfully"
+          },
+          "400": {
+            "description": "Invalid input data"
+          }
+        }
+      }
+    },
+    "/homes/{homeId}/reviews": {
+      "post": {
+        "summary": "Add a review for a home",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "homeId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Review added successfully"
+          },
+          "400": {
+            "description": "Invalid input data"
           }
         }
       }
     }
   },
-  "definitions": {
-    "registrosResponse": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "nombre": {
-          "type": "string"
-        },
-        "apellido": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "telefono": {
-          "type": "string"
-        },
-        "mensaje": {
-          "type": "string"
-        },
-        "__v": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "InvalidResponse": {
-      "type": "object",
-      "properties": {
-        "statusCode": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        }
-      }
+  "components": {
+    "schemas": {
+      "Realtor": null,
+      "RealtorLogin": null,
+      "home": null,
+      "ContactRequest": null,
+      "Reservation": null,
+      "Review": null
     }
   }
 }
