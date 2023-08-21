@@ -1,0 +1,25 @@
+{
+  "name": "myhome-api",
+  "description": "API para el proyecto MyHome",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon ./app.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.22",
+    "swagger-ui-express": "^4.6.3"
+  },
+  "devDependencies": {
+    "bcrypt": "^5.1.0",
+    "express-validator": "^7.0.1",
+    "jest": "^29.5.0",
+    "mongodb-memory-server": "^8.12.2"
+  }
+}
