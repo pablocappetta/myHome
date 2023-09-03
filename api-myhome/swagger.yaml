@@ -1,0 +1,331 @@
+openapi: 3.0.2
+info:
+  title: myHome API Documentation
+  version: 1.0.0
+  description: API endpoints for the myHome application
+servers:
+  - url: https://www.google.com.ar
+    description: Production server
+paths:
+  /realtors:
+    post:
+      summary: Register a new realtor agency
+      tags:
+        - Realtors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Realtor"
+      responses:
+        "201":
+          description: Successfully registered the agency
+        "400":
+          description: Invalid input data
+
+  /realtors/login:
+    post:
+      summary: Log in as a realtor
+      tags:
+        - Realtors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RealtorLogin"
+      responses:
+        "200":
+          description: Realtor logged in successfully
+        "401":
+          description: Unauthorized
+  /realtors/{realtorId}:
+    get:
+      summary: Get realtor details by ID
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Realtor details retrieved successfully
+        "404":
+          description: Realtor not found
+  /homes:
+    get:
+      summary: Get list of homes
+      tags:
+        - Homes
+      parameters:
+        - in: query
+          name: homeType
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of homes retrieved successfully
+    post:
+      summary: Add a new home
+      tags:
+        - Homes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/home"
+      responses:
+        "201":
+          description: home added successfully
+        "400":
+          description: Invalid input data
+  /homes/{homeId}:
+    get:
+      summary: Get home details by ID
+      tags:
+        - Homes
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: home details retrieved successfully
+        "404":
+          description: home not found
+    put:
+      summary: Update home details
+      tags:
+        - Homes
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/home"
+      responses:
+        "200":
+          description: home details updated successfully
+        "400":
+          description: Invalid input data
+        "404":
+          description: home not found
+    delete:
+      summary: Delete a home
+      tags:
+        - Homes
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: home deleted successfully
+        "404":
+          description: home not found
+  /homes/{homeId}/contact:
+    post:
+      summary: Contact realtor for home inquiry
+      tags:
+        - Homes
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactRequest"
+      responses:
+        "201":
+          description: Inquiry sent successfully
+        "400":
+          description: Invalid input data
+  /homes/{homeId}/reserve:
+    post:
+      summary: Reserve a home for rent
+      tags:
+        - Homes
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+      responses:
+        "201":
+          description: home reserved successfully
+        "400":
+          description: Invalid input data
+  /homes/{homeId}/reviews:
+    post:
+      summary: Add a review for a home
+      tags:
+        - Homes
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Review"
+      responses:
+        "201":
+          description: Review added successfully
+        "400":
+          description: Invalid input data
+  /users/me:
+    get:
+      summary: Get current user's profile
+      tags:
+        - Users
+      responses:
+        "200":
+          description: User profile retrieved successfully
+        "401":
+          description: Unauthorized access
+  /users/me/favorites:
+    get:
+      summary: Get current user's favorite homes
+      responses:
+        "200":
+          description: List of favorite homes retrieved successfully
+        "401":
+          description: Unauthorized access
+      tags:
+        - Users
+    post:
+      summary: Add home to favorites
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "201":
+          description: home added to favorites
+        "404":
+          description: home not found
+    delete:
+      summary: Remove home from favorites
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: home removed from favorites
+        "404":
+          description: home not found
+  /users/me/favorites/{homeId}:
+    get:
+      summary: Check if home is in favorites
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: home is in favorites
+        "404":
+          description: home not found
+    put:
+      summary: Update home in favorites
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+      responses:
+        "200":
+          description: home updated in favorites
+        "404":
+          description: home not found
+    delete:
+      summary: Remove home from favorites
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: homeId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: home removed from favorites
+        "404":
+          description: home not found
+components:
+  schemas:
+    Realtor: null
+    RealtorLogin: null
+    home: null
+    ContactRequest: null
+    Reservation: null
+    Review: null

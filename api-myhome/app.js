@@ -1,13 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const { dbConnection } = require("./src/db/config");
+const YAML = require("yamljs");
 const path = require("path");
 const app = express();
 dbConnection();
 const morgan = require("morgan");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 //Middleware
 app.use(morgan("dev"));
