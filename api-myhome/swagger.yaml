@@ -323,9 +323,131 @@ paths:
           description: home not found
 components:
   schemas:
-    Realtor: null
-    RealtorLogin: null
-    home: null
-    ContactRequest: null
-    Reservation: null
-    Review: null
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        role:
+          type: string
+          enum:
+            - user
+            - realty
+            - admin
+    Realtor:
+      type: object
+      properties:
+        name:
+          type: string
+        contactEmail:
+          type: string
+        reviews:
+          type: object
+          properties:
+            rating:
+              type: number
+            comment:
+              type: string
+    Property:
+      type: object
+      properties:
+        title:
+          type: string
+        realtyId:
+          type: integer
+        description:
+          type: string
+        status:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        geolocation:
+          $ref: '#/components/schemas/Geolocation'
+        type:
+          type: string
+        sqm:
+          $ref: '#/components/schemas/Sqm'
+        cardinalOrientation:
+          type: string
+        price:
+          type: number
+        amenities:
+          type: array
+          items:
+            type: string
+        pictures:
+          type: array
+          items:
+            type: string
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+    Geolocation:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+    Sqm:
+      type: object
+      properties:
+        covered:
+          type: number
+        uncovered:
+          type: number
+    Listing:
+      type: object
+      properties:
+        id:
+          type: integer
+        propertyId:
+          type: integer
+        realtyId:
+          type: integer
+        listingType:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+    Reservation:
+      type: object
+      properties:
+        propertyId:
+          type: integer
+        userId:
+          type: integer
+        reservationDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+    Visit:
+      type: object
+      properties:
+        userId:
+          type: integer
+        realtyId:
+          type: integer
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        createdDate:
+          type: string
+          format: date-time
