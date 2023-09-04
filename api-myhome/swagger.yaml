@@ -21,9 +21,56 @@ paths:
       responses:
         "201":
           description: Successfully registered the agency
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
         "400":
           description: Invalid input data
-
+  /realtors/me:
+    get:
+      summary: Get current realtor's profile
+      tags:
+        - Realtors
+      responses:
+        "200":
+          description: Realtor profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
+        "401":
+          description: Unauthorized access
+    put:
+      summary: Update current realtor's profile
+      tags:
+        - Realtors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Realtor"
+      responses:
+        "200":
+          description: Realtor profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized access
+    delete:
+      summary: Delete current realtor's profile
+      tags:
+        - Realtors
+      responses:
+        "204":
+          description: Realtor profile deleted successfully
+        "401":
+          description: Unauthorized access
   /realtors/login:
     post:
       summary: Log in as a realtor
@@ -38,6 +85,15 @@ paths:
       responses:
         "200":
           description: Realtor logged in successfully
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Log out as a realtor
+      tags:
+        - Realtors
+      responses:
+        "204":
+          description: Realtor logged out successfully
         "401":
           description: Unauthorized
   /realtors/{realtorId}:
@@ -57,19 +113,74 @@ paths:
           description: Realtor details retrieved successfully
         "404":
           description: Realtor not found
-  /homes:
-    get:
-      summary: Get list of homes
+  /realtors/password-reset:
+    post:
+      summary: Send password reset email
       tags:
-        - Homes
+        - Realtors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        "200":
+          description: Password reset email sent successfully
+        "400":
+          description: Invalid input data
+  /realtors/password-reset/{token}:
+    post:
+      summary: Reset password
+      tags:
+        - Realtors
       parameters:
-        - in: query
-          name: homeType
+        - in: path
+          name: token
+          required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Password reset successfully
+        "400":
+          description: Invalid input data
+  /realtors/{realtorId}/homes: # TODO orientar a listings?
+    get:
+      summary: Get list of homes for a realtor
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: List of homes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/home"
+        "404":
+          description: Realtor not found
+  /homes:
     post:
       summary: Add a new home
       tags:
@@ -83,8 +194,30 @@ paths:
       responses:
         "201":
           description: home added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/home"
         "400":
           description: Invalid input data
+    get: # TODO aca falta ver como otrientar esto a las Listings pas que a las homes
+      summary: Get list of homes. 
+      tags:
+        - Homes
+      parameters:
+        - in: query
+          name: homeType
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of homes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/home"
   /homes/{homeId}:
     get:
       summary: Get home details by ID
@@ -100,6 +233,10 @@ paths:
       responses:
         "200":
           description: home details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/home"
         "404":
           description: home not found
     put:
@@ -211,6 +348,51 @@ paths:
           description: Review added successfully
         "400":
           description: Invalid input data
+  /users:
+    post:
+      summary: Register a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: Successfully registered the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input data
+  /users/login:
+    post:
+      summary: Log in as a user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: User logged in successfully
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Log out as a user
+      tags:
+        - Users
+      responses:
+        "204":
+          description: User logged out successfully
+        "401":
+          description: Unauthorized
   /users/me:
     get:
       summary: Get current user's profile
@@ -219,18 +401,59 @@ paths:
       responses:
         "200":
           description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized access
+    put:
+      summary: Update current user's profile
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized access
+    delete:
+      summary: Delete current user's profile
+      tags:
+        - Users
+      responses:
+        "204":
+          description: User profile deleted successfully
         "401":
           description: Unauthorized access
   /users/me/favorites:
-    get:
+    get: # TODO orientar a listings
       summary: Get current user's favorite homes
       responses:
         "200":
           description: List of favorite homes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/home"
         "401":
           description: Unauthorized access
       tags:
         - Users
+  /users/me/favorites/{homeId}:
     post:
       summary: Add home to favorites
       tags:
@@ -263,69 +486,137 @@ paths:
           description: home removed from favorites
         "404":
           description: home not found
-  /users/me/favorites/{homeId}:
-    get:
-      summary: Check if home is in favorites
-      tags:
-        - Users
-      parameters:
-        - in: path
-          name: homeId
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-          description: home is in favorites
-        "404":
-          description: home not found
-    put:
-      summary: Update home in favorites
-      tags:
-        - Users
-      parameters:
-        - in: path
-          name: homeId
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                notes:
-                  type: string
-      responses:
-        "200":
-          description: home updated in favorites
-        "404":
-          description: home not found
-    delete:
-      summary: Remove home from favorites
-      tags:
-        - Users
-      parameters:
-        - in: path
-          name: homeId
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          description: home removed from favorites
-        "404":
-          description: home not found
 components:
   schemas:
-    Realtor: null
-    RealtorLogin: null
+    Realtor:
+      type: object
+      properties:
+        name:
+          type: string
+        contactEmail:
+          type: string
+        reviews:
+          type: object
+          properties:
+            rating:
+              type: number
+            comment:
+              type: string
     home: null
+    Property:
+      type: object
+      properties:
+        title:
+          type: string
+        realtyId:
+          type: integer
+        description:
+          type: string
+        status:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        geolocation:
+          $ref: '#/components/schemas/Geolocation'
+        type:
+          type: string
+        sqm:
+          $ref: '#/components/schemas/Sqm'
+        cardinalOrientation:
+          type: string
+        price:
+          type: number
+        amenities:
+          type: array
+          items:
+            type: string
+        pictures:
+          type: array
+          items:
+            type: string
     ContactRequest: null
     Reservation: null
     Review: null
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        role:
+          type: string
+          enum:
+            - user
+            - realty
+            - admin
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+    Geolocation:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+    Sqm:
+      type: object
+      properties:
+        covered:
+          type: number
+        uncovered:
+          type: number
+    Listing:
+      type: object
+      properties:
+        id:
+          type: integer
+        propertyId:
+          type: integer
+        realtyId:
+          type: integer
+        listingType:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+    Reservation:
+      type: object
+      properties:
+        propertyId:
+          type: integer
+        userId:
+          type: integer
+        reservationDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+    Visit:
+      type: object
+      properties:
+        userId:
+          type: integer
+        realtyId:
+          type: integer
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+          format: time
+        createdDate:
+          type: string
+          format: date-time
