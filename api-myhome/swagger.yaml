@@ -488,6 +488,28 @@ paths:
           description: home not found
 components:
   schemas:
+    Realtor: null
+    RealtorLogin: null
+    home: null
+    ContactRequest: null
+    Reservation: null
+    Review: null
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        role:
+          type: string
+          enum:
+            - user
+            - realty
+            - admin
     Realtor:
       type: object
       properties:
@@ -502,7 +524,6 @@ components:
               type: number
             comment:
               type: string
-    home: null
     Property:
       type: object
       properties:
@@ -534,25 +555,6 @@ components:
           type: array
           items:
             type: string
-    ContactRequest: null
-    Reservation: null
-    Review: null
-    User:
-      type: object
-      properties:
-        name:
-          type: string
-        email:
-          type: string
-          format: email
-        phone:
-          type: string
-        role:
-          type: string
-          enum:
-            - user
-            - realty
-            - admin
     Address:
       type: object
       properties:
