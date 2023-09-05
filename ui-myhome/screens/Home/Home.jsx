@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import { SegmentedButtons } from "react-native-paper";
 
-import { Avatar, Card, Text, Searchbar, Chip } from "react-native-paper";
+import { Avatar, Text, Searchbar } from "react-native-paper";
 import {
   mockedHighlightedListings,
   mockedRecentListings,
@@ -12,6 +12,7 @@ import {
   getFilteredListingByQuery,
   getFilteredListingByType,
 } from "./HomeUtils";
+import ListingCard from "../../components/ListingCard/ListingCard";
 
 const Home = ({ navigation }) => {
   const user = {
@@ -38,6 +39,7 @@ const Home = ({ navigation }) => {
     setRecentListings(
       getFilteredListingByType(mockedRecentListings, listingType)
     );
+    setSearchQuery("");
   };
 
   const handleSearchStringChange = (text) => {
@@ -47,10 +49,10 @@ const Home = ({ navigation }) => {
   const handleSearchSubmitChange = ({ nativeEvent }) => {
     setSearchQuery(nativeEvent.text);
     setHighlightedListing(
-      getFilteredListingByQuery(mockedHighlightedListings, nativeEvent.text)
+      getFilteredListingByQuery(highlightedListings, nativeEvent.text)
     );
     setRecentListings(
-      getFilteredListingByQuery(mockedRecentListings, nativeEvent.text)
+      getFilteredListingByQuery(recentListings, nativeEvent.text)
     );
   };
 
@@ -125,7 +127,6 @@ const Home = ({ navigation }) => {
           onChangeText={handleSearchStringChange}
           onSubmitEditing={handleSearchSubmitChange}
           onClearIconPress={handleSearchClearIconPress}
-          mode="bar"
           value={searchQuery}
         />
       </View>
@@ -168,76 +169,11 @@ const Home = ({ navigation }) => {
           }}
         >
           {highlightedListings.map((item, index) => (
-            <Card
+            <ListingCard
               key={index + item.id}
-              style={{
-                marginVertical: 8,
-                marginLeft: 16,
-                position: "relative",
-              }}
-              width={180}
-              height={300}
-            >
-              <View>
-                <Chip
-                  icon={
-                    item.listingType === "Alquiler"
-                      ? "key-chain"
-                      : "currency-usd"
-                  }
-                  style={{
-                    position: "absolute",
-                    zIndex: 1,
-                    right: 8,
-                    top: 8,
-                  }}
-                >
-                  {item.listingType}
-                </Chip>
-              </View>
-              <Card.Cover source={{ uri: item.image }} />
-              <Card.Content
-                style={{ display: "flex", flexDirection: "column" }}
-              >
-                <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                  {item.type}
-                </Text>
-                <Text
-                  variant="bodySmall"
-                  numberOfLines={2}
-                  style={{ width: "100%" }}
-                >
-                  {item.location}
-                </Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    marginTop: 12,
-                    position: "absolute",
-                    top: 64,
-                    right: 16,
-                  }}
-                >
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 4,
-                    }}
-                  >
-                    <Text variant="bodyMedium" style={{ fontWeight: 600 }}>
-                      {item.currency}
-                    </Text>
-                    <Text variant="bodyMedium" style={{ fontWeight: 800 }}>
-                      ${item.price}
-                    </Text>
-                  </View>
-                </View>
-              </Card.Content>
-            </Card>
+              listing={item}
+              type={"highlighted"}
+            />
           ))}
         </ScrollView>
       </View>
@@ -283,75 +219,7 @@ const Home = ({ navigation }) => {
           }}
         >
           {recentListings.map((item, index) => (
-            <Card
-              key={index + item.id}
-              height={300}
-              style={{
-                marginVertical: 8,
-                position: "relative",
-                width: "45%",
-                marginHorizontal: 8,
-              }}
-            >
-              <View>
-                <Chip
-                  icon={
-                    item.listingType === "Alquiler"
-                      ? "key-chain"
-                      : "currency-usd"
-                  }
-                  style={{
-                    position: "absolute",
-                    zIndex: 1,
-                    right: 8,
-                    top: 8,
-                  }}
-                >
-                  {item.listingType}
-                </Chip>
-              </View>
-              <Card.Cover source={{ uri: item.image }} />
-              <Card.Content
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                  {item.type}
-                </Text>
-                <Text variant="bodySmall" numberOfLines={2}>
-                  {item.location}
-                </Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    marginTop: 12,
-                    position: "absolute",
-                    top: 64,
-                    right: 16,
-                  }}
-                >
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 4,
-                    }}
-                  >
-                    <Text variant="bodyMedium" style={{ fontWeight: 600 }}>
-                      {item.currency}
-                    </Text>
-                    <Text variant="bodyMedium" style={{ fontWeight: 800 }}>
-                      ${item.price}
-                    </Text>
-                  </View>
-                </View>
-              </Card.Content>
-            </Card>
+            <ListingCard key={index + item.id} listing={item} type={"recent"} />
           ))}
         </View>
       </View>
