@@ -1,27 +1,64 @@
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  FlatList,
-} from "react-native";
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import React, { useState } from "react";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Avatar, Button, Card, Text, Searchbar } from "react-native-paper";
+
+import { SegmentedButtons } from "react-native-paper";
+
+import { Avatar, Card, Text, Searchbar, Chip } from "react-native-paper";
+import {
+  mockedHighlightedListings,
+  mockedRecentListings,
+} from "./mock/MockedHomeData";
+import {
+  getFilteredListingByQuery,
+  getFilteredListingByType,
+} from "./HomeUtils";
 
 const Home = ({ navigation }) => {
   const user = {
     name: "Pablo",
   };
 
-  const [notification, setNotification] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [selected, setSelected] = useState("alquilar");
+  const [highlightedListings, setHighlightedListing] = useState(
+    [].concat(mockedHighlightedListings)
+  );
 
-  function handleSelection(selection) {
-    setSelected(selection);
-  }
+  const [recentListings, setRecentListings] = useState(
+    [].concat(mockedRecentListings)
+  );
+
+  const [filterSelection, setFilterSelection] = useState("todos");
+
+  const handleButtonFilterChange = (listingType) => {
+    setFilterSelection(listingType);
+    setHighlightedListing(
+      getFilteredListingByType(mockedHighlightedListings, listingType)
+    );
+    setRecentListings(
+      getFilteredListingByType(mockedRecentListings, listingType)
+    );
+  };
+
+  const handleSearchStringChange = (text) => {
+    setSearchQuery(text);
+  };
+
+  const handleSearchSubmitChange = ({ nativeEvent }) => {
+    setSearchQuery(nativeEvent.text);
+    setHighlightedListing(
+      getFilteredListingByQuery(mockedHighlightedListings, nativeEvent.text)
+    );
+    setRecentListings(
+      getFilteredListingByQuery(mockedRecentListings, nativeEvent.text)
+    );
+  };
+
+  const handleSearchClearIconPress = () => {
+    setSearchQuery("");
+    setHighlightedListing(mockedHighlightedListings);
+    setRecentListings(mockedRecentListings);
+  };
 
   return (
     <ScrollView vertical>
@@ -30,7 +67,8 @@ const Home = ({ navigation }) => {
           display: "flex",
           flexDirection: "row",
           gap: 24,
-          marginTop: 48,
+          marginTop: 64,
+          marginBottom: 16,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -39,7 +77,37 @@ const Home = ({ navigation }) => {
           size={36}
           source={require("../../assets/images/pablo.png")}
         />
-        <Text variant="titleLarge">¡Hola, {user.name}!</Text>
+        <Text variant="titleLarge">
+          ¡Hola, <Text style={{ fontWeight: 800 }}>{user.name}</Text>!
+        </Text>
+      </View>
+
+      <View>
+        <SegmentedButtons
+          buttons={[
+            {
+              value: "alquiler",
+              label: "Alquilar",
+              icon: "key-chain",
+            },
+            {
+              value: "todos",
+              icon: "circle-outline",
+            },
+            {
+              value: "venta",
+              label: "Comprar",
+              icon: "currency-usd",
+            },
+          ]}
+          value={filterSelection}
+          onValueChange={handleButtonFilterChange}
+          style={{
+            marginTop: 16,
+            marginBottom: 16,
+            paddingHorizontal: 48,
+          }}
+        />
       </View>
 
       <View
@@ -52,7 +120,14 @@ const Home = ({ navigation }) => {
           marginBottom: 16,
         }}
       >
-        <Searchbar placeholder="Buscar..." />
+        <Searchbar
+          placeholder="Buscar..."
+          onChangeText={handleSearchStringChange}
+          onSubmitEditing={handleSearchSubmitChange}
+          onClearIconPress={handleSearchClearIconPress}
+          mode="bar"
+          value={searchQuery}
+        />
       </View>
 
       <View>
@@ -89,89 +164,81 @@ const Home = ({ navigation }) => {
           style={{
             marginTop: 16,
             marginBottom: 16,
-            marginHorizontal: 16,
+            paddingBottom: 4,
           }}
         >
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
+          {highlightedListings.map((item, index) => (
+            <Card
+              key={index + item.id}
+              style={{
+                marginVertical: 8,
+                marginLeft: 16,
+                position: "relative",
               }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1515263487990-61b07816b324?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
-              }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
-              }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1580216643062-cf460548a66a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1867&q=80",
-              }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1579632652768-6cb9dcf85912?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2572&q=80",
-              }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
+              width={180}
+              height={300}
+            >
+              <View>
+                <Chip
+                  icon={
+                    item.listingType === "Alquiler"
+                      ? "key-chain"
+                      : "currency-usd"
+                  }
+                  style={{
+                    position: "absolute",
+                    zIndex: 1,
+                    right: 8,
+                    top: 8,
+                  }}
+                >
+                  {item.listingType}
+                </Chip>
+              </View>
+              <Card.Cover source={{ uri: item.image }} />
+              <Card.Content
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <Text variant="titleSmall" style={{ marginTop: 6 }}>
+                  {item.type}
+                </Text>
+                <Text
+                  variant="bodySmall"
+                  numberOfLines={2}
+                  style={{ width: "100%" }}
+                >
+                  {item.location}
+                </Text>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    marginTop: 12,
+                    position: "absolute",
+                    top: 64,
+                    right: 16,
+                  }}
+                >
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 4,
+                    }}
+                  >
+                    <Text variant="bodyMedium" style={{ fontWeight: 600 }}>
+                      {item.currency}
+                    </Text>
+                    <Text variant="bodyMedium" style={{ fontWeight: 800 }}>
+                      ${item.price}
+                    </Text>
+                  </View>
+                </View>
+              </Card.Content>
+            </Card>
+          ))}
         </ScrollView>
       </View>
 
@@ -212,73 +279,80 @@ const Home = ({ navigation }) => {
             flexWrap: "wrap",
             marginTop: 16,
             marginBottom: 16,
-            marginHorizontal: 16,
+            justifyContent: "center",
           }}
         >
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1525438160292-a4a860951216?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80",
+          {recentListings.map((item, index) => (
+            <Card
+              key={index + item.id}
+              height={300}
+              style={{
+                marginVertical: 8,
+                position: "relative",
+                width: "45%",
+                marginHorizontal: 8,
               }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1619994121345-b61cd610c5a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80",
-              }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1568295123886-8d09a5986b4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
-              }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
-          <Card style={{ marginHorizontal: 4, marginVertical: 8 }}>
-            <Card.Cover
-              source={{
-                uri: "https://images.unsplash.com/photo-1605283176568-9b41fde3672e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80",
-              }}
-            />
-            <Card.Content style={{ display: "flex", flexDirection: "column" }}>
-              <Text variant="titleSmall" style={{ marginTop: 6 }}>
-                Departamento
-              </Text>
-              <Text variant="bodySmall">Recoleta, Buenos Aires</Text>
-              <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-                $500.000
-              </Text>
-            </Card.Content>
-          </Card>
+            >
+              <View>
+                <Chip
+                  icon={
+                    item.listingType === "Alquiler"
+                      ? "key-chain"
+                      : "currency-usd"
+                  }
+                  style={{
+                    position: "absolute",
+                    zIndex: 1,
+                    right: 8,
+                    top: 8,
+                  }}
+                >
+                  {item.listingType}
+                </Chip>
+              </View>
+              <Card.Cover source={{ uri: item.image }} />
+              <Card.Content
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Text variant="titleSmall" style={{ marginTop: 6 }}>
+                  {item.type}
+                </Text>
+                <Text variant="bodySmall" numberOfLines={2}>
+                  {item.location}
+                </Text>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    marginTop: 12,
+                    position: "absolute",
+                    top: 64,
+                    right: 16,
+                  }}
+                >
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 4,
+                    }}
+                  >
+                    <Text variant="bodyMedium" style={{ fontWeight: 600 }}>
+                      {item.currency}
+                    </Text>
+                    <Text variant="bodyMedium" style={{ fontWeight: 800 }}>
+                      ${item.price}
+                    </Text>
+                  </View>
+                </View>
+              </Card.Content>
+            </Card>
+          ))}
         </View>
       </View>
     </ScrollView>
