@@ -1,22 +1,52 @@
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './screens/HomeScreen';
-import { LoginScreen } from './screens/LoginScreen';
-import { PropertyScreen } from './screens/PropertyScreen';
+import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Home from "./screens/Home/Home";
+import { NavigationContainer } from "@react-navigation/native";
 
-const Stack = createNativeStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
-function App() {
+export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="MyHome" component={HomeScreen} />
-        <Stack.Screen name="Property" component={PropertyScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Tab.Navigator initialRouteName="Login">
+          <Tab.Screen
+            name="Home"
+            component={Home}
+            options={{
+              tabBarLabel: "Inicio",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="home" color={color} size={26} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="My Properties"
+            component={Home}
+            options={{
+              tabBarLabel: "Mis Propiedades",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons
+                  name="shopping"
+                  color={color}
+                  size={26}
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={Home}
+            options={{
+              tabBarLabel: "Ajustes",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="cog" color={color} size={26} />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
-export default App;
