@@ -1,71 +1,90 @@
 import React from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+import { View, StyleSheet } from "react-native";
+import { TextInput, Button, Title, HelperText } from "react-native-paper";
+import { Formik } from "formik";
+import * as yup from "yup";
+
+const validationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Ingresa un correo electrónico válido")
+    .required("El correo electrónico es obligatorio"),
+  password: yup
+    .string()
+    .min(6, "La contraseña debe tener al menos 6 caracteres")
+    .required("La contraseña es obligatoria"),
+});
 
 const Login = ({ navigation }) => {
+  const handleLogin = (values) => {
+    navigation.navigate("Home");
+  };
+
   return (
-    <View className="flex items-center bg-[#FFFF] h-[100vh] w-[100vw]">
-      <View className="flex items-center pt-6">
-        <Image
-          source={require("../../assets/images/logo.png")}
-          className="h-[122px] w-[158px]"
-        />
-        <Text className="font-semibold text-[30px]">Ingresar a tu cuenta</Text>
-      </View>
-      <View className="gap-[20px] mt-[49px]">
-        <View className="flex-row border-[1px] items-center px-6 border-[#c4c4c4] bg-[#e7e7e7] rounded-[10px] w-[300px] h-[50px] ">
-          <Icon name="mail" size={22} color="#2e2e2e" />
-          <TextInput placeholder="Mail" className="ml-[20px] text-[#2e2e2e]" />
-        </View>
-        <View className="flex-row border-[1px] items-center px-6 border-[#c4c4c4] bg-[#e7e7e7] rounded-[10px] w-[300px] h-[50px]">
-          <Icon name="lock" size={22} color="#2e2e2e" />
-          <TextInput
-            placeholder="Contraseña"
-            className="ml-[20px] text-[#2e2e2e]"
-          />
-        </View>
-      </View>
-      <View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("MyHome")}
-          title="Ingresar"
-          className="bg-[#694DB6] w-[300px] h-[50px] rounded-[31px] mt-[32px]"
-        >
-          <Text className="text-[20px] text-[#FFFF] font-medium text-center pt-[10px]">
-            Ingresar
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="mt-[20px]">
-          <Text className="text-[20px] text-[#5D157E] font-normal text-center ">
-            Me olvidé mi contraseña
-          </Text>
-        </TouchableOpacity>
-      </View>
+    <View style={styles.container}>
+      <Title style={styles.title}>Iniciar sesión</Title>
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validationSchema={validationSchema}
+        onSubmit={handleLogin}
+      >
+        {({ handleChange, handleSubmit, values, errors, touched }) => {
+          const isEmailValid = touched.email ? !errors.email : true;
+          const isPasswordValid = touched.password ? !errors.password : true;
 
-      <View className="flex-row items-center mt-[15px]">
-        <View className="border-[1px] border-[#c4c4c4] w-[120px]"></View>
-        <Text className="text-[15px] text-[#5D157E] font-semibold text-center px-[20px]">
-          O
-        </Text>
-        <View className="border-[1px] border-[#c4c4c4] w-[120px]"></View>
-      </View>
-
-      <View className="flex items-center mt-[15px]">
-        <TouchableOpacity className="flex-row items-center border-[1px] border-[#c4c4c4] bg-[#FFFF] rounded-[10px] w-[300px] h-[50px] justify-center ">
-          <Image source={require("../../assets/images/google.png")} />
-          <Text className="text-[18px]  font-normal text-center">
-            Continuar con Google
-          </Text>
-        </TouchableOpacity>
-        <View className="flex-row mt-[31px] ">
-          <Text className="text-[16px] pr-2">No tenés cuenta?</Text>
-          <TouchableOpacity>
-            <Text className="text-[16px] text-[#5D157E]">Registrate</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+          return (
+            <>
+              <TextInput
+                label="Email"
+                value={values.email}
+                onChangeText={handleChange("email")}
+                mode="outlined"
+                style={styles.input}
+                error={!isEmailValid}
+              />
+              <HelperText type="error" visible={!isEmailValid}>
+                {errors.email}
+              </HelperText>
+              <TextInput
+                label="Contraseña"
+                value={values.password}
+                onChangeText={handleChange("password")}
+                secureTextEntry
+                mode="outlined"
+                style={styles.input}
+                error={!isPasswordValid}
+              />
+              <HelperText type="error" visible={!isPasswordValid}>
+                {errors.password}
+              </HelperText>
+              <Button
+                mode="contained"
+                onPress={handleSubmit}
+                style={styles.button}
+              >
+                Iniciar sesión
+              </Button>
+            </>
+          );
+        }}
+      </Formik>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 16,
+  },
+  button: {
+    marginTop: 8,
+  },
+});
 
 export default Login;

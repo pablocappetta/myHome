@@ -1,25 +1,18 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Card, Text, Chip } from "react-native-paper";
+import { Card, Text } from "react-native-paper";
+import ListingTypeChip from "../ListingTypeChip/ListingTypeChip";
 
-export default ListingCard = ({ listing, type }) => (
+const ListingCard = ({ listing, type }) => (
   <Card
     style={type === "highlighted" ? styles.highlighted : styles.recent}
     width={180}
     height={300}
   >
     <View>
-      <Chip
-        icon={listing.listingType === "Alquiler" ? "key-chain" : "currency-usd"}
-        style={{
-          position: "absolute",
-          zIndex: 1,
-          right: 8,
-          top: 8,
-        }}
-      >
+      <ListingTypeChip listingType={listing.listingType}>
         {listing.listingType}
-      </Chip>
+      </ListingTypeChip>
     </View>
     <Card.Cover source={{ uri: listing.image }} />
     <Card.Content style={{ display: "flex", flexDirection: "column" }}>
@@ -60,16 +53,19 @@ export default ListingCard = ({ listing, type }) => (
   </Card>
 );
 
+const sharedStyles = {
+  position: "relative",
+};
+
 const styles = StyleSheet.create({
   highlighted: {
-    marginVertical: 8,
-    marginLeft: 16,
-    position: "relative",
+    ...sharedStyles,
+    marginLeft: 6,
+    marginRight: 6,
   },
   recent: {
-    marginVertical: 8,
-    position: "relative",
-    width: "45%",
-    marginHorizontal: 8,
+    ...sharedStyles,
   },
 });
+
+export default ListingCard;

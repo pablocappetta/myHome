@@ -1,24 +1,19 @@
-import { View, TouchableOpacity, ScrollView } from "react-native";
 import React, { useState } from "react";
-
-import { SegmentedButtons } from "react-native-paper";
-
-import { Avatar, Text, Searchbar } from "react-native-paper";
-import {
-  mockedHighlightedListings,
-  mockedRecentListings,
-} from "./mock/MockedHomeData";
+import { View, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { Avatar, Text, Searchbar, SegmentedButtons } from "react-native-paper";
 import {
   getFilteredListingByQuery,
   getFilteredListingByType,
 } from "./HomeUtils";
 import ListingCard from "../../components/ListingCard/ListingCard";
+import {
+  mockedHighlightedListings,
+  mockedRecentListings,
+} from "./mock/MockedHomeData";
+import { useUserContext } from "../../contexts/UserContext";
 
 const Home = ({ navigation }) => {
-  const user = {
-    name: "Pablo",
-  };
-
+  const { user } = useUserContext();
   const [searchQuery, setSearchQuery] = useState("");
 
   const [highlightedListings, setHighlightedListing] = useState(
@@ -64,21 +59,8 @@ const Home = ({ navigation }) => {
 
   return (
     <ScrollView vertical>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 24,
-          marginTop: 64,
-          marginBottom: 16,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Avatar.Image
-          size={36}
-          source={require("../../assets/images/pablo.png")}
-        />
+      <View style={styles.userHomeWelcomeHeader}>
+        <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
         <Text variant="titleLarge">
           ¡Hola, <Text style={{ fontWeight: 800 }}>{user.name}</Text>!
         </Text>
@@ -160,21 +142,26 @@ const Home = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <ScrollView
-          horizontal
-          style={{
-            marginTop: 16,
-            marginBottom: 16,
-            paddingBottom: 4,
-          }}
-        >
-          {highlightedListings.map((item, index) => (
-            <ListingCard
-              key={index + item.id}
-              listing={item}
-              type={"highlighted"}
-            />
-          ))}
+        <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              marginTop: 16,
+              marginBottom: 16,
+              justifyContent: "center",
+              gap: 16,
+            }}
+          >
+            {highlightedListings.map((item, index) => (
+              <ListingCard
+                key={index + item.id}
+                listing={item}
+                type={"highlighted"}
+              />
+            ))}
+          </View>
         </ScrollView>
       </View>
 
@@ -216,6 +203,7 @@ const Home = ({ navigation }) => {
             marginTop: 16,
             marginBottom: 16,
             justifyContent: "center",
+            gap: 16,
           }}
         >
           {recentListings.map((item, index) => (
@@ -226,5 +214,17 @@ const Home = ({ navigation }) => {
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  userHomeWelcomeHeader: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 24,
+    marginTop: 64,
+    marginBottom: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
 
 export default Home;
