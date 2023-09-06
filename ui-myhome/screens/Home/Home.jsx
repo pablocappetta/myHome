@@ -14,7 +14,10 @@ import { useUserContext } from "../../contexts/UserContext";
 
 const Home = ({ navigation }) => {
   const { user } = useUserContext();
+
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [isQueryActive, setIsQueryActive] = useState(false);
 
   const [highlightedListings, setHighlightedListing] = useState(
     [].concat(mockedHighlightedListings)
@@ -49,12 +52,14 @@ const Home = ({ navigation }) => {
     setRecentListings(
       getFilteredListingByQuery(recentListings, nativeEvent.text)
     );
+    setIsQueryActive(true);
   };
 
   const handleSearchClearIconPress = () => {
     setSearchQuery("");
     setHighlightedListing(mockedHighlightedListings);
     setRecentListings(mockedRecentListings);
+    setIsQueryActive(false);
   };
 
   return (
@@ -113,37 +118,145 @@ const Home = ({ navigation }) => {
         />
       </View>
 
-      <View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: 16,
-          }}
-        >
-          <Text
-            variant="titleLarge"
+      {highlightedListings.length > 0 && !isQueryActive && (
+        <View>
+          <View
             style={{
-              paddingHorizontal: 16,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 16,
             }}
           >
-            Destacados
-          </Text>
-          <TouchableOpacity>
             <Text
-              variant="labelLarge"
+              variant="titleLarge"
               style={{
                 paddingHorizontal: 16,
               }}
             >
-              Ver más
+              Destacados
             </Text>
-          </TouchableOpacity>
+            <TouchableOpacity>
+              <Text
+                variant="labelLarge"
+                style={{
+                  paddingHorizontal: 16,
+                }}
+              >
+                Ver más
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                marginTop: 16,
+                marginBottom: 16,
+                justifyContent: "center",
+                gap: 16,
+              }}
+            >
+              {highlightedListings.map((item, index) => (
+                <ListingCard
+                  key={index + item.id}
+                  listing={item}
+                  type={"highlighted"}
+                />
+              ))}
+            </View>
+          </ScrollView>
         </View>
-        <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
+      )}
+
+      {recentListings.length > 0 && !isQueryActive && (
+        <View>
           <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 16,
+            }}
+          >
+            <Text
+              variant="titleLarge"
+              style={{
+                paddingHorizontal: 16,
+              }}
+            >
+              Últimas publicaciones
+            </Text>
+            <TouchableOpacity>
+              <Text
+                variant="labelLarge"
+                style={{
+                  paddingHorizontal: 16,
+                }}
+              >
+                Ver más
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            horizontal
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              marginTop: 16,
+              marginBottom: 16,
+              justifyContent: "center",
+              gap: 16,
+            }}
+          >
+            {recentListings.map((item, index) => (
+              <ListingCard
+                key={index + item.id}
+                listing={item}
+                type={"recent"}
+              />
+            ))}
+          </View>
+        </View>
+      )}
+
+      {searchQuery.length > 0 && isQueryActive && (
+        <View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 16,
+            }}
+          >
+            <Text
+              variant="titleLarge"
+              style={{
+                paddingHorizontal: 16,
+              }}
+            >
+              Resultados de la búsqueda
+            </Text>
+            <TouchableOpacity>
+              <Text
+                variant="labelLarge"
+                style={{
+                  paddingHorizontal: 16,
+                }}
+              >
+                Ver más
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            horizontal
             style={{
               display: "flex",
               flexDirection: "row",
@@ -158,59 +271,26 @@ const Home = ({ navigation }) => {
               <ListingCard
                 key={index + item.id}
                 listing={item}
-                type={"highlighted"}
+                type={"recent"}
               />
             ))}
           </View>
-        </ScrollView>
-      </View>
+        </View>
+      )}
 
-      <View>
+      {!highlightedListings.length > 0 && !recentListings.length > 0 && (
         <View
           style={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexDirection: "column",
             alignItems: "center",
-            marginTop: 16,
-          }}
-        >
-          <Text
-            variant="titleLarge"
-            style={{
-              paddingHorizontal: 16,
-            }}
-          >
-            Últimas publicaciones
-          </Text>
-          <TouchableOpacity>
-            <Text
-              variant="labelLarge"
-              style={{
-                paddingHorizontal: 16,
-              }}
-            >
-              Ver más
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          horizontal
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            marginTop: 16,
-            marginBottom: 16,
             justifyContent: "center",
-            gap: 16,
+            marginTop: 64,
           }}
         >
-          {recentListings.map((item, index) => (
-            <ListingCard key={index + item.id} listing={item} type={"recent"} />
-          ))}
+          <Text variant="labelLarge">No hay publicaciones</Text>
         </View>
-      </View>
+      )}
     </ScrollView>
   );
 };
