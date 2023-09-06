@@ -29,9 +29,8 @@ const Login = ({ navigation }) => {
         onSubmit={handleLogin}
       >
         {({ handleChange, handleSubmit, values, errors, touched }) => {
-          const isEmailValid = touched.email ? !errors.email : true;
-          const isPasswordValid = touched.password ? !errors.password : true;
-
+          const isEmailError = touched.email && !!errors.email;
+          const isPasswordError = touched.password && !!errors.password;
           return (
             <>
               <TextInput
@@ -40,9 +39,9 @@ const Login = ({ navigation }) => {
                 onChangeText={handleChange("email")}
                 mode="outlined"
                 style={styles.input}
-                error={!isEmailValid}
+                error={isEmailError}
               />
-              <HelperText type="error" visible={!isEmailValid}>
+              <HelperText type="error" visible={isEmailError}>
                 {errors.email}
               </HelperText>
               <TextInput
@@ -52,9 +51,9 @@ const Login = ({ navigation }) => {
                 secureTextEntry
                 mode="outlined"
                 style={styles.input}
-                error={!isPasswordValid}
+                error={isPasswordError}
               />
-              <HelperText type="error" visible={!isPasswordValid}>
+              <HelperText type="error" visible={isPasswordError}>
                 {errors.password}
               </HelperText>
               <Button
