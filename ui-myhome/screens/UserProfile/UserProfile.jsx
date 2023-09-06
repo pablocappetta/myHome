@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import {
   Avatar,
   Button,
   Divider,
   IconButton,
   Menu,
-  PaperProvider,
+  Text,
 } from "react-native-paper";
 import { useUserContext } from "../../contexts/UserContext";
 import Login from "../Login/Login";
@@ -24,69 +24,63 @@ const UserProfile = () => {
   return !user ? (
     <Login />
   ) : (
-    <PaperProvider>
-      <View style={styles.container}>
-        <Menu
-          visible={menuVisible}
-          onDismiss={closeMenu}
-          style={styles.menuBar}
-          anchorPosition="bottom"
-          anchor={
-            <TouchableOpacity onPress={openMenu}>
-              <Avatar.Image
-                size={180}
-                source={{ uri: user.profilePicture }}
-                style={styles.avatar}
-              />
-            </TouchableOpacity>
-          }
-        >
-          <Menu.Item onPress={() => {}} title="Modificar" leadingIcon="image" />
-          <Divider />
-          <Menu.Item
-            onPress={() => {}}
-            title="Eliminar"
-            leadingIcon={"delete"}
-          />
-        </Menu>
-        <Text style={styles.fullName}>{`${user.name} ${user.lastName}`}</Text>
-        <View style={styles.emailContainer}>
-          <Text style={styles.email}>{user.email}</Text>
-          <IconButton
-            icon={user.isVerified ? "check" : "alert"}
-            mode="contained"
-            size={16}
-          />
-        </View>
+    <View style={styles.container}>
+      <Menu
+        visible={menuVisible}
+        onDismiss={closeMenu}
+        style={styles.menuBar}
+        anchorPosition="bottom"
+        anchor={
+          <TouchableOpacity onPress={openMenu}>
+            <Avatar.Image
+              size={180}
+              source={{ uri: user.profilePicture }}
+              style={styles.avatar}
+            />
+          </TouchableOpacity>
+        }
+      >
+        <Menu.Item onPress={() => {}} title="Modificar" leadingIcon="image" />
+        <Divider />
+        <Menu.Item onPress={() => {}} title="Eliminar" leadingIcon={"delete"} />
+      </Menu>
+      <Text style={styles.fullName}>{`${user.name} ${user.lastName}`}</Text>
+      <View style={styles.emailContainer}>
+        <Text style={styles.email}>{user.email}</Text>
+        <IconButton
+          icon={user.isVerified ? "check" : "alert"}
+          mode="contained"
+          size={16}
+        />
+      </View>
 
-        <View style={styles.actions}>
-          <Button
-            icon="heart"
-            mode="contained-tonal"
-            style={styles.actionButton}
-            onPress={() => {}}
-          >
-            Ver Favoritos
-          </Button>
-          <Button
-            icon="home"
-            mode="contained-tonal"
-            style={styles.actionButton}
-            onPress={() => {}}
-          >
-            Mis Propiedades
-          </Button>
-        </View>
-
+      <View style={styles.actions}>
         <Button
-          mode="outlined"
-          style={styles.logoutButton}
-          onPress={handleLogout}
+          icon="heart"
+          mode="contained-tonal"
+          style={styles.actionButton}
+          onPress={() => {}}
         >
-          Cerrar Sesión
+          Ver Favoritos
+        </Button>
+        <Button
+          icon="home"
+          mode="contained-tonal"
+          style={styles.actionButton}
+          onPress={() => {}}
+        >
+          Mis Propiedades
         </Button>
       </View>
-    </PaperProvider>
+
+      <Button
+        mode="outlined"
+        style={styles.logoutButton}
+        onPress={handleLogout}
+      >
+        Cerrar Sesión
+      </Button>
+    </View>
   );
 };
 
@@ -96,7 +90,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 32,
-    backgroundColor: "#fff",
   },
   avatar: {},
   fullName: {
