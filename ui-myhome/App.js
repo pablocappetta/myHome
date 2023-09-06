@@ -20,9 +20,7 @@ export const App = () => {
               component={Home}
               options={{
                 tabBarLabel: "Inicio",
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="home" color={color} size={26} />
-                ),
+                tabBarIcon: "home",
               }}
             />
             <Tab.Screen
@@ -30,13 +28,7 @@ export const App = () => {
               component={UserProfile}
               options={{
                 tabBarLabel: "Mi Perfil",
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons
-                    name="account"
-                    color={color}
-                    size={26}
-                  />
-                ),
+                tabBarIcon: "account",
               }}
             />
           </Tab.Navigator>
