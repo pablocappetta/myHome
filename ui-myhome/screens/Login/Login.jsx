@@ -1,18 +1,15 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { TextInput, Button, Title, HelperText } from "react-native-paper";
+import { View, StyleSheet, Image } from "react-native";
+import { TextInput, Button, HelperText } from "react-native-paper";
 import { Formik } from "formik";
 import * as yup from "yup";
 
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email("Ingresa un correo electrónico válido")
+    .email("Ingresá un correo electrónico válido")
     .required("El correo electrónico es obligatorio"),
-  password: yup
-    .string()
-    .min(6, "La contraseña debe tener al menos 6 caracteres")
-    .required("La contraseña es obligatoria"),
+  password: yup.string().required("La contraseña es obligatoria"),
 });
 
 const Login = ({ navigation }) => {
@@ -22,7 +19,15 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Title style={styles.title}>Iniciar sesión</Title>
+      <Image
+        source={require("../../assets/images/loginVector.png")}
+        style={{
+          width: 300,
+          height: 300,
+          alignSelf: "center",
+        }}
+      />
+
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={validationSchema}

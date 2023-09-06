@@ -12,6 +12,23 @@ import {
 } from "./mock/MockedHomeData";
 import { useUserContext } from "../../contexts/UserContext";
 
+const segmentedButtons = [
+  {
+    value: "alquiler",
+    label: "Alquilar",
+    icon: "key-chain",
+  },
+  {
+    value: "todos",
+    icon: "circle-outline",
+  },
+  {
+    value: "venta",
+    label: "Comprar",
+    icon: "currency-usd",
+  },
+];
+
 const Home = ({ navigation }) => {
   const { user } = useUserContext();
 
@@ -67,48 +84,20 @@ const Home = ({ navigation }) => {
       <View style={styles.userHomeWelcomeHeader}>
         <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
         <Text variant="titleLarge">
-          ¡Hola, <Text style={{ fontWeight: 800 }}>{user.name}</Text>!
+          ¡Hola, <Text style={styles.userNameGreeting}>{user.name}</Text>!
         </Text>
       </View>
 
       <View>
         <SegmentedButtons
-          buttons={[
-            {
-              value: "alquiler",
-              label: "Alquilar",
-              icon: "key-chain",
-            },
-            {
-              value: "todos",
-              icon: "circle-outline",
-            },
-            {
-              value: "venta",
-              label: "Comprar",
-              icon: "currency-usd",
-            },
-          ]}
+          buttons={segmentedButtons}
           value={filterSelection}
           onValueChange={handleButtonFilterChange}
-          style={{
-            marginTop: 16,
-            marginBottom: 16,
-            paddingHorizontal: 48,
-          }}
+          style={styles.segmentedButtons}
         />
       </View>
 
-      <View
-        style={{
-          display: "flex",
-          marginTop: 16,
-          alignItems: "center",
-          justifyContent: "center",
-          paddingHorizontal: 16,
-          marginBottom: 16,
-        }}
-      >
+      <View style={styles.searchBarContainer}>
         <Searchbar
           placeholder="Buscar..."
           onChangeText={handleSearchStringChange}
@@ -120,15 +109,7 @@ const Home = ({ navigation }) => {
 
       {highlightedListings.length > 0 && !isQueryActive && (
         <View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 16,
-            }}
-          >
+          <View style={styles.listingHeader}>
             <Text
               variant="titleLarge"
               style={{
@@ -149,17 +130,7 @@ const Home = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                marginTop: 16,
-                marginBottom: 16,
-                justifyContent: "center",
-                gap: 16,
-              }}
-            >
+            <View style={styles.listingCardsContainer}>
               {highlightedListings.map((item, index) => (
                 <ListingCard
                   key={index + item.id}
@@ -174,15 +145,7 @@ const Home = ({ navigation }) => {
 
       {recentListings.length > 0 && !isQueryActive && (
         <View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 16,
-            }}
-          >
+          <View style={styles.listingHeader}>
             <Text
               variant="titleLarge"
               style={{
@@ -202,18 +165,7 @@ const Home = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View
-            horizontal
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              marginTop: 16,
-              marginBottom: 16,
-              justifyContent: "center",
-              gap: 16,
-            }}
-          >
+          <View horizontal style={styles.listingCardsContainer}>
             {recentListings.map((item, index) => (
               <ListingCard
                 key={index + item.id}
@@ -227,15 +179,7 @@ const Home = ({ navigation }) => {
 
       {searchQuery.length > 0 && isQueryActive && (
         <View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 16,
-            }}
-          >
+          <View style={styles.listingHeader}>
             <Text
               variant="titleLarge"
               style={{
@@ -255,18 +199,7 @@ const Home = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View
-            horizontal
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              marginTop: 16,
-              marginBottom: 16,
-              justifyContent: "center",
-              gap: 16,
-            }}
-          >
+          <View horizontal style={styles.listingCardsContainer}>
             {highlightedListings.map((item, index) => (
               <ListingCard
                 key={index + item.id}
@@ -279,15 +212,7 @@ const Home = ({ navigation }) => {
       )}
 
       {!highlightedListings.length > 0 && !recentListings.length > 0 && (
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 64,
-          }}
-        >
+        <View style={styles.noListingResultsContainer}>
           <Text variant="labelLarge">No hay publicaciones</Text>
         </View>
       )}
@@ -304,6 +229,45 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: "center",
     justifyContent: "center",
+  },
+  userNameGreeting: {
+    fontWeight: 800,
+  },
+  segmentedButtons: {
+    marginTop: 16,
+    marginBottom: 16,
+    paddingHorizontal: 48,
+  },
+  searchBarContainer: {
+    display: "flex",
+    marginTop: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  listingHeader: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  listingCardsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 16,
+    marginBottom: 16,
+    justifyContent: "center",
+    gap: 16,
+  },
+  noListingResultsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 64,
   },
 });
 
