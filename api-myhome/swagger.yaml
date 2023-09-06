@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API endpoints for the myHome application
 servers:
-  - url: https://www.google.com.ar
+  - url: https://www.api.myhome.com.ar/v1
     description: Production server
 paths:
   /realtors:
@@ -80,20 +80,20 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-              $ref: "#/components/schemas/RealtorLogin"
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              password:
+                type: string
       responses:
         "200":
           description: Realtor logged in successfully
-        "401":
-          description: Unauthorized
-    delete:
-      summary: Log out as a realtor
-      tags:
-        - Realtors
-      responses:
-        "204":
-          description: Realtor logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor
         "401":
           description: Unauthorized
   /realtors/{realtorId}:
@@ -111,6 +111,10 @@ paths:
       responses:
         "200":
           description: Realtor details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
         "404":
           description: Realtor not found
   /realtors/password-reset:
@@ -122,11 +126,11 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
       responses:
         "200":
           description: Password reset email sent successfully
@@ -147,11 +151,10 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-              type: object
-              properties:
-                password:
-                  type: string
+            type: object
+            properties:
+              password:
+                type: string
       responses:
         "200":
           description: Password reset successfully
@@ -181,7 +184,7 @@ paths:
         "404":
           description: Realtor not found
   /homes:
-    post:
+    post: # TODO vamos a hacer el POST de homes o directamente de listings?
       summary: Add a new home
       tags:
         - Homes
@@ -384,15 +387,6 @@ paths:
           description: User logged in successfully
         "401":
           description: Unauthorized
-    delete:
-      summary: Log out as a user
-      tags:
-        - Users
-      responses:
-        "204":
-          description: User logged out successfully
-        "401":
-          description: Unauthorized
   /users/me:
     get:
       summary: Get current user's profile
@@ -488,12 +482,18 @@ paths:
           description: home not found
 components:
   schemas:
-    Realtor: null
-    RealtorLogin: null
     home: null
     ContactRequest: null
-    Reservation: null
-    Review: null
+    Review: 
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        rating:
+          type: number
+        comment:
+          type: string
     User:
       type: object
       properties:
@@ -518,12 +518,9 @@ components:
         contactEmail:
           type: string
         reviews:
-          type: object
-          properties:
-            rating:
-              type: number
-            comment:
-              type: string
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
     Property:
       type: object
       properties:
@@ -591,7 +588,10 @@ components:
           type: integer
         listingType:
           type: string
-        createdDate:
+          enum:
+            - sale
+            - rent
+        creationDate:
           type: string
           format: date-time
     Reservation:
@@ -618,7 +618,9 @@ components:
           format: date
         time:
           type: string
-          format: time
-        createdDate:
+          enum: 
+            - morning
+            - afternoon
+        creationDate:
           type: string
           format: date-time
