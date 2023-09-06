@@ -4,6 +4,7 @@ import { Avatar, Text, Searchbar, SegmentedButtons } from "react-native-paper";
 import {
   getFilteredListingByQuery,
   getFilteredListingByType,
+  segmentedButtons,
 } from "./HomeUtils";
 import ListingCard from "../../components/ListingCard/ListingCard";
 import {
@@ -11,23 +12,6 @@ import {
   mockedRecentListings,
 } from "./mock/MockedHomeData";
 import { useUserContext } from "../../contexts/UserContext";
-
-const segmentedButtons = [
-  {
-    value: "alquiler",
-    label: "Alquilar",
-    icon: "key-chain",
-  },
-  {
-    value: "todos",
-    icon: "circle-outline",
-  },
-  {
-    value: "venta",
-    label: "Comprar",
-    icon: "currency-usd",
-  },
-];
 
 const Home = ({ navigation }) => {
   const { user } = useUserContext();
@@ -81,12 +65,19 @@ const Home = ({ navigation }) => {
 
   return (
     <ScrollView vertical>
-      <View style={styles.userHomeWelcomeHeader}>
+      <TouchableOpacity
+        style={styles.userHomeWelcomeHeader}
+        onPress={() => navigation.navigate("Mi Perfil")}
+      >
         <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
         <Text variant="titleLarge">
-          ¡Hola, <Text style={styles.userNameGreeting}>{user.name}</Text>!
+          ¡Hola,{" "}
+          <Text style={styles.userNameGreeting} numberOfLines={1}>
+            {user.name}
+          </Text>
+          !
         </Text>
-      </View>
+      </TouchableOpacity>
 
       <View>
         <SegmentedButtons
@@ -229,6 +220,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 48,
   },
   userNameGreeting: {
     fontWeight: 800,

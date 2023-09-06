@@ -1,3 +1,20 @@
+export const segmentedButtons = [
+  {
+    value: "alquiler",
+    label: "Alquilar",
+    icon: "key-chain",
+  },
+  {
+    value: "todos",
+    icon: "circle-outline",
+  },
+  {
+    value: "venta",
+    label: "Comprar",
+    icon: "currency-usd",
+  },
+];
+
 export const getFilteredListingByType = (listings, type) => {
   if (type === "todos") return listings;
   return listings.filter(

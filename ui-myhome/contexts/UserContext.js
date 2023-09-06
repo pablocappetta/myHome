@@ -10,6 +10,7 @@ export const UserProvider = ({ children }) => {
     lastName: "Cappetta",
     email: "pablo.placeholder@placeholder.com",
     profilePicture: "https://avatars.githubusercontent.com/u/75391203?v=4",
+    isVerified: true,
   });
 
   const store = {
