@@ -10,7 +10,6 @@ import {
   Text,
 } from "react-native-paper";
 import { useUserContext } from "../../contexts/UserContext";
-import Login from "../Login/Login";
 
 const UserProfile = ({ navigation }) => {
   const { user } = useUserContext();
