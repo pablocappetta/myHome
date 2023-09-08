@@ -22,13 +22,11 @@ const UserProfile = ({ navigation }) => {
 
   const handleLogout = () => {};
 
-  return !user ? (
-    <Login />
-  ) : (
+  return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
         <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
-        <Appbar.Content title="Mi Perfil" />
+        <Appbar.Content title="Perfil" />
       </Appbar.Header>
       <View style={styles.profileContainer}>
         <Menu
@@ -54,9 +52,14 @@ const UserProfile = ({ navigation }) => {
             leadingIcon={"delete"}
           />
         </Menu>
-        <Text style={styles.fullName}>{`${user.name} ${user.lastName}`}</Text>
+        <Text
+          style={styles.fullName}
+          numberOfLines={1}
+        >{`${user.name} ${user.lastName}`}</Text>
         <View style={styles.emailContainer}>
-          <Text style={styles.email}>{user.email}</Text>
+          <Text style={styles.email} numberOfLines={1}>
+            {user.email}
+          </Text>
           <IconButton
             icon={user.isVerified ? "check" : "alert"}
             mode="contained"
@@ -100,8 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profileContainer: {
-    marginTop: 16,
-    padding: 16,
+    padding: 32,
     justifyContent: "center",
     alignItems: "center",
   },

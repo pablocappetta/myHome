@@ -1,21 +1,28 @@
-import React from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-const UserContext = React.createContext();
+const UserContext = createContext();
 
-export const useUserContext = () => React.useContext(UserContext);
+export const useUserContext = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = React.useState({
-    name: "Pablo",
-    lastName: "Cappetta",
-    email: "pablo.placeholder@placeholder.com",
-    profilePicture: "https://avatars.githubusercontent.com/u/75391203?v=4",
-    isVerified: true,
+  const [user, setUser] = useState({
+    name: null,
+    lastName: null,
+    email: null,
+    profilePicture: null,
+    isVerified: null,
   });
+
+  const [isUserLogged, setIsUserLogged] = useState(false);
+
+  useEffect(() => {
+    setIsUserLogged(user.name !== null);
+  }, [user]);
 
   const store = {
     user,
     setUser,
+    isUserLogged,
   };
 
   return <UserContext.Provider value={store}>{children}</UserContext.Provider>;
