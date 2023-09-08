@@ -1,5 +1,11 @@
 import React, { useState, useRef } from "react";
-import { View, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import { Avatar, Text, Searchbar, SegmentedButtons } from "react-native-paper";
 import {
   getFilteredListingByQuery,
@@ -69,154 +75,155 @@ const Home = ({ navigation }) => {
   };
 
   return (
-    <ScrollView vertical>
-      <TouchableOpacity
-        style={styles.userHomeWelcomeHeader}
-        onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
-      >
-        {isUserLogged ? (
-          <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
-        ) : (
-          <Avatar.Icon size={36} icon="account" />
-        )}
-        <Text variant="titleLarge">
-          ¡Hola,{" "}
-          <Text style={styles.userNameGreeting} numberOfLines={1}>
-            {isUserLogged ? user.name : "invitado"}
-          </Text>
-          !
-        </Text>
-      </TouchableOpacity>
-
-      <View>
-        <SegmentedButtons
-          buttons={segmentedButtons}
-          value={filterSelection}
-          onValueChange={handleButtonFilterChange}
-          style={styles.segmentedButtons}
-        />
-      </View>
-
-      <View style={styles.searchBarContainer}>
-        <Searchbar
-          placeholder="Buscar..."
-          onChangeText={handleSearchStringChange}
-          onSubmitEditing={handleSearchSubmitChange}
-          onClearIconPress={handleSearchClearIconPress}
-          value={searchQuery}
-        />
-      </View>
-
-      {highlightedListings.length > 0 && !isQueryActive && (
-        <View>
-          <View style={styles.listingHeader}>
-            <Text
-              variant="titleLarge"
-              style={{
-                paddingHorizontal: 16,
-              }}
-            >
-              Destacados
+    <SafeAreaView>
+      <ScrollView vertical ref={ref}>
+        <TouchableOpacity
+          style={styles.userHomeWelcomeHeader}
+          onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
+        >
+          {isUserLogged ? (
+            <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+          ) : (
+            <Avatar.Icon size={36} icon="account" />
+          )}
+          <Text variant="titleLarge">
+            ¡Hola,{" "}
+            <Text style={styles.userNameGreeting} numberOfLines={1}>
+              {isUserLogged ? user.name : "invitado"}
             </Text>
-            <TouchableOpacity>
+            !
+          </Text>
+        </TouchableOpacity>
+        <View>
+          <SegmentedButtons
+            buttons={segmentedButtons}
+            value={filterSelection}
+            onValueChange={handleButtonFilterChange}
+            style={styles.segmentedButtons}
+          />
+        </View>
+
+        <View style={styles.searchBarContainer}>
+          <Searchbar
+            placeholder="Buscar..."
+            onChangeText={handleSearchStringChange}
+            onSubmitEditing={handleSearchSubmitChange}
+            onClearIconPress={handleSearchClearIconPress}
+            value={searchQuery}
+          />
+        </View>
+
+        {highlightedListings.length > 0 && !isQueryActive && (
+          <View>
+            <View style={styles.listingHeader}>
               <Text
-                variant="labelLarge"
+                variant="titleLarge"
                 style={{
                   paddingHorizontal: 16,
                 }}
               >
-                Ver más
+                Destacados
               </Text>
-            </TouchableOpacity>
+              <TouchableOpacity>
+                <Text
+                  variant="labelLarge"
+                  style={{
+                    paddingHorizontal: 16,
+                  }}
+                >
+                  Ver más
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
+              <View style={styles.listingCardsContainer}>
+                {highlightedListings.map((item, index) => (
+                  <ListingCard
+                    key={index + item.id}
+                    listing={item}
+                    type={"highlighted"}
+                  />
+                ))}
+              </View>
+            </ScrollView>
           </View>
-          <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
-            <View style={styles.listingCardsContainer}>
+        )}
+
+        {recentListings.length > 0 && !isQueryActive && (
+          <View>
+            <View style={styles.listingHeader}>
+              <Text
+                variant="titleLarge"
+                style={{
+                  paddingHorizontal: 16,
+                }}
+              >
+                Últimas publicaciones
+              </Text>
+              <TouchableOpacity>
+                <Text
+                  variant="labelLarge"
+                  style={{
+                    paddingHorizontal: 16,
+                  }}
+                >
+                  Ver más
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View horizontal style={styles.listingCardsContainer}>
+              {recentListings.map((item, index) => (
+                <ListingCard
+                  key={index + item.id}
+                  listing={item}
+                  type={"recent"}
+                />
+              ))}
+            </View>
+          </View>
+        )}
+
+        {searchQuery.length > 0 && isQueryActive && (
+          <View>
+            <View style={styles.listingHeader}>
+              <Text
+                variant="titleLarge"
+                style={{
+                  paddingHorizontal: 16,
+                }}
+              >
+                Resultados de la búsqueda
+              </Text>
+              <TouchableOpacity>
+                <Text
+                  variant="labelLarge"
+                  style={{
+                    paddingHorizontal: 16,
+                  }}
+                >
+                  Ver más
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View horizontal style={styles.listingCardsContainer}>
               {highlightedListings.map((item, index) => (
                 <ListingCard
                   key={index + item.id}
                   listing={item}
-                  type={"highlighted"}
+                  type={"recent"}
                 />
               ))}
             </View>
-          </ScrollView>
-        </View>
-      )}
+          </View>
+        )}
 
-      {recentListings.length > 0 && !isQueryActive && (
-        <View>
-          <View style={styles.listingHeader}>
-            <Text
-              variant="titleLarge"
-              style={{
-                paddingHorizontal: 16,
-              }}
-            >
-              Últimas publicaciones
-            </Text>
-            <TouchableOpacity>
-              <Text
-                variant="labelLarge"
-                style={{
-                  paddingHorizontal: 16,
-                }}
-              >
-                Ver más
-              </Text>
-            </TouchableOpacity>
+        {!highlightedListings.length > 0 && !recentListings.length > 0 && (
+          <View style={styles.noListingResultsContainer}>
+            <Text variant="labelLarge">No hay publicaciones</Text>
           </View>
-          <View horizontal style={styles.listingCardsContainer}>
-            {recentListings.map((item, index) => (
-              <ListingCard
-                key={index + item.id}
-                listing={item}
-                type={"recent"}
-              />
-            ))}
-          </View>
-        </View>
-      )}
-
-      {searchQuery.length > 0 && isQueryActive && (
-        <View>
-          <View style={styles.listingHeader}>
-            <Text
-              variant="titleLarge"
-              style={{
-                paddingHorizontal: 16,
-              }}
-            >
-              Resultados de la búsqueda
-            </Text>
-            <TouchableOpacity>
-              <Text
-                variant="labelLarge"
-                style={{
-                  paddingHorizontal: 16,
-                }}
-              >
-                Ver más
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View horizontal style={styles.listingCardsContainer}>
-            {highlightedListings.map((item, index) => (
-              <ListingCard
-                key={index + item.id}
-                listing={item}
-                type={"recent"}
-              />
-            ))}
-          </View>
-        </View>
-      )}
-
-      {!highlightedListings.length > 0 && !recentListings.length > 0 && (
-        <View style={styles.noListingResultsContainer}>
-          <Text variant="labelLarge">No hay publicaciones</Text>
-        </View>
-      )}
-    </ScrollView>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -242,8 +249,6 @@ const styles = StyleSheet.create({
   searchBarContainer: {
     display: "flex",
     marginTop: 16,
-    alignItems: "center",
-    justifyContent: "center",
     paddingHorizontal: 16,
     marginBottom: 16,
   },

@@ -1,5 +1,14 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Platform,
+  ScrollView,
+} from "react-native";
 import { TextInput, Button, HelperText, Appbar } from "react-native-paper";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -27,62 +36,75 @@ const Login = ({ navigation }) => {
       <Appbar.Header elevated={true}>
         <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
       </Appbar.Header>
-      <View style={styles.loginContainer}>
-        <Image
-          source={require("../../assets/images/loginVector.png")}
-          style={{
-            width: 300,
-            height: 300,
-            alignSelf: "center",
-          }}
-        />
-
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={validationSchema}
-          onSubmit={handleLogin}
+      <ScrollView vertical automaticallyAdjustKeyboardInsets={true}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          {({ handleChange, handleSubmit, values, errors, touched }) => {
-            const isEmailError = touched.email && !!errors.email;
-            const isPasswordError = touched.password && !!errors.password;
-            return (
-              <>
-                <TextInput
-                  label="Email"
-                  value={values.email}
-                  onChangeText={handleChange("email")}
-                  mode="outlined"
-                  style={styles.input}
-                  error={isEmailError}
-                />
-                <HelperText type="error" visible={isEmailError}>
-                  {errors.email}
-                </HelperText>
-                <TextInput
-                  label="Contraseña"
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  secureTextEntry
-                  mode="outlined"
-                  style={styles.input}
-                  error={isPasswordError}
-                />
-                <HelperText type="error" visible={isPasswordError}>
-                  {errors.password}
-                </HelperText>
-                <Button
-                  mode="contained"
-                  onPress={handleSubmit}
-                  style={styles.button}
-                  disabled={isPasswordError || isEmailError}
-                >
-                  Iniciar sesión
-                </Button>
-              </>
-            );
-          }}
-        </Formik>
-      </View>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.loginContainer}>
+              <Image
+                source={require("../../assets/images/loginVector.png")}
+                style={{
+                  width: 300,
+                  height: 300,
+                  alignSelf: "center",
+                }}
+              />
+
+              <Formik
+                initialValues={{ email: "", password: "" }}
+                validationSchema={validationSchema}
+                onSubmit={handleLogin}
+              >
+                {({ handleChange, handleSubmit, values, errors, touched }) => {
+                  const isEmailError = touched.email && !!errors.email;
+                  const isPasswordError = touched.password && !!errors.password;
+                  return (
+                    <>
+                      <TextInput
+                        label="Email"
+                        value={values.email}
+                        onChangeText={handleChange("email")}
+                        mode="outlined"
+                        style={styles.input}
+                        error={isEmailError}
+                      />
+                      <HelperText type="error" visible={isEmailError}>
+                        {errors.email}
+                      </HelperText>
+                      <TextInput
+                        label="Contraseña"
+                        value={values.password}
+                        onChangeText={handleChange("password")}
+                        secureTextEntry
+                        mode="outlined"
+                        style={styles.input}
+                        error={isPasswordError}
+                      />
+                      <HelperText type="error" visible={isPasswordError}>
+                        {errors.password}
+                      </HelperText>
+                      <Button
+                        mode="contained"
+                        onPress={handleSubmit}
+                        style={styles.button}
+                        disabled={
+                          !values.email ||
+                          !values.password ||
+                          isPasswordError ||
+                          isEmailError
+                        }
+                      >
+                        Iniciar sesión
+                      </Button>
+                    </>
+                  );
+                }}
+              </Formik>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </View>
   );
 };

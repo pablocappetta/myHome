@@ -1,6 +1,12 @@
 import React, { useRef, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Switch, List, RadioButton, Appbar } from "react-native-paper";
+import {
+  Switch,
+  List,
+  RadioButton,
+  Appbar,
+  IconButton,
+} from "react-native-paper";
 import { useTheme } from "../../contexts/ThemeContext";
 import { currencyOptions, languageOptions } from "./SettingsUtils";
 import { useScrollToTop } from "@react-navigation/native";
@@ -31,11 +37,10 @@ const Settings = () => {
         <List.Section>
           <List.Subheader>Modo Oscuro</List.Subheader>
           <List.Item
-            title="Activar Modo Oscuro"
+            title="Modo Oscuro"
             left={() => (
-              <List.Icon
-                icon={theme.dark ? "brightness-7" : "weather-night"}
-                style={{ paddingLeft: 8, paddingRight: 4 }}
+              <IconButton
+                icon={theme.dark ? "weather-night" : "white-balance-sunny"}
               />
             )}
             right={() => (
