@@ -9,7 +9,7 @@ const ListingCard = ({ listing, type }) => (
     width={180}
     height={300}
   >
-    <View>
+    <View style={styles.listingTypeChip}>
       <ListingTypeChip listingType={listing.listingType}>
         {listing.listingType}
       </ListingTypeChip>
@@ -65,6 +65,12 @@ const styles = StyleSheet.create({
   },
   recent: {
     ...sharedStyles,
+  },
+  listingTypeChip: {
+    position: "absolute",
+    zIndex: 1,
+    right: 8,
+    top: 8,
   },
 });
 
