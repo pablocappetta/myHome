@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import {
+  Appbar,
   Avatar,
   Button,
   Divider,
@@ -11,7 +12,7 @@ import {
 import { useUserContext } from "../../contexts/UserContext";
 import Login from "../Login/Login";
 
-const UserProfile = () => {
+const UserProfile = ({ navigation }) => {
   const { user } = useUserContext();
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -25,61 +26,71 @@ const UserProfile = () => {
     <Login />
   ) : (
     <View style={styles.container}>
-      <Menu
-        visible={menuVisible}
-        onDismiss={closeMenu}
-        style={styles.menuBar}
-        anchorPosition="bottom"
-        anchor={
-          <TouchableOpacity onPress={openMenu}>
-            <Avatar.Image
-              size={180}
-              source={{ uri: user.profilePicture }}
-              style={styles.avatar}
-            />
-          </TouchableOpacity>
-        }
-      >
-        <Menu.Item onPress={() => {}} title="Modificar" leadingIcon="image" />
-        <Divider />
-        <Menu.Item onPress={() => {}} title="Eliminar" leadingIcon={"delete"} />
-      </Menu>
-      <Text style={styles.fullName}>{`${user.name} ${user.lastName}`}</Text>
-      <View style={styles.emailContainer}>
-        <Text style={styles.email}>{user.email}</Text>
-        <IconButton
-          icon={user.isVerified ? "check" : "alert"}
-          mode="contained"
-          size={16}
-        />
-      </View>
-
-      <View style={styles.actions}>
-        <Button
-          icon="heart"
-          mode="contained-tonal"
-          style={styles.actionButton}
-          onPress={() => {}}
+      <Appbar.Header elevated={true}>
+        <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
+        <Appbar.Content title="Mi Perfil" />
+      </Appbar.Header>
+      <View style={styles.profileContainer}>
+        <Menu
+          visible={menuVisible}
+          onDismiss={closeMenu}
+          style={styles.menuBar}
+          anchorPosition="bottom"
+          anchor={
+            <TouchableOpacity onPress={openMenu}>
+              <Avatar.Image
+                size={180}
+                source={{ uri: user.profilePicture }}
+                style={styles.avatar}
+              />
+            </TouchableOpacity>
+          }
         >
-          Ver Favoritos
-        </Button>
+          <Menu.Item onPress={() => {}} title="Modificar" leadingIcon="image" />
+          <Divider />
+          <Menu.Item
+            onPress={() => {}}
+            title="Eliminar"
+            leadingIcon={"delete"}
+          />
+        </Menu>
+        <Text style={styles.fullName}>{`${user.name} ${user.lastName}`}</Text>
+        <View style={styles.emailContainer}>
+          <Text style={styles.email}>{user.email}</Text>
+          <IconButton
+            icon={user.isVerified ? "check" : "alert"}
+            mode="contained"
+            size={16}
+          />
+        </View>
+
+        <View style={styles.actions}>
+          <Button
+            icon="heart"
+            mode="contained-tonal"
+            style={styles.actionButton}
+            onPress={() => {}}
+          >
+            Ver Favoritos
+          </Button>
+          <Button
+            icon="home"
+            mode="contained-tonal"
+            style={styles.actionButton}
+            onPress={() => {}}
+          >
+            Mis Propiedades
+          </Button>
+        </View>
+
         <Button
-          icon="home"
-          mode="contained-tonal"
-          style={styles.actionButton}
-          onPress={() => {}}
+          mode="outlined"
+          style={styles.logoutButton}
+          onPress={handleLogout}
         >
-          Mis Propiedades
+          Cerrar Sesión
         </Button>
       </View>
-
-      <Button
-        mode="outlined"
-        style={styles.logoutButton}
-        onPress={handleLogout}
-      >
-        Cerrar Sesión
-      </Button>
     </View>
   );
 };
@@ -87,9 +98,12 @@ const UserProfile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+  },
+  profileContainer: {
+    marginTop: 16,
+    padding: 16,
     justifyContent: "center",
-    padding: 32,
+    alignItems: "center",
   },
   avatar: {},
   fullName: {

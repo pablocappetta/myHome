@@ -1,15 +1,36 @@
 import React, { createContext, useState, useContext } from "react";
-import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  PaperProvider,
+  adaptNavigationTheme,
+} from "react-native-paper";
+import {
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+} from "@react-navigation/native";
+import merge from "deepmerge";
+import { StatusBar } from "react-native";
+
+const { LightTheme, DarkTheme } = adaptNavigationTheme({
+  reactNavigationLight: NavigationDefaultTheme,
+  reactNavigationDark: NavigationDarkTheme,
+});
+
+const CombinedDefaultTheme = merge(MD3LightTheme, LightTheme);
+const CombinedDarkTheme = merge(MD3DarkTheme, DarkTheme);
 
 const ThemeContext = createContext();
 
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(MD3DarkTheme);
+  const [theme, setTheme] = useState(CombinedDarkTheme);
 
   const toggleTheme = () => {
-    setTheme(theme === MD3LightTheme ? MD3DarkTheme : MD3LightTheme);
+    setTheme(
+      theme === CombinedDarkTheme ? CombinedDefaultTheme : CombinedDarkTheme
+    );
   };
 
   const store = {
@@ -19,6 +40,7 @@ export const ThemeProvider = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={store}>
+      <StatusBar />
       <PaperProvider theme={theme}>{children}</PaperProvider>
     </ThemeContext.Provider>
   );
