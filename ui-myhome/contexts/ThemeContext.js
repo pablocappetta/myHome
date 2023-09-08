@@ -26,6 +26,7 @@ export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(CombinedDarkTheme);
+  const [statusBarBackground, setStatusBarBackground] = useState("transparent");
 
   const toggleTheme = () => {
     setTheme(
@@ -36,11 +37,16 @@ export const ThemeProvider = ({ children }) => {
   const store = {
     theme,
     toggleTheme,
+    setStatusBarBackground,
   };
 
   return (
     <ThemeContext.Provider value={store}>
-      <StatusBar />
+      <StatusBar
+        barStyle={theme.dark ? "light-content" : "dark-content"}
+        translucent={true}
+        backgroundColor={statusBarBackground}
+      />
       <PaperProvider theme={theme}>{children}</PaperProvider>
     </ThemeContext.Provider>
   );
