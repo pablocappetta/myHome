@@ -41,9 +41,15 @@ const SettingsScreenRoutes = () => {
 
 const Navigator = () => {
   const { theme } = useTheme();
+
   return (
     <NavigationContainer theme={theme}>
-      <Tab.Navigator initialRouteName="tabHome" theme={theme}>
+      <Tab.Navigator
+        initialRouteName="tabHome"
+        theme={theme}
+        activeColor={theme.colors.primary}
+        labeled={true}
+      >
         <Tab.Screen
           name="tabHome"
           component={HomeScreenRoutes}

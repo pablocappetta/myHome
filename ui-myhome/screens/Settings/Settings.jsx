@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { Switch, List, RadioButton, Appbar } from "react-native-paper";
 import { useTheme } from "../../contexts/ThemeContext";
 import { currencyOptions, languageOptions } from "./SettingsUtils";
+import { useScrollToTop } from "@react-navigation/native";
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme();
@@ -17,12 +18,16 @@ const Settings = () => {
     setCurrency(value);
   };
 
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
+
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
         <Appbar.Content title="Ajustes" />
       </Appbar.Header>
-      <View style={styles.settingsContainer}>
+      <ScrollView style={styles.settingsContainer} ref={ref}>
         <List.Section>
           <List.Subheader>Modo Oscuro</List.Subheader>
           <List.Item
@@ -74,7 +79,7 @@ const Settings = () => {
             />
           ))}
         </List.Section>
-      </View>
+      </ScrollView>
     </View>
   );
 };
