@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import { Avatar, Text, Searchbar, SegmentedButtons } from "react-native-paper";
 import {
@@ -12,6 +12,7 @@ import {
   mockedRecentListings,
 } from "./mock/MockedHomeData";
 import { useUserContext } from "../../contexts/UserContext";
+import { useScrollToTop } from "@react-navigation/native";
 
 const Home = ({ navigation }) => {
   const { user, isUserLogged } = useUserContext();
@@ -29,6 +30,10 @@ const Home = ({ navigation }) => {
   );
 
   const [filterSelection, setFilterSelection] = useState("todos");
+
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   const handleButtonFilterChange = (listingType) => {
     setFilterSelection(listingType);
