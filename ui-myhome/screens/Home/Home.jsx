@@ -14,7 +14,7 @@ import {
 import { useUserContext } from "../../contexts/UserContext";
 
 const Home = ({ navigation }) => {
-  const { user } = useUserContext();
+  const { user, isUserLogged } = useUserContext();
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -67,13 +67,17 @@ const Home = ({ navigation }) => {
     <ScrollView vertical>
       <TouchableOpacity
         style={styles.userHomeWelcomeHeader}
-        onPress={() => navigation.navigate("Mi Perfil")}
+        onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
       >
-        <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+        {isUserLogged ? (
+          <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+        ) : (
+          <Avatar.Icon size={36} icon="account" />
+        )}
         <Text variant="titleLarge">
           ¡Hola,{" "}
           <Text style={styles.userNameGreeting} numberOfLines={1}>
-            {user.name}
+            {isUserLogged ? user.name : "invitado"}
           </Text>
           !
         </Text>
@@ -216,7 +220,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 24,
-    marginTop: 64,
+    marginTop: 48,
     marginBottom: 16,
     alignItems: "center",
     justifyContent: "center",
