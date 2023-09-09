@@ -7,6 +7,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../Login/Login";
+import ListingPost from "../Home/ListingPost/ListingPost";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -22,6 +23,7 @@ const HomeScreenRoutes = () => {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Post" component={ListingPost} />
     </Stack.Navigator>
   );
 };

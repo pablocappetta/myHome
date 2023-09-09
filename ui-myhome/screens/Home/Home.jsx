@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   SafeAreaView,
+  Touchable,
 } from "react-native";
 import { Avatar, Text, Searchbar, SegmentedButtons } from "react-native-paper";
 import {
@@ -138,11 +139,12 @@ const Home = ({ navigation }) => {
             <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
               <View style={styles.listingCardsContainer}>
                 {highlightedListings.map((item, index) => (
-                  <ListingCard
+                  <TouchableOpacity
                     key={index + item.id}
-                    listing={item}
-                    type={"highlighted"}
-                  />
+                    onPress={() => navigation.navigate("Post", item)}
+                  >
+                    <ListingCard listing={item} type={"highlighted"} />
+                  </TouchableOpacity>
                 ))}
               </View>
             </ScrollView>
@@ -173,11 +175,12 @@ const Home = ({ navigation }) => {
             </View>
             <View horizontal style={styles.listingCardsContainer}>
               {recentListings.map((item, index) => (
-                <ListingCard
+                <TouchableOpacity
                   key={index + item.id}
-                  listing={item}
-                  type={"recent"}
-                />
+                  onPress={() => navigation.navigate("Post", item)}
+                >
+                  <ListingCard listing={item} type={"recent"} />
+                </TouchableOpacity>
               ))}
             </View>
           </View>
@@ -207,11 +210,12 @@ const Home = ({ navigation }) => {
             </View>
             <View horizontal style={styles.listingCardsContainer}>
               {highlightedListings.map((item, index) => (
-                <ListingCard
+                <TouchableOpacity
                   key={index + item.id}
-                  listing={item}
-                  type={"recent"}
-                />
+                  onPress={() => navigation.navigate("Post", item)}
+                >
+                  <ListingCard listing={item} type={"recent"} />
+                </TouchableOpacity>
               ))}
             </View>
           </View>
