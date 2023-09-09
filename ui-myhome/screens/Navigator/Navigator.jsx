@@ -8,6 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../Login/Login";
 import ListingPost from "../Home/ListingPost/ListingPost";
+import { Platform } from "react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -51,6 +52,7 @@ const Navigator = () => {
         theme={theme}
         activeColor={theme.colors.primary}
         labeled={true}
+        barStyle={Platform.OS === "ios" && { height: 96 }}
       >
         <Tab.Screen
           name="tabHome"
