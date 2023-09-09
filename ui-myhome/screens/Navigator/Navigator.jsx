@@ -51,6 +51,7 @@ const Navigator = () => {
         theme={theme}
         activeColor={theme.colors.primary}
         labeled={true}
+        barStyle={{ height: 96 }}
       >
         <Tab.Screen
           name="tabHome"
