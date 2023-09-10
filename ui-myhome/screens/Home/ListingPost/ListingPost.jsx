@@ -237,6 +237,15 @@ export const ListingPost = ({ navigation, ...props }) => {
               }}
             />
           </View>
+
+          <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
+            <IconButton
+              icon={like ? "heart" : "heart-outline"}
+              mode={like && "contained"}
+              onPress={() => navigation.navigate("BookingDate")}
+            />
+            <IconButton icon="share-variant" />
+          </View>
         </View>
       </ScrollView>
     </View>
