@@ -51,7 +51,7 @@ export const BookingInfo = ({ navigation }) => {
                 </View>
                 <View style={styles.bottomButton}>
                     <Button
-                        onPress={() => navigation.navigate('BookingPayment')}
+                        onPress={() => navigation.navigate('Booking', { screen: 'BookingPayment' })}
                         accessibilityLabel="Continuar a la siguiente pantalla para elegir el medio de pago"
                         mode="contained"
                     >

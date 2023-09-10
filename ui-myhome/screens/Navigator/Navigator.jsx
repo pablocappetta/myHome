@@ -17,6 +17,22 @@ import { Platform } from "react-native";
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
+const BookingRoutes = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Booking"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Date" component={BookingDate} />
+      <Stack.Screen name="Info" component={BookingInfo} />
+      <Stack.Screen name="Payment" component={BookingPayment} />
+      <Stack.Screen name="Summary" component={BookingSummary} />
+    </Stack.Navigator>
+  );
+};
+
 const HomeScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -29,10 +45,7 @@ const HomeScreenRoutes = () => {
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Post" component={ListingPost} />
-      <Stack.Screen name="BookingDate" component={BookingDate} />
-      <Stack.Screen name="BookingInfo" component={BookingInfo} />
-      <Stack.Screen name="BookingPayment" component={BookingPayment} />
-      <Stack.Screen name="BookingSummary" component={BookingSummary} />
+      <Stack.Screen name="Booking" component={BookingRoutes} />
     </Stack.Navigator>
   );
 };
@@ -76,6 +89,15 @@ const Navigator = () => {
           options={{
             tabBarLabel: "Ajustes",
             tabBarIcon: "cog",
+          }}
+        />
+
+        <Tab.Screen
+          name="tabPerfil"
+          component={UserProfile}
+          options={{
+            tabBarLabel: "Perfil",
+            tabBarIcon: "account",
           }}
         />
       </Tab.Navigator>

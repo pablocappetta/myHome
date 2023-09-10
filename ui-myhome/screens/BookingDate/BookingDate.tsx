@@ -74,7 +74,7 @@ export const BookingDate = ({ navigation }) => {
                 </View>
                 <View style={styles.bottomButton}>
                     <Button
-                        onPress={() => navigation.navigate('BookingInfo')}
+                        onPress={() => navigation.navigate('Booking', { screen: 'Info' })}
                         accessibilityLabel="Continuar a la siguiente pantalla para editar datos de contacto"
                         mode="contained"
                     >

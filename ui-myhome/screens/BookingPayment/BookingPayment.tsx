@@ -80,7 +80,7 @@ export const BookingPayment = ({ navigation }) => {
                 </View>
                 <View style={styles.bottomButton}>
                     <Button
-                        onPress={() => navigation.navigate('BookingSummary')}
+                        onPress={() => navigation.navigate('Booking', { screen: 'BookingSummary' })}
                         accessibilityLabel="Continuar a la siguiente pantalla para confirmar la reserva"
                         mode="contained"
                     >

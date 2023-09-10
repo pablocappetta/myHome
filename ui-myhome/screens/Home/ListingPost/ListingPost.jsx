@@ -200,7 +200,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             <IconButton
               icon={like ? "heart" : "heart-outline"}
               mode={like && "contained"}
-              onPress={() => navigation.navigate("BookingDate")}
+              onPress={() => navigation.navigate("Booking", {screen: "Date"})}
             />
             <IconButton icon="share-variant" />
           </View>
