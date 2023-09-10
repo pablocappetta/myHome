@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
   Appbar,
@@ -10,7 +10,7 @@ import {
   Text,
 } from "react-native-paper";
 import MapView from "react-native-maps";
-import { SliderBox } from "react-native-image-slider-box";
+import Carousel from "react-native-reanimated-carousel";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
 import commaNumber from "comma-number";
@@ -20,11 +20,14 @@ import commaNumber from "comma-number";
 export const ListingPost = ({ navigation, ...props }) => {
   const { theme } = useTheme();
   const [like, setLike] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const listing = props.route.params;
 
   const handleLikePress = () => {
     setLike(!like);
   };
+
+  const width = Dimensions.get("window").width;
 
   return (
     <View style={styles.container}>
@@ -35,54 +38,52 @@ export const ListingPost = ({ navigation, ...props }) => {
 
       <ScrollView vertical style={styles.listingContainer}>
         <View style={styles.containerImage}>
-          <SliderBox
-            dotColor={theme.colors.primary}
-            inactiveDotColor={theme.colors.secondary}
-            images={[
-              listing.image,
-              listing.image,
-              listing.image,
-              listing.image,
-            ]}
-            circleLoop
-            imageLoader={() => (
-              <ActivityIndicator size="large" color={theme.colors.primary} />
+          <Carousel
+            loop
+            width={width}
+            height={width / 2}
+            scrollAnimationDuration={1000}
+            panGestureHandlerProps={{
+              activeOffsetX: [-10, 10],
+            }}
+            data={[listing.image, listing.image, listing.image]}
+            renderItem={({ item, index }) => (
+              <View style={styles.containerImageCarousel}>
+                {imageLoading && (
+                  <ActivityIndicator style={styles.activityIndicatorImage} />
+                )}
+                <Image
+                  key={index + item}
+                  style={styles.listingImage}
+                  src={item}
+                  onLoadStart={() => setImageLoading(true)}
+                  onLoadEnd={() => setImageLoading(false)}
+                  mode="cover"
+                />
+              </View>
             )}
           />
         </View>
+
         <View style={styles.listingDetailsContainer}>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingHorizontal: 16,
-              marginTop: 8,
-            }}
-          >
-            <View>
-              <ListingTypeChip listingType={listing.listingType}>
-                {listing.listingType}
-              </ListingTypeChip>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignSelf: "flex-end",
-              }}
-            >
+          <View style={styles.topListingDetailsContainer}>
+            <ListingTypeChip listingType={listing.listingType}>
+              {listing.listingType}
+            </ListingTypeChip>
+            <View style={styles.actionButtonsContainer}>
               <IconButton
                 icon={like ? "heart" : "heart-outline"}
                 mode={like && "contained"}
                 onPress={handleLikePress}
               />
-              <IconButton icon="share-variant" />
+              <IconButton
+                icon="share-variant"
+                onPress={() => console.debug("Share TBD")}
+              />
             </View>
           </View>
-          <View style={styles.containerDescription}>
-            <View style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <View style={styles.containerListingMainDetails}>
+            <View style={styles.containerHomeLocationDetails}>
               <Text
                 variant="titleLarge"
                 style={{ color: theme.colors.primary, fontWeight: 800 }}
@@ -96,14 +97,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 {listing.location}
               </Text>
             </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-
-                alignItems: "center",
-              }}
-            >
+            <View style={styles.containerPriceDetails}>
               <IconButton icon="currency-usd" />
               <View>
                 <Text variant="titleLarge" style={styles.price}>
@@ -120,26 +114,17 @@ export const ListingPost = ({ navigation, ...props }) => {
           </View>
 
           <Divider />
-          <List.Subheader style={{ fontWeight: 800 }}>
+          <List.Subheader style={styles.listSubheader}>
             Publicado por
           </List.Subheader>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 24,
-              alignItems: "center",
-              paddingHorizontal: 16,
-              marginBottom: 16,
-            }}
-          >
+          <View style={styles.containerListingOwner}>
             <Avatar.Icon icon="account" size={36} />
             <Text variant="titleMedium">Cosme Fulanito Rodriguez</Text>
           </View>
           <Divider />
 
           <View>
-            <List.Subheader style={{ fontWeight: 800 }}>
+            <List.Subheader style={styles.listSubheader}>
               Descripción
             </List.Subheader>
             <Text variant="bodyLarge" style={styles.description}>
@@ -154,88 +139,61 @@ export const ListingPost = ({ navigation, ...props }) => {
             </Text>
           </View>
           <Divider />
-          <List.Subheader style={{ fontWeight: 800 }}>
+          <List.Subheader style={styles.listSubheader}>
             Características
           </List.Subheader>
 
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              paddingBottom: 16,
-              alignContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
+          <View style={styles.containerListingSpecialDetails}>
             <List.Item
               title="Superficie"
               description="120 m2"
               left={(props) => <List.Icon {...props} icon="texture-box" />}
               titleStyle={{ fontWeight: 800 }}
-              width={180}
+              width={width / 2 - 16}
             />
             <List.Item
               title="Habitaciones"
               description="4"
               left={(props) => <List.Icon {...props} icon="floor-plan" />}
               titleStyle={{ fontWeight: 800 }}
-              width={180}
+              width={width / 2 - 16}
             />
             <List.Item
               title="Baños"
               description="2"
               left={(props) => <List.Icon {...props} icon="toilet" />}
               titleStyle={{ fontWeight: 800 }}
-              width={180}
+              width={width / 2 - 16}
             />
             <List.Item
               title="Antigüedad"
               description="4"
               left={(props) => <List.Icon {...props} icon="clock-outline" />}
               titleStyle={{ fontWeight: 800 }}
-              width={180}
+              width={width / 2 - 16}
             />
             <List.Item
               title="Estado"
               description="Excelente"
               left={(props) => <List.Icon {...props} icon="list-status" />}
               titleStyle={{ fontWeight: 800 }}
-              width={180}
+              width={width / 2 - 16}
             />
             <List.Item
               title="Animales"
               description="Acepta"
               left={(props) => <List.Icon {...props} icon="paw" />}
               titleStyle={{ fontWeight: 800 }}
-              width={180}
+              width={width / 2 - 16}
             />
           </View>
           <Divider />
-          <List.Subheader style={{ fontWeight: 800 }}>
+          <List.Subheader style={styles.listSubheader}>
             Vista satelital
           </List.Subheader>
 
-          <View
-            style={{
-              height: 280,
-              zIndex: -1,
-              borderRadius: 16,
-              overflow: "hidden",
-              alignItems: "center",
-              justifyContent: "center",
-              marginVertical: 16,
-              marginHorizontal: 48,
-            }}
-          >
-            <MapView
-              style={{
-                flex: 1,
-                height: "100%",
-                width: "100%",
-                borderRadius: 16,
-                paddingHorizontal: 16,
-              }}
-            />
+          <View style={styles.containerMapView}>
+            <MapView style={styles.mapView} />
           </View>
 
           <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
@@ -264,10 +222,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  topListingDetailsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    marginTop: 8,
+  },
+  actionButtonsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignSelf: "flex-end",
+  },
   listingDetailsContainer: {
     paddingHorizontal: 16,
   },
-  containerDescription: {
+  containerListingMainDetails: {
     paddingHorizontal: 16,
     paddingVertical: 16,
     display: "flex",
@@ -275,13 +246,75 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  containerHomeLocationDetails: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+  },
+  containerPriceDetails: {
+    display: "flex",
+    flexDirection: "row",
+
+    alignItems: "center",
+  },
   price: {
     fontWeight: 800,
+  },
+  containerListingOwner: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 24,
+    alignItems: "center",
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
   description: {
     textAlign: "justify",
     paddingHorizontal: 16,
     paddingBottom: 16,
+  },
+  containerListingSpecialDetails: {
+    display: "flex",
+    flexDirection: "row",
+    paddingBottom: 16,
+    flexWrap: "wrap",
+  },
+  elemento: {
+    alignItems: "center",
+    textAlign: "center",
+  },
+  listSubheader: { fontWeight: 800 },
+  containerImageCarousel: {
+    flex: 1,
+  },
+  activityIndicatorImage: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+  listingImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  containerMapView: {
+    height: 280,
+    zIndex: -1,
+    borderRadius: 16,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 16,
+    marginHorizontal: 48,
+  },
+  mapView: {
+    flex: 1,
+    height: "100%",
+    width: "100%",
+    borderRadius: 16,
+    paddingHorizontal: 16,
   },
 });
 

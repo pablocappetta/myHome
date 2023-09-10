@@ -12,6 +12,7 @@ import BookingDate from "../BookingDate/BookingDate";
 import BookingInfo from "../BookingInfo/BookingInfo";
 import BookingPayment from "../BookingPayment/BookingPayment";
 import BookingSummary from "../BookingSummary/BookingSummary";
+import { Platform } from "react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -59,6 +60,7 @@ const Navigator = () => {
         theme={theme}
         activeColor={theme.colors.primary}
         labeled={true}
+        barStyle={Platform.OS === "ios" && { height: 96 }}
       >
         <Tab.Screen
           name="tabHome"

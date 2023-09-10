@@ -45,6 +45,7 @@ export const ThemeProvider = ({ children }) => {
       <StatusBar
         barStyle={theme.dark ? "light-content" : "dark-content"}
         translucent={true}
+        animated={true}
         backgroundColor={statusBarBackground}
       />
       <PaperProvider theme={theme}>{children}</PaperProvider>
