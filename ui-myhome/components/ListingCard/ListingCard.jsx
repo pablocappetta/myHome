@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Card, Text } from "react-native-paper";
 import ListingTypeChip from "../ListingTypeChip/ListingTypeChip";
+import commaNumber from "comma-number";
 
 const ListingCard = ({ listing, type }) => (
   <Card
@@ -45,7 +46,7 @@ const ListingCard = ({ listing, type }) => (
             {listing.currency}
           </Text>
           <Text variant="bodyLarge" style={{ fontWeight: 800 }}>
-            ${listing.price}
+            ${commaNumber(listing.price)}
           </Text>
         </View>
       </View>
