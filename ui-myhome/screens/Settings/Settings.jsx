@@ -56,7 +56,7 @@ const Settings = () => {
               key={option.value}
               title={option.label}
               onPress={() => handleLanguageChange(option.value)}
-              left={() => (
+              right={() => (
                 <RadioButton.Android
                   value={option.value}
                   status={language === option.value ? "checked" : "unchecked"}
@@ -74,7 +74,7 @@ const Settings = () => {
               key={option.value}
               title={option.label}
               onPress={() => handleCurrencyChange(option.value)}
-              left={() => (
+              right={() => (
                 <RadioButton.Android
                   value={option.value}
                   status={currency === option.value ? "checked" : "unchecked"}
@@ -94,9 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   settingsContainer: {
-    flex: 1,
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingHorizontal: 16,
   },
 });
 
