@@ -93,7 +93,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Realtor
+                $ref: "#/components/schemas/Realtor"
         "401":
           description: Unauthorized
   /realtors/{realtorId}:
@@ -117,6 +117,38 @@ paths:
                 $ref: "#/components/schemas/Realtor"
         "404":
           description: Realtor not found
+  /realtors/{realtorId}/message: #Los mensajes no se ven desde la app. Se manda un mail.
+    post:
+      summary: Send a message to a realtor
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            type: object
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+                format: email
+              phone:
+                type: string
+              message:
+                type: string
+      responses:
+        "201":
+          description: Message sent successfully
+        "400":
+          description: Invalid input data
   /realtors/password-reset:
     post:
       summary: Send password reset email
@@ -160,9 +192,9 @@ paths:
           description: Password reset successfully
         "400":
           description: Invalid input data
-  /realtors/{realtorId}/homes: # TODO orientar a listings?
+  /realtors/{realtorId}/listings:
     get:
-      summary: Get list of homes for a realtor
+      summary: Get list of listings for a realtor
       tags:
         - Realtors
       parameters:
@@ -174,81 +206,111 @@ paths:
             format: int64
       responses:
         "200":
-          description: List of homes retrieved successfully
+          description: List of listings retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/home"
+                  $ref: "#/components/schemas/Listing"
         "404":
           description: Realtor not found
-  /homes:
-    post: # TODO vamos a hacer el POST de homes o directamente de listings?
-      summary: Add a new home
+  /realtors/{realtorId}/listings/{listingId}/visits:
+    get:
+      summary: Get list of visits for a listing
       tags:
-        - Homes
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/home"
-      responses:
-        "201":
-          description: home added successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/home"
-        "400":
-          description: Invalid input data
-    get: # TODO aca falta ver como otrientar esto a las Listings pas que a las homes
-      summary: Get list of homes. 
-      tags:
-        - Homes
+        - Realtors
       parameters:
-        - in: query
-          name: homeType
+        - in: path
+          name: realtorId
+          required: true
           schema:
-            type: string
+            type: integer
+            format: int64
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
-          description: List of homes retrieved successfully
+          description: List of visits retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/home"
-  /homes/{homeId}:
-    get:
-      summary: Get home details by ID
+                  $ref: "#/components/schemas/Visit"
+        "404":
+          description: Realtor or listing not found
+  /listings:
+    post:
+      summary: Add a new listing
       tags:
-        - Homes
+        - Listings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Listing"
+      responses:
+        "201":
+          description: Listing added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "400":
+          description: Invalid input data
+    get:
+      summary: Get list of listings. 
+      tags:
+        - Listings
+      parameters: # Posiblemente haya que agregar mas parametros. Por ejemplo, para filtrar por tipo de propiedad, etc.
+        - in: query
+          name: listingType
+          required: true
+          schema:
+            ref: "#/components/schemas/ListingType"
+      responses:
+        "200":
+          description: List of listings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+  /listings/{listingId}:
+    get:
+      summary: Get listing details by ID
+      tags:
+        - Listings
       parameters:
         - in: path
-          name: homeId
+          name: listingId
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "200":
-          description: home details retrieved successfully
+          description: Listing details retrieved successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/home"
+                $ref: "#/components/schemas/Listing"
         "404":
-          description: home not found
+          description: Listing not found
     put:
-      summary: Update home details
+      summary: Update listing details
       tags:
-        - Homes
+        - Listings
       parameters:
         - in: path
-          name: homeId
+          name: listingId
           required: true
           schema:
             type: integer
@@ -258,38 +320,38 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/home"
+              $ref: "#/components/schemas/Listing"
       responses:
         "200":
-          description: home details updated successfully
+          description: Listing details updated successfully
         "400":
           description: Invalid input data
         "404":
-          description: home not found
+          description: Listing not found
     delete:
-      summary: Delete a home
+      summary: Delete a listing
       tags:
-        - Homes
+        - Listings
       parameters:
         - in: path
-          name: homeId
+          name: listingId
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "204":
-          description: home deleted successfully
+          description: Listing deleted successfully
         "404":
-          description: home not found
-  /homes/{homeId}/contact:
+          description: Listing not found
+  /listings/{listingId}/visit:
     post:
-      summary: Contact realtor for home inquiry
+      summary: Schedule a visit for a listing
       tags:
-        - Homes
+        - Listings
       parameters:
         - in: path
-          name: homeId
+          name: listingId
           required: true
           schema:
             type: integer
@@ -299,20 +361,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ContactRequest"
+              $ref: "#/components/schemas/Visit"
       responses:
         "201":
-          description: Inquiry sent successfully
+          description: Visit scheduled successfully
         "400":
-          description: Invalid input data
-  /homes/{homeId}/reserve:
+          description: Invalid input data or time slot not available
+  /listings/{listingId}/reservation:
     post:
-      summary: Reserve a home for rent
+      summary: Reserve a listing for rent
       tags:
-        - Homes
+        - Listings
       parameters:
         - in: path
-          name: homeId
+          name: listingId
           required: true
           schema:
             type: integer
@@ -325,17 +387,21 @@ paths:
               $ref: "#/components/schemas/Reservation"
       responses:
         "201":
-          description: home reserved successfully
+          description: Listing reserved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
         "400":
-          description: Invalid input data
-  /homes/{homeId}/reviews:
+          description: Invalid input data or already reserved
+  /reservations/{reservationId}/review:
     post:
-      summary: Add a review for a home
+      summary: Add a review for a reservation
       tags:
-        - Homes
+        - Listings
       parameters:
         - in: path
-          name: homeId
+          name: reservationId
           required: true
           schema:
             type: integer
@@ -432,58 +498,54 @@ paths:
         "401":
           description: Unauthorized access
   /users/me/favorites:
-    get: # TODO orientar a listings
-      summary: Get current user's favorite homes
+    get:
+      summary: Get list of favorite listings
+      tags:
+        - Users
       responses:
         "200":
-          description: List of favorite homes retrieved successfully
+          description: List of favorite listings retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/home"
-        "401":
-          description: Unauthorized access
-      tags:
-        - Users
-  /users/me/favorites/{homeId}:
+                  $ref: "#/components/schemas/Listing"
+  /users/me/favorites/{listingId}:
     post:
-      summary: Add home to favorites
+      summary: Add listing to favorites
       tags:
         - Users
       parameters:
         - in: path
-          name: homeId
+          name: listingId
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "201":
-          description: home added to favorites
+          description: Listing added to favorites successfully
         "404":
-          description: home not found
+          description: Listing not found
     delete:
-      summary: Remove home from favorites
+      summary: Remove listing from favorites
       tags:
         - Users
       parameters:
         - in: path
-          name: homeId
+          name: listingId
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "204":
-          description: home removed from favorites
+          description: Listing removed from favorites successfully
         "404":
-          description: home not found
+          description: Listing not found
 components:
   schemas:
-    home: null
-    ContactRequest: null
     Review: 
       type: object
       properties:
@@ -587,25 +649,34 @@ components:
         realtyId:
           type: integer
         listingType:
-          type: string
-          enum:
-            - sale
-            - rent
+          $ref: '#/components/schemas/ListingType'
         creationDate:
           type: string
           format: date-time
+    ListingType:
+      type: string
+      enum:
+        - sale
+        - rent
     Reservation:
       type: object
       properties:
-        propertyId:
+        listingId:
           type: integer
+          format: int64
         userId:
           type: integer
+          format: int64
         reservationDate:
           type: string
           format: date-time
         status:
           type: string
+          enum:
+            - pending
+            - accepted
+        review: #la review la guardamos aca o en realtor? se podria dejar un flag para saber si ya se hizo o no.
+          $ref: '#/components/schemas/Review'
     Visit:
       type: object
       properties:
