@@ -25,10 +25,7 @@ const validationSchema = yup.object().shape({
     .string()
     .email("El email no es válido")
     .required("El email es obligatorio"),
-  telefono: yup
-    .string()
-    .matches(/^\d+$/, "Teléfono no válido")
-    .required("El teléfono es obligatorio"),
+  telefono: yup.string().required("El teléfono es obligatorio"),
 });
 
 const BookingInfo = ({ navigation }) => {
@@ -80,6 +77,7 @@ const BookingInfo = ({ navigation }) => {
                         onChangeText={handleChange("email")}
                         mode="outlined"
                         error={isEmailError}
+                        keyboardType="email-address"
                       />
                       <HelperText type="error" visible={isEmailError}>
                         {errors.email}
@@ -90,7 +88,7 @@ const BookingInfo = ({ navigation }) => {
                         onChangeText={handleChange("telefono")}
                         mode="outlined"
                         error={isPhoneError}
-                        required
+                        keyboardType="phone-pad"
                       />
                       <HelperText type="error" visible={isPhoneError}>
                         {errors.telefono}
