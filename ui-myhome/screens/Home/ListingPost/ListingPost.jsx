@@ -32,7 +32,7 @@ export const ListingPost = ({ navigation, ...props }) => {
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
-        <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={listing.location} />
       </Appbar.Header>
 
@@ -71,6 +71,12 @@ export const ListingPost = ({ navigation, ...props }) => {
               {listing.listingType}
             </ListingTypeChip>
             <View style={styles.actionButtonsContainer}>
+              <IconButton
+                icon={"calendar-clock"}
+                onPress={() =>
+                  navigation.navigate("Booking", { screen: "Date" })
+                }
+              />
               <IconButton
                 icon={like ? "heart" : "heart-outline"}
                 mode={like && "contained"}

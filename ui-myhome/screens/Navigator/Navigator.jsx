@@ -8,10 +8,30 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../Login/Login";
 import ListingPost from "../Home/ListingPost/ListingPost";
+import BookingDate from "../Booking/BookingDate/BookingDate";
+import BookingInfo from "../Booking/BookingInfo/BookingInfo";
+import BookingPayment from "../Booking/BookingPayment/BookingPayment";
+import BookingSummary from "../Booking/BookingSummary/BookingSummary";
 import { Platform } from "react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
+
+const BookingRoutes = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Booking"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Date" component={BookingDate} />
+      <Stack.Screen name="Info" component={BookingInfo} />
+      <Stack.Screen name="Payment" component={BookingPayment} />
+      <Stack.Screen name="Summary" component={BookingSummary} />
+    </Stack.Navigator>
+  );
+};
 
 const HomeScreenRoutes = () => {
   return (
@@ -25,6 +45,7 @@ const HomeScreenRoutes = () => {
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Post" component={ListingPost} />
+      <Stack.Screen name="Booking" component={BookingRoutes} />
     </Stack.Navigator>
   );
 };

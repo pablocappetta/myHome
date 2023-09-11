@@ -117,10 +117,6 @@ const styles = StyleSheet.create({
     padding: 32,
     justifyContent: "center",
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
-  },
   button: {
     marginTop: 8,
   },
