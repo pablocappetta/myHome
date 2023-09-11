@@ -1,9 +1,3 @@
-// Create a screen where the user will be able to select it's payment method
-// //create a react native screen that will show a list of payment methods
-// the payment methods will have an icon a text description and a radio button to select it
-// // component should use the material paper components for the inputs
-// only one payment method can be selected at a time
-
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text, Button, Appbar, List } from "react-native-paper";
