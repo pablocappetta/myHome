@@ -46,14 +46,15 @@ const BookingInfo = ({ navigation }) => {
         >
           Ingresá tus datos de contacto
         </Text>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.containerUserDetails}>
+
+        <View style={styles.containerUserDetails}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <Formik
                 initialValues={{ nombre: "", email: "", telefono: "" }}
-                // validationSchema={validationSchema}
+                validationSchema={validationSchema}
                 onSubmit={() =>
                   navigation.navigate("Booking", { screen: "Payment" })
                 }
@@ -63,67 +64,59 @@ const BookingInfo = ({ navigation }) => {
                   const isEmailError = touched.email && !!errors.email;
                   const isPhoneError = touched.telefono && !!errors.telefono;
                   return (
-                    <>
-                      <View style={styles.containerInputs}>
-                        <View>
-                          <TextInput
-                            label="Nombre"
-                            value={values.nombre}
-                            onChangeText={handleChange("nombre")}
-                            mode="outlined"
-                          />
-                          <HelperText type="error" visible={isNameError}>
-                            {errors.nombre}
-                          </HelperText>
-                        </View>
-                        <View>
-                          <TextInput
-                            label="Email"
-                            value={values.email}
-                            onChangeText={handleChange("email")}
-                            mode="outlined"
-                            error={isEmailError}
-                          />
-                          <HelperText type="error" visible={isEmailError}>
-                            {errors.email}
-                          </HelperText>
-                        </View>
-                        <View>
-                          <TextInput
-                            label="Teléfono"
-                            value={values.telefono}
-                            onChangeText={handleChange("telefono")}
-                            mode="outlined"
-                            error={isPhoneError}
-                            required
-                          />
-                          <HelperText type="error" visible={isPhoneError}>
-                            {errors.telefono}
-                          </HelperText>
-                        </View>
-                      </View>
+                    <View>
+                      <TextInput
+                        label="Nombre"
+                        value={values.nombre}
+                        onChangeText={handleChange("nombre")}
+                        mode="outlined"
+                      />
+                      <HelperText type="error" visible={isNameError}>
+                        {errors.nombre}
+                      </HelperText>
+                      <TextInput
+                        label="Email"
+                        value={values.email}
+                        onChangeText={handleChange("email")}
+                        mode="outlined"
+                        error={isEmailError}
+                      />
+                      <HelperText type="error" visible={isEmailError}>
+                        {errors.email}
+                      </HelperText>
+                      <TextInput
+                        label="Teléfono"
+                        value={values.telefono}
+                        onChangeText={handleChange("telefono")}
+                        mode="outlined"
+                        error={isPhoneError}
+                        required
+                      />
+                      <HelperText type="error" visible={isPhoneError}>
+                        {errors.telefono}
+                      </HelperText>
 
                       <Button
                         mode="contained"
                         onPress={handleSubmit}
                         style={styles.button}
-                        // disabled={
-                        //   !values.nombre ||
-                        //   !values.email ||
-                        //   !values.telefono ||
-                        //   isPhoneError ||
-                        //   isEmailError
-                        // }
+                        disabled={
+                          !values.nombre ||
+                          !values.email ||
+                          !values.telefono ||
+                          isPhoneError ||
+                          isEmailError
+                        }
                       >
                         Continuar
                       </Button>
-                    </>
+                    </View>
                   );
                 }}
               </Formik>
-            </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+            </TouchableWithoutFeedback>
+          </KeyboardAvoidingView>
+        </View>
       </View>
     </View>
   );
@@ -137,11 +130,10 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 24,
   },
-  containerInputs: {
-    display: "flex",
-  },
   button: {
-    marginTop: 226,
+    width: "100%",
+    position: "absolute",
+    top: 445,
   },
 });
 
