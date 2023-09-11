@@ -20,44 +20,43 @@ export const BookingPayment = ({ navigation }) => {
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={bookingTitle} />
       </Appbar.Header>
+      <Text
+        variant="titleLarge"
+        style={{ marginTop: 6, paddingHorizontal: 24, paddingTop: 40 }}
+      >
+        Elegí el método de pago
+      </Text>
+      <View style={styles.containerPaymentOptions}>
+        <List.Section>
+          <List.Item
+            title={"Tarjeta de crédito/débito"}
+            left={() => (
+              <List.Icon icon="credit-card" style={styles.leftIcons} />
+            )}
+            right={() => <RadioButton.Android value="Option 1" />}
+          />
+          <List.Item
+            title={"MercadoPago"}
+            left={() => <List.Icon icon="cash" style={styles.leftIcons} />}
+            right={() => <RadioButton.Android value="Option 1" />}
+          />
+          <List.Item
+            title={"Efectivo/Transferencia"}
+            left={() => <List.Icon icon="bank" style={styles.leftIcons} />}
+            right={() => <RadioButton.Android value="Option 1" />}
+          />
+        </List.Section>
 
-      <View>
-        <Text
-          variant="titleLarge"
-          style={{ marginTop: 6, paddingHorizontal: 24, paddingTop: 40 }}
-        >
-          Elegí el método de pago
-        </Text>
-        <View style={{ paddingHorizontal: 24 }}>
-          <List.Section style={styles.containerPaymentOptions}>
-            <List.Item
-              title={"Tarjeta de crédito/débito"}
-              left={() => <List.Icon icon="credit-card" />}
-              right={() => <RadioButton.Android value="Option 1" />}
-            />
-            <List.Item
-              title={"MercadoPago"}
-              left={() => <List.Icon icon="cash" />}
-              right={() => <RadioButton.Android value="Option 1" />}
-            />
-            <List.Item
-              title={"Efectivo/Transferencia"}
-              left={() => <List.Icon icon="bank" />}
-              right={() => <RadioButton.Android value="Option 1" />}
-            />
-          </List.Section>
-
-          <View style={styles.bottomButton}>
-            <Button
-              onPress={() =>
-                navigation.navigate("Booking", { screen: "BookingSummary" })
-              }
-              accessibilityLabel="Continuar a la siguiente pantalla para confirmar la reserva"
-              mode="contained"
-            >
-              Continuar
-            </Button>
-          </View>
+        <View style={styles.bottomButton}>
+          <Button
+            onPress={() =>
+              navigation.navigate("Booking", { screen: "BookingSummary" })
+            }
+            accessibilityLabel="Continuar a la siguiente pantalla para confirmar la reserva"
+            mode="contained"
+          >
+            Continuar
+          </Button>
         </View>
       </View>
     </View>
@@ -69,14 +68,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerPaymentOptions: {
-    flexDirection: "column",
-    alignItems: "center",
-    marginTop: 24,
-    gap: 32,
-    justifyContent: "center",
+    flex: 1,
+    paddingHorizontal: 16,
+    marginTop: 32,
+  },
+  leftIcons: {
+    paddingLeft: 16,
   },
   bottomButton: {
-    marginTop: 196,
+    flex: 1,
+    marginBottom: 32,
+    justifyContent: "flex-end",
   },
 });
 
