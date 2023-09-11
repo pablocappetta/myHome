@@ -20,7 +20,7 @@ const Stack = createStackNavigator();
 const BookingRoutes = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Booking"
+      initialRouteName="Date"
       screenOptions={{
         headerShown: false,
       }}
