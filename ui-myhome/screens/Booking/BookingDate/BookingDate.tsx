@@ -2,23 +2,34 @@
 // also add a time selection component
 // component should use the material paper components for the time selection and calendar input
 
-const bookingTitle = "Reservar propiedad";
-
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput, Text, Button, Appbar, List } from "react-native-paper";
 import { DatePickerInput, TimePickerModal } from "react-native-paper-dates";
+import { enGB, es, en, registerTranslation } from "react-native-paper-dates";
+
+const languageMap = {
+  "en-GB": enGB,
+  es: es,
+  en: en,
+};
+
+for (const language in languageMap) {
+  registerTranslation(language, languageMap[language]);
+}
+
+const bookingTitle = "Reservar propiedad";
 
 export const BookingDate = ({ navigation }) => {
-  const [date, onChangeDate] = React.useState(undefined);
-  const [time, onChangeTime] = React.useState("");
+  const [date, onChangeDate] = useState(undefined);
+  const [time, onChangeTime] = useState("");
 
-  const [showTime, setShowTime] = React.useState(false);
-  const onDismiss = React.useCallback(() => {
+  const [showTime, setShowTime] = useState(false);
+  const onDismiss = useCallback(() => {
     setShowTime(false);
   }, [setShowTime]);
 
-  const onConfirm = React.useCallback(
+  const onConfirm = useCallback(
     ({ hours, minutes }) => {
       setShowTime(false);
       onChangeTime(`${hours}:${minutes}`);
