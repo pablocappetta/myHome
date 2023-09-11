@@ -8,10 +8,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../Login/Login";
 import ListingPost from "../Home/ListingPost/ListingPost";
-import BookingDate from "../BookingDate/BookingDate";
-import BookingInfo from "../BookingInfo/BookingInfo";
-import BookingPayment from "../BookingPayment/BookingPayment";
-import BookingSummary from "../BookingSummary/BookingSummary";
+import BookingDate from "../Booking/BookingDate/BookingDate";
+import BookingInfo from "../Booking/BookingInfo/BookingInfo";
+import BookingPayment from "../Booking/BookingPayment/BookingPayment";
+import BookingSummary from "../Booking/BookingSummary/BookingSummary";
 import { Platform } from "react-native";
 
 const Tab = createMaterialBottomTabNavigator();

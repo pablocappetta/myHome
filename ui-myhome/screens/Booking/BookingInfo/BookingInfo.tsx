@@ -7,95 +7,101 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Platform,
-  ScrollView,
 } from "react-native";
-import { TextInput, Button, HelperText, Appbar } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  HelperText,
+  Appbar,
+  Text,
+} from "react-native-paper";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useUserContext } from "../../contexts/UserContext";
-import { mockedUser } from "./mock/MockedLoginData";
+
+const bookingTitle = "Reservar visita";
 
 const validationSchema = yup.object().shape({
-  email: yup
+  nombre: yup.string().required("El nombre es obligatorio"),
+  email: yup.string().email("El email no es válido").required("Requerido"),
+  telefono: yup
     .string()
-    .email("Ingresá un correo electrónico válido")
-    .required("El correo electrónico es obligatorio"),
-  password: yup.string().required("La contraseña es obligatoria"),
+    .matches(/^\d+$/, "Teléfono no válido")
+    .required("El teléfono es obligatorio"),
 });
 
-const Login = ({ navigation }) => {
-  const { setUser } = useUserContext();
-
-  const handleLogin = (values) => {
-    setUser(mockedUser);
-    navigation.navigate("Home");
-  };
-
+const BookingInfo = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
-        <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title={bookingTitle} />
       </Appbar.Header>
-      <ScrollView vertical automaticallyAdjustKeyboardInsets={true}>
+      <Text
+        variant="titleLarge"
+        style={{ marginTop: 6, paddingHorizontal: 24, paddingTop: 40 }}
+      >
+        Ingresá tus datos de contacto
+      </Text>
+      <View>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.loginContainer}>
-              <Image
-                source={require("../../assets/images/loginVector.png")}
-                style={{
-                  width: 300,
-                  height: 300,
-                  alignSelf: "center",
-                }}
-              />
-
+            <View style={styles.detailsContainer}>
               <Formik
-                initialValues={{ email: "", password: "" }}
+                initialValues={{ nombre: "", email: "", telefono: "" }}
                 validationSchema={validationSchema}
-                onSubmit={handleLogin}
+                onSubmit={() =>
+                  navigation.navigate("Booking", { screen: "Payment" })
+                }
               >
                 {({ handleChange, handleSubmit, values, errors, touched }) => {
                   const isEmailError = touched.email && !!errors.email;
-                  const isPasswordError = touched.password && !!errors.password;
+                  const isPhoneError = touched.telefono && !!errors.telefono;
                   return (
                     <>
+                      <TextInput
+                        label="Nombre"
+                        value={values.nombre}
+                        onChangeText={handleChange("nombre")}
+                        mode="outlined"
+                      />
+                      <HelperText type="error" visible={false}></HelperText>
                       <TextInput
                         label="Email"
                         value={values.email}
                         onChangeText={handleChange("email")}
                         mode="outlined"
-                        style={styles.input}
                         error={isEmailError}
                       />
                       <HelperText type="error" visible={isEmailError}>
                         {errors.email}
                       </HelperText>
+
                       <TextInput
-                        label="Contraseña"
-                        value={values.password}
-                        onChangeText={handleChange("password")}
-                        secureTextEntry
+                        label="Teléfono"
+                        value={values.telefono}
+                        onChangeText={handleChange("telefono")}
                         mode="outlined"
-                        style={styles.input}
-                        error={isPasswordError}
+                        error={isPhoneError}
+                        required
                       />
-                      <HelperText type="error" visible={isPasswordError}>
-                        {errors.password}
+                      <HelperText type="error" visible={isPhoneError}>
+                        {errors.telefono}
                       </HelperText>
                       <Button
                         mode="contained"
                         onPress={handleSubmit}
                         style={styles.button}
                         disabled={
+                          !values.nombre ||
                           !values.email ||
-                          !values.password ||
-                          isPasswordError ||
+                          !values.telefono ||
+                          isPhoneError ||
                           isEmailError
                         }
                       >
-                        Iniciar sesión
+                        Continuar
                       </Button>
                     </>
                   );
@@ -104,7 +110,7 @@ const Login = ({ navigation }) => {
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -113,13 +119,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  loginContainer: {
-    padding: 32,
-    justifyContent: "center",
+  detailsContainer: {
+    marginTop: 20,
+    paddingHorizontal: 24,
   },
   button: {
     marginTop: 8,
   },
 });
 
-export default Login;
+export default BookingInfo;
