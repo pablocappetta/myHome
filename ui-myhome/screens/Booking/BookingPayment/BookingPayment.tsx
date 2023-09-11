@@ -4,120 +4,80 @@
 // // component should use the material paper components for the inputs
 // only one payment method can be selected at a time
 
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Text, Button, IconButton } from 'react-native-paper';
-import { RadioButton } from 'react-native-paper';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { Text, Button, Appbar, List } from "react-native-paper";
+import { RadioButton } from "react-native-paper";
+
+const bookingTitle = "Reservar propiedad";
 
 export const BookingPayment = ({ navigation }) => {
-    const [checked, setChecked] = React.useState('first');
+  const [checked, setChecked] = React.useState("first");
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <IconButton
-                    icon={'arrow-left'}
-                    onPress={() => navigation.goBack()}
-                />
-                <Text variant='titleMedium'>Reservar Departamento</Text>
-            </View>
+  return (
+    <View style={styles.container}>
+      <Appbar.Header elevated={true}>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title={bookingTitle} />
+      </Appbar.Header>
 
-            <View style={styles.body}>
+      <View>
+        <Text
+          variant="titleLarge"
+          style={{ marginTop: 6, paddingHorizontal: 24, paddingTop: 40 }}
+        >
+          Elegí el método de pago
+        </Text>
+        <View style={{ paddingHorizontal: 24 }}>
+          <List.Section style={styles.containerPaymentOptions}>
+            <List.Item
+              title={"Tarjeta de crédito/débito"}
+              left={() => <List.Icon icon="credit-card" />}
+              right={() => <RadioButton.Android value="Option 1" />}
+            />
+            <List.Item
+              title={"MercadoPago"}
+              left={() => <List.Icon icon="cash" />}
+              right={() => <RadioButton.Android value="Option 1" />}
+            />
+            <List.Item
+              title={"Efectivo/Transferencia"}
+              left={() => <List.Icon icon="bank" />}
+              right={() => <RadioButton.Android value="Option 1" />}
+            />
+          </List.Section>
 
-                <Text variant="titleLarge" style={{ marginTop: 6 }}>
-                    Elegí tu método de pago
-                </Text>
-                <View style={styles.section}>
-
-                    <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                    >
-                        <Button icon="credit-card-outline">
-                        </Button>
-                        <Text variant='bodyLarge' style={{ marginLeft: 6 }}>Tarjeta de crédito</Text>
-                    </View>
-
-                    <View style={{ justifyContent: 'flex-end' }}>
-                        <RadioButton
-                            value="first"
-                            status={checked === 'first' ? 'checked' : 'unchecked'}
-                            onPress={() => setChecked('first')}
-                        />
-                    </View>
-                </View>
-                <View style={styles.section}>
-                    <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                    >
-                        {/* TODO: change to correct icon */}
-
-                        <Button icon="credit-card-outline">
-                        </Button>
-                        <Text variant='bodyLarge' style={{ marginLeft: 6 }}>Mercado Pago</Text>
-                    </View>
-                    <RadioButton
-
-                        value="second"
-                        status={checked === 'second' ? 'checked' : 'unchecked'}
-                        onPress={() => setChecked('second')}
-                    />
-                </View>
-                <View style={styles.section}>
-                    <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                    >
-                        {/* TODO: change to correct icon */}
-
-                        <Button icon="credit-card-outline">
-                        </Button>
-                        <Text variant='bodyLarge' style={{ marginLeft: 6 }}>PayPal</Text>
-                    </View>
-                    <RadioButton
-                        value="third"
-                        status={checked === 'third' ? 'checked' : 'unchecked'}
-                        onPress={() => setChecked('third')}
-                    />
-                </View>
-                <View style={styles.bottomButton}>
-                    <Button
-                        onPress={() => navigation.navigate('Booking', { screen: 'BookingSummary' })}
-                        accessibilityLabel="Continuar a la siguiente pantalla para confirmar la reserva"
-                        mode="contained"
-                    >
-                        Continuar
-                    </Button>
-                </View>
-            </View>
+          <View style={styles.bottomButton}>
+            <Button
+              onPress={() =>
+                navigation.navigate("Booking", { screen: "BookingSummary" })
+              }
+              accessibilityLabel="Continuar a la siguiente pantalla para confirmar la reserva"
+              mode="contained"
+            >
+              Continuar
+            </Button>
+          </View>
         </View>
-    );
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingHorizontal: 20,
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    body: {
-        flex: 1,
-        marginTop: 20,
-    },
-    section: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 8,
-        flex: 1,
-        justifyContent: 'space-between',
-    },
-    bottomButton: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        marginBottom: 36,
-    },
+  container: {
+    flex: 1,
+  },
+  containerPaymentOptions: {
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: 24,
+    gap: 32,
+    justifyContent: "center",
+  },
+  bottomButton: {
+    marginTop: 196,
+  },
 });
 
 export default BookingPayment;

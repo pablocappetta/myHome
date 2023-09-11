@@ -91,15 +91,6 @@ const Navigator = () => {
             tabBarIcon: "cog",
           }}
         />
-
-        <Tab.Screen
-          name="tabPerfil"
-          component={UserProfile}
-          options={{
-            tabBarLabel: "Perfil",
-            tabBarIcon: "account",
-          }}
-        />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -2,18 +2,11 @@
 // also add a time selection component
 // component should use the material paper components for the time selection and calendar input
 
-const bookingTitle = "Reservar visita";
+const bookingTitle = "Reservar propiedad";
 
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import {
-  TextInput,
-  Text,
-  Button,
-  IconButton,
-  Appbar,
-  List,
-} from "react-native-paper";
+import { TextInput, Text, Button, Appbar, List } from "react-native-paper";
 import { DatePickerInput, TimePickerModal } from "react-native-paper-dates";
 
 export const BookingDate = ({ navigation }) => {
@@ -39,7 +32,6 @@ export const BookingDate = ({ navigation }) => {
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={bookingTitle} />
       </Appbar.Header>
-
       <View style={styles.containerBookingDate}>
         <Text variant="titleLarge" style={{ marginTop: 6 }}>
           Elegí la fecha y hora de tu cita
@@ -100,7 +92,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   section: {
-    marginTop: 20,
+    marginTop: 24,
     display: "flex",
     gap: 16,
   },
