@@ -394,6 +394,58 @@ paths:
                 $ref: "#/components/schemas/Reservation"
         "400":
           description: Invalid input data or already reserved
+    get:
+      summary: Get reservation details for a listing
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Reservation details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "404":
+          description: Listing not found
+  /reservations/{reservationId}/payment:
+    post:
+      summary: Make a payment for a reservation
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: reservationId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            type: object
+            properties:
+              cardNumber:
+                type: string
+              cardHolder:
+                type: string
+              expirationDate:
+                type: string
+                format: date
+              cvv:
+                type: string
+      responses:
+        "201":
+          description: Payment made successfully
+        "400":
+          description: Invalid input data
   /reservations/{reservationId}/review:
     post:
       summary: Add a review for a reservation
@@ -675,7 +727,7 @@ components:
           enum:
             - pending
             - accepted
-        review: #la review la guardamos aca o en realtor? se podria dejar un flag para saber si ya se hizo o no.
+        review: #la review la guardamos aca o en realtor? se podria dejar un flag para saber si ya se hizo o no y guardar en el realtor.
           $ref: '#/components/schemas/Review'
     Visit:
       type: object
