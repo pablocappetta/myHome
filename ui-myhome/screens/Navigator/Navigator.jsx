@@ -13,6 +13,7 @@ import BookingInfo from "../Booking/BookingInfo/BookingInfo";
 import BookingPayment from "../Booking/BookingPayment/BookingPayment";
 import BookingSummary from "../Booking/BookingSummary/BookingSummary";
 import { Platform } from "react-native";
+import Favorites from "../Favorites/Favorites";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -33,7 +34,7 @@ const BookingRoutes = () => {
   );
 };
 
-const HomeScreenRoutes = () => {
+const SearchScreenRoutes = () => {
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -43,22 +44,24 @@ const HomeScreenRoutes = () => {
     >
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Perfil" component={UserProfile} />
-      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
+      <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>
   );
 };
 
-const SettingsScreenRoutes = () => {
+const MyAccountScreenRoutes = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Ajustes"
+      initialRouteName="Mi Cuenta"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Ajustes" component={Settings} />
+      <Stack.Screen name="Mi Cuenta" component={Settings} />
+      <Stack.Screen name="Perfil" component={UserProfile} />
+      <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>
   );
 };
@@ -69,26 +72,42 @@ const Navigator = () => {
   return (
     <NavigationContainer theme={theme}>
       <Tab.Navigator
-        initialRouteName="tabHome"
+        initialRouteName="tabBuscar"
         theme={theme}
         activeColor={theme.colors.primary}
         labeled={true}
         barStyle={Platform.OS === "ios" && { height: 96 }}
       >
         <Tab.Screen
-          name="tabHome"
-          component={HomeScreenRoutes}
+          name="tabBuscar"
+          component={SearchScreenRoutes}
           options={{
-            tabBarLabel: "Inicio",
-            tabBarIcon: "home",
+            tabBarLabel: "Buscar",
+            tabBarIcon: "magnify",
           }}
         />
         <Tab.Screen
-          name="tabAjustes"
-          component={SettingsScreenRoutes}
+          name="tabMisPublicaciones"
+          component={SearchScreenRoutes}
           options={{
-            tabBarLabel: "Ajustes",
-            tabBarIcon: "cog",
+            tabBarLabel: "Mis Reservas",
+            tabBarIcon: "book-outline",
+          }}
+        />
+        <Tab.Screen
+          name="tabFavoritos"
+          component={Favorites}
+          options={{
+            tabBarLabel: "Favoritos",
+            tabBarIcon: "heart-outline",
+          }}
+        />
+        <Tab.Screen
+          name="tabMiCuenta"
+          component={MyAccountScreenRoutes}
+          options={{
+            tabBarLabel: "Mi Cuenta",
+            tabBarIcon: "account-circle-outline",
           }}
         />
       </Tab.Navigator>
