@@ -9,6 +9,7 @@ import {
   Text,
   Button,
   Avatar,
+  Divider,
 } from "react-native-paper";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useScrollToTop } from "@react-navigation/native";
@@ -126,6 +127,7 @@ const Settings = ({ navigation }) => {
             right={() => <IconButton icon={"chevron-right"} />}
             onPress={() => navigation.navigate("PrivacyPolicy")}
           />
+          <Divider />
           <List.Item
             title="Términos y condiciones"
             left={() => <IconButton icon={"information-outline"} />}
