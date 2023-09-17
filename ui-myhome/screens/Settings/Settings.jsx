@@ -105,7 +105,11 @@ const Settings = ({ navigation }) => {
               />
             )}
             right={() => (
-              <Switch value={theme.dark} onValueChange={toggleTheme} />
+              <Switch
+                value={theme.dark}
+                onValueChange={toggleTheme}
+                style={{ alignSelf: "center" }}
+              />
             )}
             onPress={toggleTheme}
           />
