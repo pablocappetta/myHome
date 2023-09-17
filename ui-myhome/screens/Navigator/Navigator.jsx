@@ -51,6 +51,21 @@ const SearchScreenRoutes = () => {
   );
 };
 
+const FavoritesScreenRoutes = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Favoritos"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Favoritos" component={Favorites} />
+      <Stack.Screen name="Post" component={ListingPost} />
+      <Stack.Screen name="Booking" component={BookingRoutes} />
+    </Stack.Navigator>
+  );
+};
+
 const MyAccountScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -96,7 +111,7 @@ const Navigator = () => {
         />
         <Tab.Screen
           name="tabFavoritos"
-          component={Favorites}
+          component={FavoritesScreenRoutes}
           options={{
             tabBarLabel: "Favoritos",
             tabBarIcon: "heart-outline",

@@ -45,7 +45,7 @@ const Settings = ({ navigation }) => {
                   onPress={() => navigation.navigate("Login")}
                   width={138}
                 >
-                  Iniciar Sesión
+                  Ingresar
                 </Button>
                 <Button
                   onPress={() => navigation.navigate("Register")}
@@ -58,7 +58,7 @@ const Settings = ({ navigation }) => {
           </View>
         ) : (
           <View style={styles.containerUserDetails}>
-            <Avatar.Icon icon="account" size={48} />
+            <Avatar.Image size={48} source={{ uri: user.profilePicture }} />
 
             <View style={{ display: "flex", flexDirection: "column" }}>
               <Text variant="titleLarge" numberOfLines={1}>
