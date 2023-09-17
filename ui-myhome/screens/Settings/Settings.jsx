@@ -1,33 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import {
   Switch,
   List,
-  RadioButton,
   Appbar,
   IconButton,
   Card,
   Text,
   Button,
+  Avatar,
 } from "react-native-paper";
 import { useTheme } from "../../contexts/ThemeContext";
-import { currencyOptions, languageOptions } from "./SettingsUtils";
 import { useScrollToTop } from "@react-navigation/native";
 import { useUserContext } from "../../contexts/UserContext";
 
 const Settings = ({ navigation }) => {
   const { theme, toggleTheme } = useTheme();
-  const [language, setLanguage] = useState("es");
-  const [currency, setCurrency] = useState("ARS");
   const { user, isUserLogged } = useUserContext();
-
-  const handleLanguageChange = (value) => {
-    setLanguage(value);
-  };
-
-  const handleCurrencyChange = (value) => {
-    setCurrency(value);
-  };
 
   const ref = useRef(null);
 
@@ -39,7 +28,7 @@ const Settings = ({ navigation }) => {
         <Appbar.Content title="Mi Cuenta" />
       </Appbar.Header>
       <ScrollView style={styles.settingsContainer} ref={ref}>
-        {!isUserLogged && (
+        {!isUserLogged ? (
           <View style={styles.topBannerContainer}>
             <Card>
               <IconButton icon={"home-circle"} size={32} />
@@ -65,6 +54,19 @@ const Settings = ({ navigation }) => {
                 </Button>
               </Card.Actions>
             </Card>
+          </View>
+        ) : (
+          <View style={styles.containerUserDetails}>
+            <Avatar.Icon icon="account" size={48} />
+
+            <View style={{ display: "flex", flexDirection: "column" }}>
+              <Text variant="titleLarge" numberOfLines={1}>
+                {user.name + " " + user.lastName}
+              </Text>
+              <Text variant="labelSmall" numberOfLines={1}>
+                {user.email}
+              </Text>
+            </View>
           </View>
         )}
         <View style={styles.userActionsButtonContainer}>
@@ -104,44 +106,37 @@ const Settings = ({ navigation }) => {
             right={() => (
               <Switch value={theme.dark} onValueChange={toggleTheme} />
             )}
+            onPress={toggleTheme}
+          />
+        </List.Section>
+        <List.Section>
+          <List.Subheader>Ayuda</List.Subheader>
+          <List.Item
+            title="Preguntas frecuentes / Ayuda"
+            left={() => <IconButton icon={"help-circle-outline"} />}
+            right={() => <IconButton icon={"chevron-right"} />}
+            onPress={() => navigation.navigate("FAQ")}
+          />
+        </List.Section>
+        <List.Section>
+          <List.Subheader>Privacidad y legal</List.Subheader>
+          <List.Item
+            title="Políticas de privacidad"
+            left={() => <IconButton icon={"file-document-outline"} />}
+            right={() => <IconButton icon={"chevron-right"} />}
+            onPress={() => navigation.navigate("PrivacyPolicy")}
+          />
+          <List.Item
+            title="Términos y condiciones"
+            left={() => <IconButton icon={"information-outline"} />}
+            right={() => <IconButton icon={"chevron-right"} />}
+            onPress={() => navigation.navigate("TermsAndConditions")}
           />
         </List.Section>
 
-        <List.Section>
-          <List.Subheader>Idioma</List.Subheader>
-          {languageOptions.map((option) => (
-            <List.Item
-              key={option.value}
-              title={option.label}
-              onPress={() => handleLanguageChange(option.value)}
-              right={() => (
-                <RadioButton.Android
-                  value={option.value}
-                  status={language === option.value ? "checked" : "unchecked"}
-                  onPress={() => handleLanguageChange(option.value)}
-                />
-              )}
-            />
-          ))}
-        </List.Section>
-
-        <List.Section>
-          <List.Subheader>Moneda</List.Subheader>
-          {currencyOptions.map((option) => (
-            <List.Item
-              key={option.value}
-              title={option.label}
-              onPress={() => handleCurrencyChange(option.value)}
-              right={() => (
-                <RadioButton.Android
-                  value={option.value}
-                  status={currency === option.value ? "checked" : "unchecked"}
-                  onPress={() => handleCurrencyChange(option.value)}
-                />
-              )}
-            />
-          ))}
-        </List.Section>
+        <Text style={{ paddingVertical: 24 }}>
+          Versión de la aplicación: {require("../../package.json").version}
+        </Text>
       </ScrollView>
     </View>
   );
@@ -179,6 +174,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 64,
+  },
+  containerUserDetails: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 24,
+    marginTop: 24,
+    marginBottom: 8,
+    paddingHorizontal: 8,
   },
   settingsContainer: {
     paddingHorizontal: 16,
