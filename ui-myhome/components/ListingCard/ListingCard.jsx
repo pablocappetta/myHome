@@ -18,7 +18,7 @@ const ListingCard = ({ listing, type }) => {
     },
     listingImage: {
       width: "100%",
-      height: type === "highlighted" ? 295 : 195,
+      height: type === "highlighted" ? 271 : 195,
     },
     recent: {
       ...sharedStyles,
@@ -48,7 +48,7 @@ const ListingCard = ({ listing, type }) => {
     <Card
       style={type === "highlighted" ? styles.highlighted : styles.recent}
       width={180}
-      height={type === "highlighted" ? 400 : 300}
+      height={type === "highlighted" ? 376 : 300}
     >
       <View style={styles.listingTypeChip}>
         <ListingTypeChip listingType={listing.listingType}>

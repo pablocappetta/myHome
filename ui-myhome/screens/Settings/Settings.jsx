@@ -40,74 +40,52 @@ const Settings = ({ navigation }) => {
       </Appbar.Header>
       <ScrollView style={styles.settingsContainer} ref={ref}>
         {!isUserLogged && (
-          <View style={{ width: "100%", marginTop: 16 }}>
+          <View style={styles.topBannerContainer}>
             <Card>
               <IconButton icon={"home-circle"} size={32} />
               <Card.Content>
                 <Text>
                   Accedé a tus reservas, favoritos y publicaciones desde tu
-                  cuenta. Si no tenés una cuenta, podés crear una ahora.
+                  cuenta. Si no estás registrado, podés hacerlo desde acá.
                 </Text>
               </Card.Content>
 
-              <Card.Actions
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignSelf: "center",
-                  marginTop: 8,
-                  marginBottom: 8,
-                  gap: 16,
-                }}
-              >
-                <Button onPress={() => navigation.navigate("Login")}>
+              <Card.Actions style={styles.topBannerCardActionsContainer}>
+                <Button
+                  onPress={() => navigation.navigate("Login")}
+                  width={138}
+                >
                   Iniciar Sesión
                 </Button>
-                <Button onPress={() => navigation.navigate("Register")}>
+                <Button
+                  onPress={() => navigation.navigate("Register")}
+                  width={138}
+                >
                   Registrarse
                 </Button>
               </Card.Actions>
             </Card>
           </View>
         )}
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: 16,
-            marginTop: 16,
-          }}
-        >
+        <View style={styles.userActionsButtonContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Perfil")}
-            style={{ width: "47%" }}
+            onPress={() =>
+              isUserLogged
+                ? navigation.navigate("Perfil")
+                : navigation.navigate("Login")
+            }
+            style={styles.userActionsButton}
           >
             <Card>
-              <Card.Content
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  height: 60,
-                }}
-              >
+              <Card.Content style={styles.userActionsButtonCardContent}>
                 <IconButton icon={"account"} style={{ marginLeft: 0 }} />
                 <Text>Mi Perfil</Text>
               </Card.Content>
             </Card>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}} style={{ width: "47%" }}>
+          <TouchableOpacity onPress={() => {}} style={styles.userActionsButton}>
             <Card>
-              <Card.Content
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  height: 60,
-                }}
-              >
+              <Card.Content style={styles.userActionsButtonCardContent}>
                 <IconButton icon={"book"} style={{ marginLeft: 0 }} />
                 <Text>Mis Reservas</Text>
               </Card.Content>
@@ -172,6 +150,35 @@ const Settings = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  topBannerContainer: {
+    marginTop: 16,
+    width: "98%",
+    alignSelf: "center",
+  },
+  topBannerCardActionsContainer: {
+    alignSelf: "center",
+    marginTop: 8,
+    marginBottom: 8,
+    gap: 16,
+    paddingRight: 16,
+  },
+  userActionsButtonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 16,
+    marginTop: 16,
+    width: "99%",
+    alignSelf: "center",
+  },
+  userActionsButton: { width: "47%" },
+  userActionsButtonCardContent: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    height: 64,
   },
   settingsContainer: {
     paddingHorizontal: 16,
