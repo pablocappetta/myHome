@@ -68,6 +68,7 @@ const Login = ({ navigation }) => {
                         mode="outlined"
                         style={styles.input}
                         error={isEmailError}
+                        keyboardType="email-address"
                       />
                       <HelperText type="error" visible={isEmailError}>
                         {errors.email}
@@ -80,6 +81,7 @@ const Login = ({ navigation }) => {
                         mode="outlined"
                         style={styles.input}
                         error={isPasswordError}
+                        keyboardType="default"
                       />
                       <HelperText type="error" visible={isPasswordError}>
                         {errors.password}
