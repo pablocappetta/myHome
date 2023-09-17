@@ -136,6 +136,22 @@ const Settings = ({ navigation }) => {
           />
         </List.Section>
 
+        <List.Section>
+          <List.Subheader>Seguridad de la cuenta</List.Subheader>
+          <List.Item
+            title="Cambiar contraseña"
+            left={() => <IconButton icon={"shield-account-outline"} />}
+            right={() => <IconButton icon={"chevron-right"} />}
+            onPress={() => navigation.navigate("ChangePassword")}
+          />
+          <Divider />
+          <List.Item
+            title="Cerrar sesión"
+            left={() => <IconButton icon={"logout"} />}
+            onPress={() => navigation.navigate("Logout")}
+          />
+        </List.Section>
+
         <Text style={{ paddingVertical: 24 }}>
           Versión de la aplicación: {require("../../package.json").version}
         </Text>
