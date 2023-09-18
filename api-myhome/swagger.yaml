@@ -649,11 +649,18 @@ components:
           enum:
             - sale
             - rent
+        status:
+          type: string
+          enum:
+            - available
+            - reserved
+            - sold
+            - cancelled
         creationDate:
           type: string
           format: date-time
         price:
-          ref: '#/components/schemas/Price'
+          $ref: '#/components/schemas/Price'
     Property:
       type: object
       properties:
@@ -768,7 +775,8 @@ components:
           type: string
           enum:
             - pending
-            - accepted
+            - payed
+            - cancelled
         review: #la review la guardamos aca o en realtor? se podria dejar un flag para saber si ya se hizo o no y guardar en el realtor.
           $ref: '#/components/schemas/Review'
     Visit:
