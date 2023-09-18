@@ -14,6 +14,7 @@ import BookingPayment from "../Booking/BookingPayment/BookingPayment";
 import BookingSummary from "../Booking/BookingSummary/BookingSummary";
 import { Platform } from "react-native";
 import Favorites from "../Favorites/Favorites";
+import PrivacyPolicy from "../Settings/PrivacyPolicy/PrivacyPolicy";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -77,6 +78,7 @@ const MyAccountScreenRoutes = () => {
       <Stack.Screen name="Mi Cuenta" component={Settings} />
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Privacidad" component={PrivacyPolicy} />
     </Stack.Navigator>
   );
 };

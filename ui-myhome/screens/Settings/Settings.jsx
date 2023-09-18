@@ -129,7 +129,7 @@ const Settings = ({ navigation }) => {
             title="Políticas de privacidad"
             left={() => <IconButton icon={"file-document-outline"} />}
             right={() => <IconButton icon={"chevron-right"} />}
-            onPress={() => navigation.navigate("PrivacyPolicy")}
+            onPress={() => navigation.navigate("Privacidad")}
           />
           <Divider />
           <List.Item
