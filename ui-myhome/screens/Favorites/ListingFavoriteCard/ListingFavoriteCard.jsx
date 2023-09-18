@@ -39,8 +39,6 @@ const ListingFavoriteCard = ({ listing }) => {
 
   const { theme } = useTheme();
 
-  console.debug(theme.colors);
-
   return (
     <Card>
       <View style={styles.listingTypeChip}>
