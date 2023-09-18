@@ -606,6 +606,8 @@ components:
           format: date-time
         rating:
           type: number
+          minimum: 0
+          maximum: 5
         comment:
           type: string
     User:
@@ -627,37 +629,94 @@ components:
     Realtor:
       type: object
       properties:
-        name:
-          type: string
         contactEmail:
           type: string
         reviews:
           type: array
           items:
             $ref: '#/components/schemas/Review'
+    Listing:
+      type: object
+      properties:
+        id:
+          type: integer
+        property:
+          $ref: '#/components/schemas/Property'
+        realtorId:
+          type: integer
+        type:
+          type: string
+          enum:
+            - sale
+            - rent
+        creationDate:
+          type: string
+          format: date-time
+        price:
+          ref: '#/components/schemas/Price'
     Property:
       type: object
       properties:
         title:
           type: string
-        realtyId:
+        realtorId:
           type: integer
         description:
           type: string
         status:
           type: string
+        age:
+          type: integer
         address:
           $ref: '#/components/schemas/Address'
         geolocation:
-          $ref: '#/components/schemas/Geolocation'
+          type: object
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
         type:
           type: string
+          enum:
+            - House
+            - Apartment
+            - PH
+            - Store
+            - Office
+            - Warehouse
+            - Land
         sqm:
-          $ref: '#/components/schemas/Sqm'
+          type: object
+          properties:
+            covered:
+              type: integer
+            uncovered:
+              type: integer
         cardinalOrientation:
           type: string
-        price:
-          type: number
+          enum:
+            - North
+            - South
+            - East
+            - West
+        relativeOrientation:
+          type: string
+          enum:
+            - Front
+            - Back
+        numberOfRooms:
+          type: integer
+        numberOfBathrooms:
+          type: integer
+        numberOfGarages:
+          type: integer
+        hasTerrace:
+          type: boolean
+        hasBalcony:
+          type: boolean
+        hasStorageUnit:
+          type: boolean
         amenities:
           type: array
           items:
@@ -666,50 +725,33 @@ components:
           type: array
           items:
             type: string
+        video:
+          type: string
+        expensesPrice:
+          $ref: '#/components/schemas/Price'
+    Price:
+      type: object
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+          enum:
+            - USD
+            - ARS
     Address:
       type: object
       properties:
         street:
           type: string
+        number:
+          type: integer
         city:
           type: string
         state:
           type: string
         zip:
           type: string
-    Geolocation:
-      type: object
-      properties:
-        latitude:
-          type: number
-        longitude:
-          type: number
-    Sqm:
-      type: object
-      properties:
-        covered:
-          type: number
-        uncovered:
-          type: number
-    Listing:
-      type: object
-      properties:
-        id:
-          type: integer
-        propertyId:
-          type: integer
-        realtyId:
-          type: integer
-        listingType:
-          $ref: '#/components/schemas/ListingType'
-        creationDate:
-          type: string
-          format: date-time
-    ListingType:
-      type: string
-      enum:
-        - sale
-        - rent
     Reservation:
       type: object
       properties:
@@ -734,7 +776,7 @@ components:
       properties:
         userId:
           type: integer
-        realtyId:
+        realtorId:
           type: integer
         date:
           type: string
