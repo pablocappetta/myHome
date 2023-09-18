@@ -273,7 +273,7 @@ paths:
           name: listingType
           required: true
           schema:
-            ref: "#/components/schemas/ListingType"
+            $ref: "#/components/schemas/ListingType"
       responses:
         "200":
           description: List of listings retrieved successfully
@@ -647,10 +647,7 @@ components:
         realtorId:
           type: integer
         type:
-          type: string
-          enum:
-            - sale
-            - rent
+          $ref: '#/components/schemas/ListingType'
         status:
           type: string
           enum:
@@ -663,6 +660,11 @@ components:
           format: date-time
         price:
           $ref: '#/components/schemas/Price'
+    ListingType:
+      type: string
+      enum:
+        - sale
+        - rent
     Property:
       type: object
       properties:
