@@ -629,6 +629,8 @@ components:
     Realtor:
       type: object
       properties:
+        realtorId:
+          type: integer
         contactEmail:
           type: string
         reviews:
@@ -777,8 +779,8 @@ components:
             - pending
             - payed
             - cancelled
-        review: #la review la guardamos aca o en realtor? se podria dejar un flag para saber si ya se hizo o no y guardar en el realtor.
-          $ref: '#/components/schemas/Review'
+        wasReviewed:
+          type: boolean
     Visit:
       type: object
       properties:
