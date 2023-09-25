@@ -83,9 +83,11 @@ paths:
             type: object
             properties:
               email:
+                required: true
                 type: string
                 format: email
               password:
+                required: true
                 type: string
       responses:
         "200":
@@ -130,19 +132,23 @@ paths:
             type: integer
             format: int64
       requestBody:
-        required: true
         content:
           application/json:
             type: object
+            required: true
             properties:
               name:
+                required: true
                 type: string
               email:
+                required: true
                 type: string
                 format: email
               phone:
+                required: true
                 type: string
               message:
+                required: true
                 type: string
       responses:
         "201":
@@ -161,6 +167,7 @@ paths:
             type: object
             properties:
               email:
+                required: true
                 type: string
                 format: email
       responses:
@@ -186,6 +193,7 @@ paths:
             type: object
             properties:
               password:
+                required: true
                 type: string
       responses:
         "200":
@@ -215,35 +223,6 @@ paths:
                   $ref: "#/components/schemas/Listing"
         "404":
           description: Realtor not found
-  /realtors/{realtorId}/listings/{listingId}/visits:
-    get:
-      summary: Get list of visits for a listing
-      tags:
-        - Realtors
-      parameters:
-        - in: path
-          name: realtorId
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - in: path
-          name: listingId
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-          description: List of visits retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Visit"
-        "404":
-          description: Realtor or listing not found
   /listings:
     post:
       summary: Add a new listing
@@ -264,11 +243,11 @@ paths:
                 $ref: "#/components/schemas/Listing"
         "400":
           description: Invalid input data
-    get:
+    get: #!!!!!!!!!!!!!!!!!!!!!
       summary: Get list of listings. 
       tags:
         - Listings
-      parameters: # Posiblemente haya que agregar mas parametros. Por ejemplo, para filtrar por tipo de propiedad, etc.
+      parameters:
         - in: query
           name: listingType
           required: true
@@ -344,7 +323,29 @@ paths:
           description: Listing deleted successfully
         "404":
           description: Listing not found
-  /listings/{listingId}/visit:
+  /listings/{listingId}/visits:
+    get:
+      summary: Get list of visits for a listing
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of visits retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Visit"
+        "404":
+          description: Listing not found
     post:
       summary: Schedule a visit for a listing
       tags:
@@ -394,6 +395,8 @@ paths:
                 $ref: "#/components/schemas/Reservation"
         "400":
           description: Invalid input data or already reserved
+        "405":
+          description: Listing not available for reservation. It is not for rent.
     get:
       summary: Get reservation details for a listing
       tags:
@@ -433,13 +436,17 @@ paths:
             type: object
             properties:
               cardNumber:
+                required: true
                 type: string
               cardHolder:
+                required: true
                 type: string
               expirationDate:
+                required: true
                 type: string
                 format: date
               cvv:
+                required: true
                 type: string
       responses:
         "201":
@@ -491,18 +498,16 @@ paths:
           description: Invalid input data
   /users/login:
     post:
-      summary: Log in as a user
+      summary: Log in as a user with Google
       tags:
         - Users
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
       responses:
         "200":
           description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
         "401":
           description: Unauthorized
   /users/me:
@@ -602,25 +607,29 @@ components:
       type: object
       properties:
         date:
+          required: true
           type: string
           format: date-time
         rating:
+          required: true
           type: number
-          minimum: 0
-          maximum: 5
         comment:
+          required: true
           type: string
     User:
       type: object
       properties:
         name:
+          required: true
           type: string
         email:
+          required: true
           type: string
           format: email
         phone:
           type: string
         role:
+          required: true
           type: string
           enum:
             - user
@@ -630,10 +639,13 @@ components:
       type: object
       properties:
         realtorId:
+          readOnly: true
           type: integer
         contactEmail:
+          required: true
           type: string
         reviews:
+          readOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Review'
@@ -641,98 +653,124 @@ components:
       type: object
       properties:
         id:
+          readOnly: true
           type: integer
         property:
+          required: true
           $ref: '#/components/schemas/Property'
         realtorId:
+          required: true
           type: integer
         type:
+          required: true
           $ref: '#/components/schemas/ListingType'
         status:
+          readOnly: true
           type: string
           enum:
-            - available
-            - reserved
-            - sold
-            - cancelled
+            - disponible
+            - reservada
+            - vendida
+            - cancelada
         creationDate:
+          readOnly: true
           type: string
           format: date-time
         price:
+          required: true
           $ref: '#/components/schemas/Price'
     ListingType:
       type: string
       enum:
-        - sale
-        - rent
+        - venta
+        - alquiler
     Property:
       type: object
       properties:
         title:
+          required: true
           type: string
         realtorId:
+          readOnly: true
           type: integer
         description:
           type: string
-        status:
-          type: string
         age:
+          required: true
           type: integer
         address:
+          required: true 
           $ref: '#/components/schemas/Address'
         geolocation:
+          required: true
           type: object
           properties:
             latitude:
+              required: true
               type: number
             longitude:
+              required: true
               type: number
         type:
+          required: true
           type: string
           enum:
-            - House
-            - Apartment
+            - Casa
+            - Departamento
             - PH
-            - Store
-            - Office
-            - Warehouse
-            - Land
+            - Local
+            - Oficina
+            - Galpon
+            - Terreno
         sqm:
+          required: true
           type: object
           properties:
             covered:
+              required: true
               type: integer
             uncovered:
+              required: true
               type: integer
         cardinalOrientation:
+          required: true
           type: string
           enum:
-            - North
-            - South
-            - East
-            - West
+            - Norte
+            - Sur
+            - Este
+            - Oeste
         relativeOrientation:
+          required: true
           type: string
           enum:
-            - Front
-            - Back
+            - Frente
+            - Contrafrente
         numberOfRooms:
+          required: true
           type: integer
         numberOfBathrooms:
+          required: true
           type: integer
         numberOfGarages:
+          required: true
           type: integer
         hasTerrace:
+          required: true
           type: boolean
         hasBalcony:
+          required: true
           type: boolean
         hasStorageUnit:
+          required: true
           type: boolean
         amenities:
+          required: true
           type: array
           items:
             type: string
         pictures:
+          required: true
           type: array
           items:
             type: string
@@ -744,8 +782,10 @@ components:
       type: object
       properties:
         amount:
+          required: true
           type: number
         currency:
+          required: true
           type: string
           enum:
             - USD
@@ -754,50 +794,69 @@ components:
       type: object
       properties:
         street:
+          required: true
           type: string
         number:
+          required: true
           type: integer
+        floor:
+          type: string
+        apartment:
+          type: string
+        neighborhood:
+          required: true
+          type: string
         city:
+          required: true
           type: string
         state:
+          required: true
           type: string
-        zip:
+        zipCode:
+          required: true
           type: string
     Reservation:
       type: object
       properties:
         listingId:
+          required: true
           type: integer
           format: int64
         userId:
+          required: true
           type: integer
           format: int64
         reservationDate:
+          readOnly: true
           type: string
           format: date-time
         status:
+          readOnly: true
           type: string
           enum:
             - pending
             - payed
             - cancelled
         wasReviewed:
+          readOnly: true
           type: boolean
     Visit:
       type: object
       properties:
         userId:
-          type: integer
-        realtorId:
+          required: true
           type: integer
         date:
+          required: true
           type: string
           format: date
         time:
+          required: true
           type: string
           enum: 
-            - morning
-            - afternoon
+            - mañana
+            - tarde
         creationDate:
+          readOnly: true
           type: string
           format: date-time
