@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API endpoints for the myHome application
 servers:
-  - url: http://localhost:8000
+  - url: http://localhost:8000/api
     description: Development server
 paths:
   /realtors:
@@ -501,13 +501,19 @@ paths:
       summary: Log in as a user with Google
       tags:
         - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
       responses:
         "200":
           description: User logged in successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserLogin"
         "401":
           description: Unauthorized
   /users/me:
@@ -644,6 +650,16 @@ components:
             - user
             - realty
             - admin
+    UserLogin:
+      type: object
+      properties:
+        email:
+          required: true
+          type: string
+          format: email
+        password:
+          required: true
+          type: string
     Realtor:
       type: object
       properties:
