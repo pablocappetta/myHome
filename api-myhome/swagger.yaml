@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   description: API endpoints for the myHome application
 servers:
-  - url: https://www.api.myhome.com.ar/v1
-    description: Production server
+  - url: http://localhost:8000
+    description: Development server
 paths:
   /realtors:
     post:
@@ -244,7 +244,7 @@ paths:
         "400":
           description: Invalid input data
     get: #!!!!!!!!!!!!!!!!!!!!!
-      summary: Get list of listings. 
+      summary: Get list of listings.
       tags:
         - Listings
       parameters:
@@ -603,7 +603,7 @@ paths:
           description: Listing not found
 components:
   schemas:
-    Review: 
+    Review:
       type: object
       properties:
         date:
@@ -622,12 +622,21 @@ components:
         name:
           required: true
           type: string
+        last_name:
+          required: true
+          type: string
         email:
           required: true
           type: string
           format: email
         phone:
           type: string
+        password:
+          required: true
+          type: string
+        google:
+          required: true
+          type: boolean
         role:
           required: true
           type: string
@@ -648,7 +657,7 @@ components:
           readOnly: true
           type: array
           items:
-            $ref: '#/components/schemas/Review'
+            $ref: "#/components/schemas/Review"
     Listing:
       type: object
       properties:
@@ -657,13 +666,13 @@ components:
           type: integer
         property:
           required: true
-          $ref: '#/components/schemas/Property'
+          $ref: "#/components/schemas/Property"
         realtorId:
           required: true
           type: integer
         type:
           required: true
-          $ref: '#/components/schemas/ListingType'
+          $ref: "#/components/schemas/ListingType"
         status:
           readOnly: true
           type: string
@@ -678,7 +687,7 @@ components:
           format: date-time
         price:
           required: true
-          $ref: '#/components/schemas/Price'
+          $ref: "#/components/schemas/Price"
     ListingType:
       type: string
       enum:
@@ -699,8 +708,8 @@ components:
           required: true
           type: integer
         address:
-          required: true 
-          $ref: '#/components/schemas/Address'
+          required: true
+          $ref: "#/components/schemas/Address"
         geolocation:
           required: true
           type: object
@@ -777,7 +786,7 @@ components:
         video:
           type: string
         expensesPrice:
-          $ref: '#/components/schemas/Price'
+          $ref: "#/components/schemas/Price"
     Price:
       type: object
       properties:
@@ -853,7 +862,7 @@ components:
         time:
           required: true
           type: string
-          enum: 
+          enum:
             - mañana
             - tarde
         creationDate:

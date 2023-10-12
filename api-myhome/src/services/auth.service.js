@@ -1,11 +1,11 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const UsuariosModel = require("../models/Usuarios");
+const UserModel = require("../models/Users");
 
 class AuthService {
   async hasValidCredentials(email, password) {
     try {
-      const user = await UsuariosModel.findOne({ email });
+      const user = await UserModel.findOne({ email });
 
       const passwordMatch = bcrypt.compareSync(password, user.password);
 
