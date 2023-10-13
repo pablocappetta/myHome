@@ -1,20 +1,20 @@
 let instance = null;
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const UsuariosService = require("../services/usuarios.service");
+const UserService = require("../services/users.service");
 const AuthService = require("../services/auth.service");
 
-class UsuariosController {
+class UserController {
   static getInstance() {
     if (!instance) {
-      return new UsuariosController();
+      return new UserController();
     }
     return instance;
   }
 
   async getUsuarios(req, res) {
     try {
-      const users = await UsuariosService.getUsers();
+      const users = await UserService.getUsers();
       return res.status(200).json(users);
     } catch (err) {
       console.error(err);
@@ -28,7 +28,7 @@ class UsuariosController {
   async getUsuarioById(req, res) {
     try {
       const id = req.params.id;
-      let user = await UsuariosService.getUserById(id);
+      let user = await UserService.getUserById(id);
       if (!user) {
         return res.status(404).json({
           method: "getUsuarioById",
@@ -47,8 +47,7 @@ class UsuariosController {
 
   async createUsuario(req, res) {
     try {
-      let newUser = await UsuariosService.createUser(req.body);
-
+      const newUser = await UserService.createUser(req.body);
       return res.status(201).json({
         message: "Created!",
         usuario: newUser,
@@ -70,7 +69,7 @@ class UsuariosController {
         password
       );
       if (isUserRegistered) {
-        const user = await UsuariosService.getUserByEmail(email);
+        const user = await UserService.getUserByEmail(email);
 
         const token = jwt.sign(user.toJSON(), process.env.PRIVATE_KEY, {
           expiresIn: "1d",
@@ -96,4 +95,4 @@ class UsuariosController {
   }
 }
 
-module.exports = UsuariosController.getInstance();
+module.exports = UserController.getInstance();

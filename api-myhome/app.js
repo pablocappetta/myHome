@@ -31,18 +31,13 @@ app.get("/test", (req, res) => {
   res.status(200).send({ message: "You are connected to the project" });
 });
 
-//Mensajes endpoint
-app.use("/api/mensajes", require("./src/routes/mensajes.routes"));
-
 //Usuarios endpoint
-app.use("/api/usuarios", require("./src/routes/usuarios.routes"));
+app.use("/api/users", require("./src/routes/user.routes"));
 
 //Swagger endpoint
-
 app.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //Error handling endpoints
-
 app.use((req, res, next) => {
   const error = new Error("Not found");
   error.status = 404;

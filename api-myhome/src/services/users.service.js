@@ -1,10 +1,10 @@
-const UsuariosModel = require("../models/Usuarios");
+const UserModel = require("../models/Users");
 const bcrypt = require("bcrypt");
 
-class UsuariosService {
+class UserService {
   async getUsers() {
     try {
-      const users = await UsuariosModel.find();
+      const users = await UserModel.find();
       return users;
     } catch (err) {
       console.error(err);
@@ -14,7 +14,7 @@ class UsuariosService {
 
   async getUserById(id) {
     try {
-      let user = await UsuariosModel.findOne({ _id: id });
+      const user = await UserModel.findOne({ _id: id });
       return user;
     } catch (err) {
       console.error(err);
@@ -24,7 +24,7 @@ class UsuariosService {
 
   async getUserByEmail(email) {
     try {
-      let user = await UsuariosModel.findOne({ email });
+      const user = await UserModel.findOne({ email });
       return user;
     } catch (err) {
       console.error(err);
@@ -34,12 +34,12 @@ class UsuariosService {
 
   async createUser(user) {
     try {
-      let isUserRegistered = await UsuariosModel.findOne({ email: user.email });
+      const isUserRegistered = await UserModel.findOne({ email: user.email });
       if (isUserRegistered) {
         throw new Error("El usuario ya existe");
       } else {
         user.password = await bcrypt.hash(user.password, 10);
-        await UsuariosModel.create(user);
+        await UserModel.create(user);
         return user;
       }
     } catch (err) {
@@ -49,4 +49,4 @@ class UsuariosService {
   }
 }
 
-module.exports = new UsuariosService();
+module.exports = new UserService();
