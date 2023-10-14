@@ -81,14 +81,15 @@ paths:
         content:
           application/json:
             type: object
-            properties:
-              email:
-                required: true
-                type: string
-                format: email
-              password:
-                required: true
-                type: string
+            schema:
+              properties:
+                email:
+                  required: true
+                  type: string
+                  format: email
+                password:
+                  required: true
+                  type: string
       responses:
         "200":
           description: Realtor logged in successfully
@@ -136,20 +137,21 @@ paths:
           application/json:
             type: object
             required: true
-            properties:
-              name:
-                required: true
-                type: string
-              email:
-                required: true
-                type: string
-                format: email
-              phone:
-                required: true
-                type: string
-              message:
-                required: true
-                type: string
+            schema:
+              properties:
+                name:
+                  required: true
+                  type: string
+                email:
+                  required: true
+                  type: string
+                  format: email
+                phone:
+                  required: true
+                  type: string
+                message:
+                  required: true
+                  type: string
       responses:
         "201":
           description: Message sent successfully
@@ -165,11 +167,12 @@ paths:
         content:
           application/json:
             type: object
-            properties:
-              email:
-                required: true
-                type: string
-                format: email
+            schema:
+              properties:
+                email:
+                  required: true
+                  type: string
+                  format: email
       responses:
         "200":
           description: Password reset email sent successfully
@@ -191,10 +194,11 @@ paths:
         content:
           application/json:
             type: object
-            properties:
-              password:
-                required: true
-                type: string
+            schema:
+              properties:
+                password:
+                  required: true
+                  type: string
       responses:
         "200":
           description: Password reset successfully
@@ -253,6 +257,45 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/ListingType"
+        - in: query
+          name: country
+          required: true
+          type: string
+        - in: query
+          name: city
+          required: true
+          type: string
+        - in: query
+          name: neighborhood
+          type: string
+      responses:
+        "200":
+          description: List of listings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+  /listings/nearby:
+    get:
+      summary: Get list of listings nearby
+      tags:
+        - Listings
+      parameters:
+        - in: query
+          name: latitude
+          required: true
+          type: number
+        - in: query
+          name: longitude
+          required: true
+          type: number
+        - in: query
+          name: radius
+          description: Radius in kilometers
+          required: true
+          type: integer
       responses:
         "200":
           description: List of listings retrieved successfully
@@ -434,20 +477,21 @@ paths:
         content:
           application/json:
             type: object
-            properties:
-              cardNumber:
-                required: true
-                type: string
-              cardHolder:
-                required: true
-                type: string
-              expirationDate:
-                required: true
-                type: string
-                format: date
-              cvv:
-                required: true
-                type: string
+            schema:
+              properties:
+                cardNumber:
+                  required: true
+                  type: string
+                cardHolder:
+                  required: true
+                  type: string
+                expirationDate:
+                  required: true
+                  type: string
+                  format: date
+                cvv:
+                  required: true
+                  type: string
       responses:
         "201":
           description: Payment made successfully
@@ -506,14 +550,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserLogin"
+              properties:
+                token:
+                  required: true
+                  type: string
+                email:
+                  required: true
+                  type: string
       responses:
         "200":
           description: User logged in successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserLogin"
+                $ref: "#/components/schemas/User"
         "401":
           description: Unauthorized
   /users/me:
@@ -622,6 +672,9 @@ components:
         comment:
           required: true
           type: string
+        userId:
+          required: true
+          type: integer
     User:
       type: object
       properties:
@@ -637,37 +690,26 @@ components:
           format: email
         phone:
           type: string
-        password:
-          required: true
-          type: string
-        google:
-          required: true
-          type: boolean
-        role:
-          required: true
-          type: string
-          enum:
-            - user
-            - realty
-            - admin
-    UserLogin:
-      type: object
-      properties:
-        email:
-          required: true
-          type: string
-          format: email
-        password:
-          required: true
-          type: string
     Realtor:
       type: object
       properties:
         realtorId:
           readOnly: true
           type: integer
+        name:
+          required: true
+          type: string
+        loginEmail:
+          required: true
+          type: string
+        password:
+          required: true
+          type: string
+          writeOnly: true
         contactEmail:
           required: true
+          type: string
+        logo:
           type: string
         reviews:
           readOnly: true
