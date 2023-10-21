@@ -8,6 +8,10 @@ const bookingTitle = "Reservar propiedad";
 export const BookingPayment = ({ navigation }) => {
   const [checked, setChecked] = React.useState("first");
 
+  const handleOptionChange = (value) => {
+    setChecked(value);
+  };
+
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
@@ -27,24 +31,44 @@ export const BookingPayment = ({ navigation }) => {
             left={() => (
               <List.Icon icon="credit-card" style={styles.leftIcons} />
             )}
-            right={() => <RadioButton.Android value="Option 1" />}
+            right={() => (
+              <RadioButton.Android
+                value="credit-card"
+                status={checked === "credit-card" ? "checked" : "unchecked"}
+                onPress={() => handleOptionChange("credit-card")}
+              />
+            )}
           />
           <List.Item
             title={"MercadoPago"}
             left={() => <List.Icon icon="cash" style={styles.leftIcons} />}
-            right={() => <RadioButton.Android value="Option 1" />}
+            right={() => (
+              <RadioButton.Android
+                value="mercado-pago"
+                status={checked === "mercado-pago" ? "checked" : "unchecked"}
+                onPress={() => handleOptionChange("mercado-pago")}
+              />
+            )}
           />
           <List.Item
             title={"Efectivo/Transferencia"}
             left={() => <List.Icon icon="bank" style={styles.leftIcons} />}
-            right={() => <RadioButton.Android value="Option 1" />}
+            right={() => (
+              <RadioButton.Android
+                value="efectivo-transferencia"
+                status={
+                  checked === "efectivo-transferencia" ? "checked" : "unchecked"
+                }
+                onPress={() => handleOptionChange("efectivo-transferencia")}
+              />
+            )}
           />
         </List.Section>
 
         <View style={styles.bottomButton}>
           <Button
             onPress={() =>
-              navigation.navigate("Booking", { screen: "BookingSummary" })
+              navigation.navigate("Booking", { screen: "Summary" })
             }
             accessibilityLabel="Continuar a la siguiente pantalla para confirmar la reserva"
             mode="contained"

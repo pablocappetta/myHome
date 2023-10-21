@@ -86,6 +86,12 @@ export const ListingPost = ({ navigation, ...props }) => {
                 icon="share-variant"
                 onPress={() => console.debug("Share TBD")}
               />
+              <IconButton
+                icon="comment-question-outline"
+                onPress={() => 
+                  navigation.navigate("SendQuestion", { screen: "SendQuestion" })
+                }
+              />
             </View>
           </View>
           <View style={styles.containerListingMainDetails}>
