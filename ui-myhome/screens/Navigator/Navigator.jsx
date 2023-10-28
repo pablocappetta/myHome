@@ -71,6 +71,21 @@ const FavoritesScreenRoutes = () => {
   );
 };
 
+const ReservationsScreenRoutes = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Mis Reservas"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Mis Reservas" component={Favorites} />
+      <Stack.Screen name="Post" component={ListingPost} />
+      <Stack.Screen name="Booking" component={BookingRoutes} />
+    </Stack.Navigator>
+  );
+};
+
 const MyAccountScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -109,7 +124,7 @@ const Navigator = () => {
         />
         <Tab.Screen
           name="tabMisPublicaciones"
-          component={SearchScreenRoutes}
+          component={FavoritesScreenRoutes}
           options={{
             tabBarLabel: "Mis Reservas",
             tabBarIcon: "book-outline",
