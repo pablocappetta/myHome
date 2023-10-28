@@ -2,15 +2,15 @@ import React, { useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Text, Dialog, Button } from "react-native-paper";
 import { Appbar } from "react-native-paper";
-import { mockedHighlightedListings } from "../Home/mock/MockedHomeData";
 import ListingReservationCard from "./ListingReservationCard/ListingReservationCard";
 import { useScrollToTop } from "@react-navigation/native";
+import { mockedReservations } from "./mock/MockedReservationsData";
 
 const Reservations = ({ navigation }) => {
   const ref = useRef(null);
 
   const [listingToRemove, setListingToRemove] = useState(null);
-  const [listings, setListings] = useState(mockedHighlightedListings);
+  const [listings, setListings] = useState(mockedReservations);
 
   useScrollToTop(ref);
 
@@ -43,7 +43,7 @@ const Reservations = ({ navigation }) => {
               key={listing.id}
               onPress={() => navigation.navigate("Post", listing)}
             >
-              <ListingReservationCard listing={listing}
+              <ListingReservationCard reservation={listing}
                 handleRemoveFavorite={handleRemoveReservation}
               />
             </TouchableOpacity>

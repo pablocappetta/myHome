@@ -17,6 +17,7 @@ import Favorites from "../Favorites/Favorites";
 import PrivacyPolicy from "../Settings/PrivacyPolicy/PrivacyPolicy";
 import SendQuestion from "../SendQuestion/SendQuestion";
 import Review from "../Review/Review";
+import Reservations from "../Reservations/Reservations";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -79,7 +80,7 @@ const ReservationsScreenRoutes = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Mis Reservas" component={Favorites} />
+      <Stack.Screen name="Mis Reservas" component={Reservations} />
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
     </Stack.Navigator>
@@ -124,7 +125,7 @@ const Navigator = () => {
         />
         <Tab.Screen
           name="tabMisPublicaciones"
-          component={FavoritesScreenRoutes}
+          component={ReservationsScreenRoutes}
           options={{
             tabBarLabel: "Mis Reservas",
             tabBarIcon: "book-outline",

@@ -5,13 +5,13 @@ import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
 
-const ListingReservationCard = ({ listing, handleRemoveFavorite }) => {
+const ListingReservationCard = ({navigation, reservation, handleRemoveFavorite }) => {
   const styles = StyleSheet.create({
-    listingImage: {
-      width: 180,
-      height: 128,
+    reservationImage: {
+      width: 170,
+      height: 190,
     },
-    listingTypeChip: {
+    reservationTypeChip: {
       position: "absolute",
       zIndex: 1,
       left: 8,
@@ -19,21 +19,21 @@ const ListingReservationCard = ({ listing, handleRemoveFavorite }) => {
     },
     priceContainer: {
       display: "flex",
-      flexDirection: "row",
-      justifyContent: "flex-end",
+      flexDirection: "column",
+      justifyContent: "flex-start",
       alignlistings: "center",
       marginTop: 12,
       position: "absolute",
-      right: 8,
+      left: 17,
       top: 72,
     },
     cardContentContainer: {
       display: "flex",
       flexDirection: "column",
       position: "absolute",
-      width: 172,
+      width: 190,
       top: 8,
-      right: 8,
+      right: 5,
     },
   });
 
@@ -41,21 +41,14 @@ const ListingReservationCard = ({ listing, handleRemoveFavorite }) => {
 
   return (
     <Card>
-      <View style={styles.listingTypeChip}>
-        <ListingTypeChip listingType={listing.listingType}>
-          {listing.listingType}
+      <View style={styles.reservationTypeChip}>
+        <ListingTypeChip listingType={reservation.listingType}>
+          {reservation.listingType}
         </ListingTypeChip>
-        <IconButton
-          icon="heart"
-          size={16}
-          mode="contained"
-          style={{ bottom: 38, left: 126 }}
-          onPress={() => handleRemoveFavorite(listing)}
-        />
       </View>
       <Card.Cover
-        source={{ uri: listing.image }}
-        style={styles.listingImage}
+        source={{ uri: reservation.image }}
+        style={styles.reservationImage}
         defaultSource={
           theme.dark
             ? require("../../../assets/images/darkBlurredImage.jpg")
@@ -63,12 +56,42 @@ const ListingReservationCard = ({ listing, handleRemoveFavorite }) => {
         }
       />
       <Card.Content style={styles.cardContentContainer}>
+        <View>
         <Text variant="titleMedium" style={{ marginTop: 6 }} numberOfLines={1}>
-          {listing.type}
+          {reservation.type}
+        </Text>
+        <IconButton
+          icon="star"
+          size={20}
+          style={{ bottom: 35, left: 130 }}
+          onPress={() => 
+            navigation.navigate("Review")
+          }
+          iconColor="#6750A4"
+        />
+        </View>
+        <View
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignlistings: "center",
+          marginTop: 12,
+          position: "absolute",
+          left: 17,
+          top: 30,
+        }}
+        >
+        <Text 
+        variant="bodySmall"
+        numberOfLines={1}>
+          {reservation.location}
         </Text>
         <Text variant="bodySmall" numberOfLines={1}>
-          {listing.location}
+          Vencimiento: {reservation.expirationDate}
         </Text>
+        </View>
+
         <View style={styles.priceContainer}>
           <View
             style={{
@@ -77,14 +100,36 @@ const ListingReservationCard = ({ listing, handleRemoveFavorite }) => {
               gap: 4,
             }}
           >
-            <Text variant="bodyLarge" style={{ fontWeight: 600 }}>
-              {listing.currency}
+            <Text variant="bodySmall" style={{ fontWeight: 600 }}>
+              Monto: {reservation.currency}
             </Text>
-            <Text variant="bodyLarge" style={{ fontWeight: 800 }}>
-              ${commaNumber(listing.price)}
+            <Text variant="bodySmall" style={{ fontWeight: 800 }}>
+              ${commaNumber(reservation.price)}
+            </Text>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 4,
+            }}
+          >
+            <Text variant="bodySmall" style={{ fontWeight: 600 }}>
+              Reserva: {reservation.currency}
+            </Text>
+            <Text variant="bodySmall" style={{ fontWeight: 800 }}>
+              ${commaNumber(reservation.reservationAmount)}
             </Text>
           </View>
         </View>
+        <Button
+        icon={"close"}
+        mode="contained"
+        style={{ bottom: -55, left: 45, width: 120 }}
+        onPress={() => handleRemoveFavorite(reservation)}
+        >
+          Cancelar
+        </Button>
       </Card.Content>
     </Card>
   );
