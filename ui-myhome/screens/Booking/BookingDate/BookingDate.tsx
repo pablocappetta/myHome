@@ -4,9 +4,9 @@
 
 import React, { useState, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
-import { TextInput, Text, Button, Appbar, List } from "react-native-paper";
-import { DatePickerInput, TimePickerModal } from "react-native-paper-dates";
-import { enGB, es, en, registerTranslation } from "react-native-paper-dates";
+import { Text, Button, Appbar, SegmentedButtons, Dialog, Portal } from "react-native-paper";
+import { DatePickerInput } from "react-native-paper-dates";
+import { es, en, enGB, registerTranslation } from "react-native-paper-dates";
 
 const languageMap = {
   "en-GB": enGB,
@@ -22,20 +22,20 @@ const bookingTitle = "Reservar propiedad";
 
 export const BookingDate = ({ navigation }) => {
   const [date, onChangeDate] = useState(undefined);
-  const [time, onChangeTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState("Mañana");
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
-  const [showTime, setShowTime] = useState(false);
-  const onDismiss = useCallback(() => {
-    setShowTime(false);
-  }, [setShowTime]);
+  const onTimeChange = useCallback((value) => {
+    setSelectedTime(value);
+  }, []);
 
-  const onConfirm = useCallback(
-    ({ hours, minutes }) => {
-      setShowTime(false);
-      onChangeTime(`${hours}:${minutes}`);
-    },
-    [setShowTime]
-  );
+  const handleAgendar = () => {
+    setShowSuccessDialog(true);
+  };
+
+  const handleReturn = () => {
+    setShowSuccessDialog(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -56,35 +56,40 @@ export const BookingDate = ({ navigation }) => {
             inputMode="start"
             mode="outlined"
           />
-          <TextInput
-            label="Hora"
-            value={time}
-            onChangeText={(text) => onChangeTime(text)}
-            mode="outlined"
-            onTouchStart={(event) => {
-              event.preventDefault();
-              setShowTime(true);
-            }}
-            showSoftInputOnFocus={false}
-          />
-          <TimePickerModal
-            visible={showTime}
-            onDismiss={onDismiss}
-            onConfirm={onConfirm}
-            hours={12}
-            minutes={14}
-          />
+          <View style={{ flexDirection: "column" }}>
+            <Text variant="titleLarge" style={{ marginTop: 6, marginBottom: 20 }}>Horario</Text>
+            <SegmentedButtons
+              value={selectedTime}
+              onValueChange={onTimeChange}
+              style={{ height: 40, width: 350 }}
+              buttons={[
+                { label: "Mañana", value: "Mañana" },
+                { label: "Tarde", value: "Tarde" },
+              ]}
+            />
+          </View>
         </View>
         <View style={styles.bottomButton}>
           <Button
-            onPress={() => navigation.navigate("Info")}
+            onPress={handleAgendar}
             accessibilityLabel="Continuar a la siguiente pantalla para editar datos de contacto"
             mode="contained"
           >
-            Continuar
+            Agendar
           </Button>
         </View>
       </View>
+      <Portal>
+        <Dialog visible={showSuccessDialog} onDismiss={handleReturn}>
+          <Dialog.Title>¡Reserva agendada!</Dialog.Title>
+          <Dialog.Content>
+            <Text>La reserva ha sido agendada exitosamente.</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={handleReturn}>Volver</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };

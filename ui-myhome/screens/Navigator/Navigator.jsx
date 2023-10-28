@@ -15,6 +15,9 @@ import BookingSummary from "../Booking/BookingSummary/BookingSummary";
 import { Platform } from "react-native";
 import Favorites from "../Favorites/Favorites";
 import PrivacyPolicy from "../Settings/PrivacyPolicy/PrivacyPolicy";
+import SendQuestion from "../SendQuestion/SendQuestion";
+import Review from "../Review/Review";
+import Reservations from "../Reservations/Reservations";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -48,6 +51,8 @@ const SearchScreenRoutes = () => {
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="SendQuestion" component={SendQuestion} />
+      <Stack.Screen name="Review" component={Review} />
     </Stack.Navigator>
   );
 };
@@ -61,6 +66,21 @@ const FavoritesScreenRoutes = () => {
       }}
     >
       <Stack.Screen name="Favoritos" component={Favorites} />
+      <Stack.Screen name="Post" component={ListingPost} />
+      <Stack.Screen name="Booking" component={BookingRoutes} />
+    </Stack.Navigator>
+  );
+};
+
+const ReservationsScreenRoutes = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Mis Reservas"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Mis Reservas" component={Reservations} />
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
     </Stack.Navigator>
@@ -105,7 +125,7 @@ const Navigator = () => {
         />
         <Tab.Screen
           name="tabMisPublicaciones"
-          component={SearchScreenRoutes}
+          component={ReservationsScreenRoutes}
           options={{
             tabBarLabel: "Mis Reservas",
             tabBarIcon: "book-outline",

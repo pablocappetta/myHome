@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Card, IconButton, Text } from "react-native-paper";
+import { Card, IconButton, Text, Dialog, Button } from "react-native-paper";
 import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
 
-const ListingFavoriteCard = ({ listing }) => {
+const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
   const styles = StyleSheet.create({
     listingImage: {
       width: 180,
@@ -50,6 +50,7 @@ const ListingFavoriteCard = ({ listing }) => {
           size={16}
           mode="contained"
           style={{ bottom: 38, left: 126 }}
+          onPress={() => handleRemoveFavorite(listing)}
         />
       </View>
       <Card.Cover
@@ -88,5 +89,7 @@ const ListingFavoriteCard = ({ listing }) => {
     </Card>
   );
 };
+
+
 
 export default ListingFavoriteCard;
