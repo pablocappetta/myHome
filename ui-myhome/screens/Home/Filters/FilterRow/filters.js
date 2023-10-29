@@ -5,7 +5,9 @@ export const filters = [
             { label: "Todas", value: "todas", selected: true },
             { label: "Venta", value: "venta", selected: false },
             { label: "Alquiler", value: "alquiler", selected: false }
-        ]
+        ],
+        isSlider: false,
+        isMultiselect: false
     },
     {
         title: "Categoria",
@@ -16,7 +18,9 @@ export const filters = [
             { label: "Oficina", value: "oficina", selected: false },
             { label: "Local", value: "local", selected: false },
             { label: "Terreno", value: "terreno", selected: false }
-        ]
+        ],
+        isSlider: false,
+        isMultiselect: false
     },
     {
         title: "Precio",
@@ -24,7 +28,8 @@ export const filters = [
             { label: "USD", value: "usd", selected: true },
             { label: "Pesos", value: "pesos", selected: true }
         ],
-        isSlider: true
+        isSlider: true,
+        isMultiselect: false
     },
     {
         title: "Amenities",
@@ -37,7 +42,9 @@ export const filters = [
             { label: "Cochera", value: "cochera", selected: false },
             { label: "Balcón", value: "balcon", selected: false },
             { label: "Terraza", value: "terraza", selected: false }
-        ]
+        ],
+        isSlider: false,
+        isMultiselect: false
     },
     {
         title: "Cantidad de Ambientes",
@@ -47,7 +54,9 @@ export const filters = [
             { label: "2", value: "2", selected: false },
             { label: "3", value: "3", selected: false },
             { label: "4+", value: "4+", selected: false }
-        ]
+        ],
+        isSlider: false,
+        isMultiselect: false
     },
     {
         title: "Cantidad de Habitaciones",
@@ -57,7 +66,9 @@ export const filters = [
             { label: "2", value: "2", selected: false },
             { label: "3", value: "3", selected: false },
             { label: "4+", value: "4+", selected: false }
-        ]
+        ],
+        isSlider: false,
+        isMultiselect: false
     },
     {
         title: "Cantidad de Baños",
@@ -67,7 +78,9 @@ export const filters = [
             { label: "2", value: "2", selected: false },
             { label: "3", value: "3", selected: false },
             { label: "4+", value: "4+", selected: false }
-        ]
+        ],
+        isSlider: false,
+        isMultiselect: false
     },
     {
         title: "Antigüedad",
@@ -76,7 +89,9 @@ export const filters = [
             { label: "1-5", value: "1-5", selected: false },
             { label: "5-10", value: "5-10", selected: false },
             { label: "10+", value: "10+", selected: false }
-        ]
+        ],
+        isSlider: false,
+        isMultiselect: false
     },
     {
         title:"Localidad",
@@ -89,6 +104,7 @@ export const filters = [
             { label: "Chascomus", value: "chascomus", selected: false },
             { label: "Bariloche", value: "bariloche", selected: false }
         ],
-        isMutiselect: true
+        isSlider: false,
+        isMultiselect: true
     }
 ];

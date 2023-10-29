@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, List, Divider, Modal, Text } from 'react-native-paper';
 import  FilterRow  from './FilterRow/FilterRow';
 import { filters } from './FilterRow/filters';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 
 export const FiltersModal = ({ isModalOpen, onClose }) => {
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -40,14 +40,16 @@ export const FiltersModal = ({ isModalOpen, onClose }) => {
                 <Button onPress={handleApplyFilters}>Aplicar</Button>
             </View>
             <View style={styles.content}>
-                <List.Section style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
-                    {
-                    filterList.map((filter) => (
-                        <React.Fragment key={filter.id}>
-                            <FilterRow headerText={filter.title} filter={filter} options={filter.options} onChange={handleFilterChange} />
-                        </React.Fragment>
-                    ))}
-                </List.Section>
+                <ScrollView style={{ maxHeight: 'calc(100vh - 200px)' }}>
+                    <List.Section>
+                        {
+                        filterList.map((filter) => (
+                            <React.Fragment key={filter.id}>
+                                <FilterRow headerText={filter.title} filter={filter} options={filter.options} onChange={handleFilterChange} />
+                            </React.Fragment>
+                        ))}
+                    </List.Section>
+                </ScrollView>
             </View>
             <View style={styles.footer}>
                 <Button mode="contained" onPress={handleClearFilters}>
