@@ -12,7 +12,7 @@ export const filters = [
     {
         title: "Categoria",
         options: [
-            { label: "Todas", value: "todas", selected: false },
+            { label: "Todas", value: "todas", selected: true },
             { label: "Casa", value: "casa", selected: false },
             { label: "Departamento", value: "departamento", selected: false },
             { label: "Oficina", value: "oficina", selected: false },
@@ -26,7 +26,7 @@ export const filters = [
         title: "Precio",
         options: [
             { label: "USD", value: "usd", selected: true },
-            { label: "Pesos", value: "pesos", selected: true }
+            { label: "Pesos", value: "pesos", selected: false }
         ],
         isSlider: true,
         isMultiselect: false

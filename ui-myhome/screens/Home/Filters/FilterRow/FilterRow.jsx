@@ -2,10 +2,28 @@ import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Text, Chip, Slider } from 'react-native-paper';
 
-export const FilterRow = ({ headerText, options, showSlider, sliderValue, onSliderValueChange, multiSelect }) => {
-    const handleChipPress = (option) => {
-        console.log(`${option} selected`);
-    };
+export const FilterRow = ({ headerText, options, showSlider, sliderValue, onSliderValueChange, multiSelect, onChange }) => {
+    const [selected, setSelected] = React.useState(new Map(
+        options?.map((option) => [option, option.selected]),
+    ));
+
+    const onSelect = React.useCallback(
+        (id) => {
+            const newSelected = new Map(selected);
+            newSelected.set(id, !selected.get(id));
+            if (!multiSelect) {
+                [...newSelected.keys()].forEach((key) => {
+                    if (key !== id) {
+                        newSelected.set(key, false);
+                    }
+                });
+            }
+
+            setSelected(newSelected);
+            onChange(newSelected, headerText);
+        },
+        [selected],
+    );
 
     return (
         <View>
@@ -17,9 +35,10 @@ export const FilterRow = ({ headerText, options, showSlider, sliderValue, onSlid
                 {options?.map((option) => (
                     <Chip
                         key={option.key}
-                        onPress={() => handleChipPress(option)}
-                        selected={multiSelect ? undefined : option === option.selected}
+                        onPress={() => onSelect(option)}
+                        selected={!!selected.get(option)}
                         style={styles.chip}
+                        selectedColor='white'
                     >
                         {option.label}
                     </Chip>

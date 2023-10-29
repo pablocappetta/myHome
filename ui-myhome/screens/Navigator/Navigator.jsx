@@ -19,6 +19,7 @@ import SendQuestion from "../SendQuestion/SendQuestion";
 import Review from "../Review/Review";
 import Reservations from "../Reservations/Reservations";
 import Search from "../Home/Search/Search";
+import ListingReservationCard from "../Reservations/ListingReservationCard/ListingReservationCard";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -83,7 +84,7 @@ const ReservationsScreenRoutes = () => {
       }}
     >
       <Stack.Screen name="Mis Reservas" component={Reservations} />
-      <Stack.Screen name="Post" component={ListingPost} />
+      <Stack.Screen name="Post" component={ListingReservationCard} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
     </Stack.Navigator>
   );
