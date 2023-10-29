@@ -8,6 +8,7 @@ import {
   IconButton,
   List,
   Text,
+  Button
 } from "react-native-paper";
 import MapView from "react-native-maps";
 import Carousel from "react-native-reanimated-carousel";
@@ -85,6 +86,12 @@ export const ListingPost = ({ navigation, ...props }) => {
               <IconButton
                 icon="share-variant"
                 onPress={() => console.debug("Share TBD")}
+              />
+              <IconButton
+                icon="comment-question-outline"
+                onPress={() => 
+                  navigation.navigate("SendQuestion", { screen: "SendQuestion" })
+                }
               />
             </View>
           </View>
@@ -201,6 +208,10 @@ export const ListingPost = ({ navigation, ...props }) => {
           <View style={styles.containerMapView}>
             <MapView style={styles.mapView} />
           </View>
+          <Divider />
+          <Button style={styles.button} mode="contained" onPress={() => navigation.navigate("Booking", { screen: "Info" })}>
+            Reservar
+          </Button>
         </View>
       </ScrollView>
     </View>
@@ -312,6 +323,10 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 16,
     paddingHorizontal: 16,
+  },
+  button: {
+    marginVertical: 16,
+    marginHorizontal: 20,
   },
 });
 
