@@ -58,14 +58,15 @@ const Home = ({ navigation }) => {
   };
 
   const handleSearchSubmitChange = ({ nativeEvent }) => {
-    setSearchQuery(nativeEvent.text);
-    setHighlightedListing(
-      getFilteredListingByQuery(highlightedListings, nativeEvent.text)
-    );
-    setRecentListings(
-      getFilteredListingByQuery(recentListings, nativeEvent.text)
-    );
-    setIsQueryActive(true);
+    navigation.navigate("Search", { searchQuery: nativeEvent.text });
+    // setSearchQuery(nativeEvent.text);
+    // setHighlightedListing(
+    //   getFilteredListingByQuery(highlightedListings, nativeEvent.text)
+    // );
+    // setRecentListings(
+    //   getFilteredListingByQuery(recentListings, nativeEvent.text)
+    // );
+    // setIsQueryActive(true);
   };
 
   const handleSearchClearIconPress = () => {
