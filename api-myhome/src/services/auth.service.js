@@ -1,6 +1,6 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const UserModel = require("../models/Users");
+const UserModel = require("../models/User");
 
 class AuthService {
   async hasValidCredentials(email, password) {

@@ -3,9 +3,18 @@ const { Schema } = mongoose;
 
 const RealtorSchema = new Schema({
   name: String,
-  loginEmail: String,
+  loginEmail: {
+    type: String,
+    required: true,
+    unique: true,
+    match: /^\S+@\S+\.\S+$/,
+  },
   password: String,
-  contactEmail: String,
+  contactEmail: {
+    type: String,
+    required: true,
+    match: /^\S+@\S+\.\S+$/,
+  },
   logo: String,
   reviews: [
     {
@@ -15,9 +24,9 @@ const RealtorSchema = new Schema({
       userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     },
   ],
-  created_at: { type: Date, default: Date.now },
+  creationDate: { type: Date, default: Date.now },
 });
 
-const Realtors = mongoose.model("realtors", RealtorSchema);
+const Realtors = mongoose.model("Realtor", RealtorSchema);
 
 module.exports = Realtors;
