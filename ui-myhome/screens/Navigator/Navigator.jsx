@@ -19,7 +19,6 @@ import { notifications } from "../Notifications/mock/notificationsMock";
 
 const Tab = createMaterialBottomTabNavigator();
 
-
 const Stack = createStackNavigator();
 
 const HomeScreenRoutes = () => {
@@ -36,7 +35,6 @@ const HomeScreenRoutes = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="NewPost" component={NewPost} />
-
     </Stack.Navigator>
   );
 };
@@ -66,7 +64,7 @@ const NotificationsScreenRoutes = () => {
       <Stack.Screen name="Notificacion" component={NotificationView} />
     </Stack.Navigator>
   );
-}
+};
 
 const UserProfileScreenRoutes = () => {
   return (
@@ -78,15 +76,14 @@ const UserProfileScreenRoutes = () => {
     >
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Ajustes" component={Settings} />
-
     </Stack.Navigator>
   );
-}
+};
 
 const Navigator = () => {
   const { theme } = useTheme();
   return (
-    <NavigationContainer theme={theme} >
+    <NavigationContainer theme={theme}>
       <Tab.Navigator
         initialRouteName="tabHome"
         theme={theme}

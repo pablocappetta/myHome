@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Alert, Dimensions, Image, ScrollView, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import {
   ActivityIndicator,
   Appbar,
@@ -18,17 +25,14 @@ import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip
 import commaNumber from "comma-number";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Dropdown } from "react-native-element-dropdown";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 
 //Es un work in progress. Tengo un quilombo de estilos y cosas por todos lados. No me juzguen :P
 
 export const ListingPost = ({ navigation, ...props }) => {
-
-
   // Si es owner
   const [isOwner, setIsOwner] = useState(true);
-
 
   //toggle edit
   const [edit, setEdit] = useState(false);
@@ -36,17 +40,20 @@ export const ListingPost = ({ navigation, ...props }) => {
   const handleEdition = () => {
     if (edit) {
       Alert.alert("Propiedad editada", "Desea guardar los cambios?", [
-        { text: "Cancelar", onPress: () => (console.log("Cancel Pressed"),setEdit(!edit)) },
-        { text: "Guardar", onPress: () => (console.log("Cambios guardados"),setEdit(!edit)) }, //Aca deberia enviar los datos al backend
+        {
+          text: "Cancelar",
+          onPress: () => (console.log("Cancel Pressed"), setEdit(!edit)),
+        },
+        {
+          text: "Guardar",
+          onPress: () => (console.log("Cambios guardados"), setEdit(!edit)),
+        }, //Aca deberia enviar los datos al backend
       ]);
-    }
-    else {
+    } else {
       setEdit(!edit);
-    } 
+    }
   };
 
-  
-  
   const { theme } = useTheme();
   const [like, setLike] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
@@ -58,115 +65,119 @@ export const ListingPost = ({ navigation, ...props }) => {
 
   const width = Dimensions.get("window").width;
 
-
   const handleDelete = () => {
-    Alert.alert("Eliminar propiedad", "La propiedad se eliminara permanentemente. Esta seguro que desea eliminarla?", [
-      { text: "Cancelar", onPress: () => console.log("Cancel Pressed") },
-      { text: "Eliminar", onPress: () => (console.log("Propiedad eliminada"), navigation.navigate("Home")) },
-    ]);
-    }
+    Alert.alert(
+      "Eliminar propiedad",
+      "La propiedad se eliminara permanentemente. Esta seguro que desea eliminarla?",
+      [
+        { text: "Cancelar", onPress: () => console.log("Cancel Pressed") },
+        {
+          text: "Eliminar",
+          onPress: () => (
+            console.log("Propiedad eliminada"), navigation.navigate("Home")
+          ),
+        },
+      ]
+    );
+  };
 
-     const data = [
-    { label: 'Item 1', value: '1' },
-    { label: 'Item 2', value: '2' },
-    { label: 'Item 3', value: '3' },
-    { label: 'Item 4', value: '4' },
-    { label: 'Item 5', value: '5' },
-    { label: 'Item 6', value: '6' },
-    { label: 'Item 7', value: '7' },
-    { label: 'Item 8', value: '8' },
+  const data = [
+    { label: "Item 1", value: "1" },
+    { label: "Item 2", value: "2" },
+    { label: "Item 3", value: "3" },
+    { label: "Item 4", value: "4" },
+    { label: "Item 5", value: "5" },
+    { label: "Item 6", value: "6" },
+    { label: "Item 7", value: "7" },
+    { label: "Item 8", value: "8" },
   ];
 
-
-  const [type, setType] = useState('');
-  const [property, setProperty] = useState('');
-  const [location, setLocation] = useState('');
-  const [price, setPrice] = useState('');
-  const [expenses, setExpenses] = useState('');
-  const [description, setDescription] = useState('');
-  const [cubiertos, setCubiertos] = useState('');
-  const [descubiertos, setDescubiertos] = useState('');
-  const [ambientes, setAmbientes] = useState('');
-  const [dormitorios, setDormitorios] = useState('');
-  const [baños, setBaños] = useState('');
-  const [antiguedad, setAntiguedad] = useState('');
-  const [orAbsoluta, setOrAbsoluta] = useState('');
-  const [orRelativa, setOrRelativa] = useState('');
-
+  const [type, setType] = useState("");
+  const [property, setProperty] = useState("");
+  const [location, setLocation] = useState("");
+  const [price, setPrice] = useState("");
+  const [expenses, setExpenses] = useState("");
+  const [description, setDescription] = useState("");
+  const [cubiertos, setCubiertos] = useState("");
+  const [descubiertos, setDescubiertos] = useState("");
+  const [ambientes, setAmbientes] = useState("");
+  const [dormitorios, setDormitorios] = useState("");
+  const [baños, setBaños] = useState("");
+  const [antiguedad, setAntiguedad] = useState("");
+  const [orAbsoluta, setOrAbsoluta] = useState("");
+  const [orRelativa, setOrRelativa] = useState("");
 
   const [cocheras, setCocheras] = useState(true);
   const [terraza, setTerraza] = useState(true);
   const [balcon, setBalcon] = useState(true);
-  
+
   const handleType = (e) => {
     setType(e);
-  }
+  };
 
   const handleProperty = (e) => {
     setProperty(e);
-  }
+  };
 
   const handleLocation = (e) => {
     setLocation(e);
-  }
+  };
 
   const handlePrice = (e) => {
     setPrice(e);
-  }
+  };
 
-  const handleExpenses  = (e) => {
+  const handleExpenses = (e) => {
     setExpenses(e);
-  }
+  };
 
   const handleDescription = (e) => {
     setDescription(e);
-  }
+  };
 
   const handleCubiertos = (e) => {
     setCubiertos(e);
-  }
+  };
 
   const handleDescubiertos = (e) => {
     setDescubiertos(e);
-  }
+  };
 
   const handleDormitorios = (e) => {
     setDormitorios(e);
-  }
+  };
 
   const handleBaños = (e) => {
     setBaños(e);
-  }
+  };
 
   const handleAntiguedad = (e) => {
     setAntiguedad(e);
-  }
+  };
 
   const handleOrAbsoluta = (e) => {
     setOrAbsoluta(e);
-  }
+  };
 
   const handleOrRelativa = (e) => {
     setOrRelativa(e);
-  }
+  };
 
   const handleAmbientes = (e) => {
     setAmbientes(e);
-  }
+  };
 
   const onToggleCocheras = () => {
     setCocheras(!cocheras);
-  }
+  };
 
   const onToggleTerraza = () => {
     setTerraza(!terraza);
-  }
+  };
 
   const onToggleBalcon = () => {
     setBalcon(!balcon);
-  }
-  
-  
+  };
 
   return (
     <View style={styles.container}>
@@ -206,134 +217,158 @@ export const ListingPost = ({ navigation, ...props }) => {
 
         <View style={styles.listingDetailsContainer}>
           <View style={styles.topListingDetailsContainer}>
-          { 
-            edit ?
-            <SelectDropdown
-                  data={["Alquiler", "Venta"]}
-                  onSelect={(selectedItem, index) => {
-                    handleType(selectedItem)
-                  }}
-                  buttonStyle={{width: 150, height: 30, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#6750a4'}}
-                  buttonTextStyle={{color: '#6750a4'}}
-                  renderDropdownIcon={() => {
-                    return (
-                      <AntDesign name="down" size={24} color="#6750a4" />
-                    )
-                  }}
-                  dropdownIconPosition={'right'}
-                  dropdownStyle={{width: 200, borderRadius: 10, borderWidth: 1, borderColor: '#6750a4'}}
-                  rowStyle={{width: 200, height: 50,  borderWidth: 1, borderColor: '#6750a4'}}
-                  rowTextStyle={{color: '#6750a4'}}
-                  defaultValueByIndex={0}
-                  buttonTextAfterSelection={(selectedItem, index) => {
-                    // text represented after item is selected
-                    // if data array is an array of objects then return selectedItem.property to render after item is selected
-                    return selectedItem
-                  }}
-                  rowTextForSelection={(item, index) => {
-                    // text represented for each item in dropdown
-                    // if data array is an array of objects then return item.property to represent item in dropdown
-                    return item
-                  }}
+            {edit ? (
+              <SelectDropdown
+                data={["Alquiler", "Venta"]}
+                onSelect={(selectedItem, index) => {
+                  handleType(selectedItem);
+                }}
+                buttonStyle={{
+                  width: 150,
+                  height: 30,
+                  backgroundColor: "#fff",
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: "#6750a4",
+                }}
+                buttonTextStyle={{ color: "#6750a4" }}
+                renderDropdownIcon={() => {
+                  return <AntDesign name="down" size={24} color="#6750a4" />;
+                }}
+                dropdownIconPosition={"right"}
+                dropdownStyle={{
+                  width: 200,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: "#6750a4",
+                }}
+                rowStyle={{
+                  width: 200,
+                  height: 50,
+                  borderWidth: 1,
+                  borderColor: "#6750a4",
+                }}
+                rowTextStyle={{ color: "#6750a4" }}
+                defaultValueByIndex={0}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  // text represented after item is selected
+                  // if data array is an array of objects then return selectedItem.property to render after item is selected
+                  return selectedItem;
+                }}
+                rowTextForSelection={(item, index) => {
+                  // text represented for each item in dropdown
+                  // if data array is an array of objects then return item.property to represent item in dropdown
+                  return item;
+                }}
+              />
+            ) : (
+              <ListingTypeChip listingType={listing.listingType}>
+                {listing.listingType}
+              </ListingTypeChip>
+            )}
+            {isOwner ? (
+              <View style={styles.actionButtonsContainer}>
+                {edit ? (
+                  <IconButton icon="check-bold" onPress={handleEdition} />
+                ) : (
+                  <IconButton icon="pencil" onPress={handleEdition} />
+                )}
+                <IconButton icon={"trash-can-outline"} onPress={handleDelete} />
+              </View>
+            ) : (
+              <View style={styles.actionButtonsContainer}>
+                <IconButton
+                  icon="calendar-month"
+                  onPress={() => console.debug("Agendar visita")}
                 />
-                :
-            <ListingTypeChip listingType={listing.listingType}>
-              {listing.listingType}
-            </ListingTypeChip>
-            }
-        {
-          isOwner ? (
-                <View style={styles.actionButtonsContainer}>
-              {
-                edit ? 
                 <IconButton
-                icon="check-bold"
-                onPress={handleEdition}
-              /> :
+                  icon={like ? "heart" : "heart-outline"}
+                  mode={like && "contained"}
+                  onPress={handleLikePress}
+                />
                 <IconButton
-                icon="pencil"
-                onPress={handleEdition}
-              />
-              }
-              <IconButton
-                icon={"trash-can-outline"}
-                onPress={handleDelete}
-              />
-            </View>
-          ) : (
-                <View style={styles.actionButtonsContainer}>
-              <IconButton
-                icon="calendar-month"
-                onPress={() => console.debug("Agendar visita")}
-              />
-              <IconButton
-                icon={like ? "heart" : "heart-outline"}
-                mode={like && "contained"}
-                onPress={handleLikePress}
-              />
-              <IconButton
-                icon="share-variant"
-                onPress={() => console.debug("Share TBD")}
-              />
-              <IconButton
-                icon="message-text-outline"
-                onPress={() => console.debug("Enviar pregunta")}
-              />
-            </View>
-  )
-}
+                  icon="share-variant"
+                  onPress={() => console.debug("Share TBD")}
+                />
+                <IconButton
+                  icon="message-text-outline"
+                  onPress={() => console.debug("Enviar pregunta")}
+                />
+              </View>
+            )}
           </View>
           <View style={styles.containerListingMainDetails}>
             <View style={styles.containerHomeLocationDetails}>
-              {
-                edit ?  
-                <TextInput value={listing.type} className="rounded-t-md w-[170px] " label={"Tipo propiedad"} onChange={property => handleProperty(property)}/>
-                :    
-              <Text
-                variant="titleLarge"
-                style={{ color: theme.colors.primary, fontWeight: 800 }}
-              >
-                {listing.type}
-              </Text>
-              }
-{
-                  edit ?  
-                <TextInput value={listing.location} className="rounded-t-md w-[170px]" label={"Ubicacion"} onChange={location => handleLocation(location)}/>
-                : 
+              {edit ? (
+                <TextInput
+                  value={listing.type}
+                  className="rounded-t-md w-[170px] "
+                  label={"Tipo propiedad"}
+                  onChange={(property) => handleProperty(property)}
+                  mode="outlined"
+                />
+              ) : (
                 <Text
-                variant="labelLarge"
-                style={{ color: theme.colors.secondary }}
-              >
-                {listing.location}
-              </Text>}
+                  variant="titleLarge"
+                  style={{ color: theme.colors.primary, fontWeight: 800 }}
+                >
+                  {listing.type}
+                </Text>
+              )}
+              {edit ? (
+                <TextInput
+                  value={listing.location}
+                  className="rounded-t-md w-[170px]"
+                  label={"Ubicacion"}
+                  onChange={(location) => handleLocation(location)}
+                  mode="outlined"
+                />
+              ) : (
+                <Text
+                  variant="labelLarge"
+                  style={{ color: theme.colors.secondary }}
+                >
+                  {listing.location}
+                </Text>
+              )}
             </View>
             <View style={styles.containerPriceDetails}>
               <IconButton icon="currency-usd" />
               <View>
-{                
-                edit ?
-                <TextInput value={commaNumber(listing.price)} className="rounded-t-md w-[100px]" label={"Precio"} onChange={price=> handlePrice(price)}/>
-                :
-                <Text variant="titleLarge" style={styles.price}>
-                  {commaNumber(listing.price)}
-                </Text>}
-{                
-                edit ?  
-                <TextInput value={"50,000"} className="rounded-t-md w-[100px]" label={"Expensas"} onChange={expenses => handleExpenses(expenses)}/>
-                :
-                <Text
-                  variant="labelSmall"
-                  style={{ color: theme.colors.secondary }}
-                >
-                  +50,000 expensas
-                </Text>}
+                {edit ? (
+                  <TextInput
+                    value={commaNumber(listing.price)}
+                    className="rounded-t-md w-[100px]"
+                    label={"Precio"}
+                    onChange={(price) => handlePrice(price)}
+                    mode="outlined"
+                  />
+                ) : (
+                  <Text variant="titleLarge" style={styles.price}>
+                    {commaNumber(listing.price)}
+                  </Text>
+                )}
+                {edit ? (
+                  <TextInput
+                    value={"50,000"}
+                    className="rounded-t-md w-[100px]"
+                    label={"Expensas"}
+                    onChange={(expenses) => handleExpenses(expenses)}
+                    mode="outlined"
+                  />
+                ) : (
+                  <Text
+                    variant="labelSmall"
+                    style={{ color: theme.colors.secondary }}
+                  >
+                    +50,000 expensas
+                  </Text>
+                )}
               </View>
             </View>
           </View>
 
-          {
-            edit ?
-            null:
+          {edit ? null : (
             <View>
               <Divider />
               <List.Subheader style={styles.listSubheader}>
@@ -345,27 +380,33 @@ export const ListingPost = ({ navigation, ...props }) => {
               </View>
               <Divider />
             </View>
-            }
+          )}
 
           <View>
             <List.Subheader style={styles.listSubheader}>
               Descripción
             </List.Subheader>
-            {            
-            edit?
-            <TextInput value={listing.description} className="rounded-t-md w-[95%] ml-[10px] " multiline label={"Descripcion"} onChange={description => handleDescription(description)}/>
-            :  
-            <Text variant="bodyLarge" style={styles.description}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa
-              iste ea doloremque. Ipsum voluptatum aspernatur, facere magni
-              vero, non excepturi aperiam libero rem neque suscipit qui amet vel
-              fuga ducimus! Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Culpa iste ea doloremque. Ipsum voluptatum aspernatur,
-              facere magni vero, non excepturi aperiam libero rem neque suscipit
-              qui amet vel fuga ducimus! Lorem ipsum dolor sit amet consectetur
-              adipisicing
-            </Text>
-            }
+            {edit ? (
+              <TextInput
+                value={listing.description}
+                className="rounded-t-md w-[95%] ml-[10px] "
+                multiline
+                label={"Descripcion"}
+                onChange={(description) => handleDescription(description)}
+                mode="outlined"
+              />
+            ) : (
+              <Text variant="bodyLarge" style={styles.description}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa
+                iste ea doloremque. Ipsum voluptatum aspernatur, facere magni
+                vero, non excepturi aperiam libero rem neque suscipit qui amet
+                vel fuga ducimus! Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Culpa iste ea doloremque. Ipsum voluptatum
+                aspernatur, facere magni vero, non excepturi aperiam libero rem
+                neque suscipit qui amet vel fuga ducimus! Lorem ipsum dolor sit
+                amet consectetur adipisicing
+              </Text>
+            )}
           </View>
           <Divider />
           <List.Subheader style={styles.listSubheader}>
@@ -373,58 +414,85 @@ export const ListingPost = ({ navigation, ...props }) => {
           </List.Subheader>
 
           <View style={styles.containerListingSpecialDetails}>
-            {
-              edit ?
-            <TextInput value="120" className="rounded-t-md w-[170px] ml-[8px] mb-2" label={"Cubiertos"} onChange={cubiertos => handleCubiertos(cubiertos)}/>
-            :
-            <List.Item
-              title="Cubiertos"
-              description="120 m2"
-              left={(props) => <List.Icon {...props} icon="texture-box" />}
-              titleStyle={{ fontWeight: 800 }}
-              width={width / 2 - 16}
-            />
-            }
-            {
-              edit ?
-            <TextInput value="20" className="rounded-t-md w-[170px] ml-[8px] mb-2" label={"Descubiertos"} onChange={descubiertos => handleDescubiertos(descubiertos)}/>
-            :
-            <List.Item
-              title="descubiertos"
-              description="20 m2"
-              left={(props) => <List.Icon {...props} icon="texture-box" />}
-              titleStyle={{ fontWeight: 800 }}
-              width={width / 2 - 16}
-            />
-            }
-            {
-              edit ?
-            <TextInput value="4" className="rounded-t-md w-[170px] ml-[8px] mb-2" label={"Ambientes"} onChange={ambientes => handleAmbientes(ambientes)}/>
-            :
-            <List.Item
-              title="Ambientes"
-              description="4"
-              left={(props) => <List.Icon {...props} icon="floor-plan" />}
-              titleStyle={{ fontWeight: 800 }}
-              width={width / 2 - 16}
-            />
-            }
-            {
-              edit ?
-              <TextInput value="2" className="rounded-t-md w-[170px] ml-[8px] mb-2" label={"Dormitorios"} onChange={dormitorios => handleDormitorios(dormitorios)}/>
-            :
+            {edit ? (
+              <TextInput
+                value="120"
+                className="rounded-t-md w-[170px] ml-[8px] mb-2"
+                label={"Cubiertos"}
+                onChange={(cubiertos) => handleCubiertos(cubiertos)}
+                mode="outlined"
+              />
+            ) : (
               <List.Item
-                title="Dormitorios"
-                description="2"
-                left={(props) => <List.Icon {...props} icon="bed-king-outline" />}
+                title="Cubiertos"
+                description="120 m2"
+                left={(props) => <List.Icon {...props} icon="texture-box" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
               />
-            }
-            {
-              edit ?
-              <TextInput value="2" className="rounded-t-md w-[170px] ml-[8px] mb-2" label={"Baños"} onChange={baños => handleBaños(baños)}/>
-              :
+            )}
+            {edit ? (
+              <TextInput
+                value="20"
+                className="rounded-t-md w-[170px] ml-[8px] mb-2"
+                label={"Descubiertos"}
+                onChange={(descubiertos) => handleDescubiertos(descubiertos)}
+                mode="outlined"
+              />
+            ) : (
+              <List.Item
+                title="descubiertos"
+                description="20 m2"
+                left={(props) => <List.Icon {...props} icon="texture-box" />}
+                titleStyle={{ fontWeight: 800 }}
+                width={width / 2 - 16}
+              />
+            )}
+            {edit ? (
+              <TextInput
+                value="4"
+                className="rounded-t-md w-[170px] ml-[8px] mb-2"
+                label={"Ambientes"}
+                onChange={(ambientes) => handleAmbientes(ambientes)}
+                mode="outlined"
+              />
+            ) : (
+              <List.Item
+                title="Ambientes"
+                description="4"
+                left={(props) => <List.Icon {...props} icon="floor-plan" />}
+                titleStyle={{ fontWeight: 800 }}
+                width={width / 2 - 16}
+              />
+            )}
+            {edit ? (
+              <TextInput
+                value="2"
+                className="rounded-t-md w-[170px] ml-[8px] mb-2"
+                label={"Dormitorios"}
+                onChange={(dormitorios) => handleDormitorios(dormitorios)}
+                mode="outlined"
+              />
+            ) : (
+              <List.Item
+                title="Dormitorios"
+                description="2"
+                left={(props) => (
+                  <List.Icon {...props} icon="bed-king-outline" />
+                )}
+                titleStyle={{ fontWeight: 800 }}
+                width={width / 2 - 16}
+              />
+            )}
+            {edit ? (
+              <TextInput
+                value="2"
+                className="rounded-t-md w-[170px] ml-[8px] mb-2"
+                label={"Baños"}
+                onChange={(baños) => handleBaños(baños)}
+                mode="outlined"
+              />
+            ) : (
               <List.Item
                 title="Baños"
                 description="2"
@@ -432,11 +500,16 @@ export const ListingPost = ({ navigation, ...props }) => {
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
               />
-            }
-            {
-              edit ?
-               <TextInput value="4" className="rounded-t-md w-[170px] ml-[8px] mb-2" label={"Antiguedad"} onChange={antiguedad => handleAntiguedad(antiguedad)}/>
-              :
+            )}
+            {edit ? (
+              <TextInput
+                value="4"
+                className="rounded-t-md w-[170px] ml-[8px] mb-2"
+                label={"Antiguedad"}
+                onChange={(antiguedad) => handleAntiguedad(antiguedad)}
+                mode="outlined"
+              />
+            ) : (
               <List.Item
                 title="Antigüedad"
                 description="4"
@@ -444,11 +517,16 @@ export const ListingPost = ({ navigation, ...props }) => {
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
               />
-            }
-            {
-              edit ?
-              <TextInput value="Sur" className="rounded-t-md w-[170px] ml-[8px] mb-2" label={"Or. Absoluta"} onChange={orAbsoluta => handleOrAbsoluta(orAbsoluta)}/>
-              :
+            )}
+            {edit ? (
+              <TextInput
+                value="Sur"
+                className="rounded-t-md w-[170px] ml-[8px] mb-2"
+                label={"Or. Absoluta"}
+                onChange={(orAbsoluta) => handleOrAbsoluta(orAbsoluta)}
+                mode="outlined"
+              />
+            ) : (
               <List.Item
                 title="Or. Absoluta"
                 description="Excelente"
@@ -456,11 +534,16 @@ export const ListingPost = ({ navigation, ...props }) => {
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
               />
-            }
-            {
-              edit ?
-               <TextInput value="" className="rounded-t-md w-[170px] ml-[8px] mb-2" label={"Or. Relativa"} onChange={orRelativa => handleOrRelativa(orRelativa)}/>
-              :
+            )}
+            {edit ? (
+              <TextInput
+                value=""
+                className="rounded-t-md w-[170px] ml-[8px] mb-2"
+                label={"Or. Relativa"}
+                onChange={(orRelativa) => handleOrRelativa(orRelativa)}
+                mode="outlined"
+              />
+            ) : (
               <List.Item
                 title="Or. Relativa"
                 description="Excelente"
@@ -468,15 +551,19 @@ export const ListingPost = ({ navigation, ...props }) => {
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
               />
-            }
+            )}
 
-            {
-              edit ?
+            {edit ? (
               <View className="flex flex-row items-center w-[45%] justify-between ml-[12px] mt-2">
-                  <Text className="pb-[5px] text-[16px]">Cochera</Text>
-                  <Switch className="rounded-t-md mb-2 " label={"Cochera"} value={cocheras} onValueChange={onToggleCocheras} ></Switch>
+                <Text className="pb-[5px] text-[16px]">Cochera</Text>
+                <Switch
+                  className="rounded-t-md mb-2 "
+                  label={"Cochera"}
+                  value={cocheras}
+                  onValueChange={onToggleCocheras}
+                ></Switch>
               </View>
-                :
+            ) : (
               <List.Item
                 title="Cochera"
                 description="Si"
@@ -484,65 +571,77 @@ export const ListingPost = ({ navigation, ...props }) => {
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
               />
-
-            }
-            {
-              edit ?
-            <View className="flex flex-row items-center w-[45%] justify-between ml-[12px] mt-2">
+            )}
+            {edit ? (
+              <View className="flex flex-row items-center w-[45%] justify-between ml-[12px] mt-2">
                 <Text className="pb-[5px] text-[16px]">Terraza</Text>
-                <Switch className="rounded-t-md mb-2 " label={"Terraza"} value={terraza} onValueChange={onToggleTerraza} ></Switch>
-            </View>
-            :              
-            <List.Item
-              title="Terraza"
-              description="Si"
-              left={(props) => <List.Icon {...props} icon="home-roof" />}
-              titleStyle={{ fontWeight: 800 }}
-              width={width / 2 - 16}
-            />
-            }
-            {
-              edit ?
-              <View className="flex flex-row items-center w-[45%] justify-between ml-[12px] ">
-                  <Text className="pb-[5px] text-[16px]">Balcon</Text>
-                  <Switch className="rounded-t-md mb-2 " label={"Balcon"} value={balcon} onValueChange={onToggleBalcon} ></Switch>
+                <Switch
+                  className="rounded-t-md mb-2 "
+                  label={"Terraza"}
+                  value={terraza}
+                  onValueChange={onToggleTerraza}
+                ></Switch>
               </View>
-              :
-            <List.Item
-              title="Balcon"
-              description="Si"
-              left={(props) => <List.Icon {...props} icon="balcony" />}
-              titleStyle={{ fontWeight: 800 }}
-              width={width / 2 - 16}
-            />
-            }
+            ) : (
+              <List.Item
+                title="Terraza"
+                description="Si"
+                left={(props) => <List.Icon {...props} icon="home-roof" />}
+                titleStyle={{ fontWeight: 800 }}
+                width={width / 2 - 16}
+              />
+            )}
+            {edit ? (
+              <View className="flex flex-row items-center w-[45%] justify-between ml-[12px] ">
+                <Text className="pb-[5px] text-[16px]">Balcon</Text>
+                <Switch
+                  className="rounded-t-md mb-2 "
+                  label={"Balcon"}
+                  value={balcon}
+                  onValueChange={onToggleBalcon}
+                ></Switch>
+              </View>
+            ) : (
+              <List.Item
+                title="Balcon"
+                description="Si"
+                left={(props) => <List.Icon {...props} icon="balcony" />}
+                titleStyle={{ fontWeight: 800 }}
+                width={width / 2 - 16}
+              />
+            )}
+          </View>
 
+          {edit ? null : (
+            <View>
+              <Divider />
+              <List.Subheader style={styles.listSubheader}>
+                Vista satelital
+              </List.Subheader>
+
+              <View style={styles.containerMapView}>
+                <MapView style={styles.mapView} />
+              </View>
             </View>
-            
-            {
-              edit ?
-              null :
-              <View>
-                <Divider />
-                <List.Subheader style={styles.listSubheader}>
-                  Vista satelital
-                </List.Subheader>
-      
-                <View style={styles.containerMapView}>
-                  <MapView style={styles.mapView} />
-                </View>
-              </View> 
-            }
-
+          )}
 
           <View className="w-full flex items-center mb-12 mt-6">
-          {
-            edit ?
-            <TouchableOpacity className="bg-[#6750a4]  px-6 py-2 w-[300px] items-center rounded-2xl" onPress={handleEdition} ><Text className="text-white text-[17px] font-bold ">Guardar cambios</Text></TouchableOpacity>
-            :
-            <TouchableOpacity className="bg-[#6750a4]  px-6 py-2 w-[300px] items-center rounded-2xl" ><Text className="text-white text-[17px] font-bold ">Reservar</Text></TouchableOpacity>
-
-          }
+            {edit ? (
+              <TouchableOpacity
+                className="bg-[#6750a4]  px-6 py-2 w-[300px] items-center rounded-2xl"
+                onPress={handleEdition}
+              >
+                <Text className="text-white text-[17px] font-bold ">
+                  Guardar cambios
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity className="bg-[#6750a4]  px-6 py-2 w-[300px] items-center rounded-2xl">
+                <Text className="text-white text-[17px] font-bold ">
+                  Reservar
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -648,7 +747,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 16,
-    marginHorizontal: 6
+    marginHorizontal: 6,
   },
   mapView: {
     flex: 1,
