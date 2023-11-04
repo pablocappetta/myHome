@@ -23,7 +23,7 @@ class RealtorService {
   }
 
   async createRealtor(realtor) {
-    const isRealtorRegistered = await this.getRealtorsByLoginEmail(
+    const isRealtorRegistered = await this.getRealtorByLoginEmail(
       realtor.loginEmail
     );
     if (isRealtorRegistered) {
