@@ -80,23 +80,23 @@ const Home = ({ navigation }) => {
   return (
     <SafeAreaView>
       <ScrollView vertical ref={ref}>
-        <TouchableOpacity
-          style={styles.userHomeWelcomeHeader}
-          onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
-        >
-          {isUserLogged ? (
-            <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
-          ) : (
-            <Avatar.Icon size={36} icon="account" />
-          )}
-          <Text variant="titleLarge">
-            ¡Hola,{" "}
-            <Text style={styles.userNameGreeting} numberOfLines={1}>
-              {isUserLogged ? user.name : "invitado"}
+            <TouchableOpacity
+            style={styles.userHomeWelcomeHeader}
+            onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
+            >
+            {isUserLogged ? (
+                <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+            ) : (
+                <Avatar.Icon size={36} icon="account" />
+            )}
+            <Text variant="titleLarge">
+                ¡Hola,{" "}
+                <Text className="font-bold" style={styles.userNameGreeting} numberOfLines={1}>
+                {isUserLogged ? user.name : "invitado"}
+                </Text>
+                !
             </Text>
-            !
-          </Text>
-        </TouchableOpacity>
+            </TouchableOpacity>
         <View>
           <SegmentedButtons
             buttons={segmentedButtons}
@@ -229,7 +229,6 @@ const Home = ({ navigation }) => {
           </View>
         )}
       </ScrollView>
-
     </SafeAreaView>
   );
 };

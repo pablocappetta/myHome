@@ -1,13 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const { dbConnection } = require("./src/db/config");
+const YAML = require("yamljs");
 const path = require("path");
 const app = express();
 dbConnection();
 const morgan = require("morgan");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 //Middleware
 app.use(morgan("dev"));
@@ -25,23 +26,19 @@ app.set("json spaces", 2);
 //Raiz
 app.use("/", express.static(path.join(__dirname, "./public")));
 
-//Test endpoint
-app.get("/test", (req, res) => {
-  res.status(200).send({ message: "You are connected to the project" });
-});
+//Realtor endpoint
+app.use("/api/realtors", require("./src/routes/realtor.routes"));
 
-//Mensajes endpoint
-app.use("/api/mensajes", require("./src/routes/mensajes.routes"));
+//Listings endpoint
+app.use("/api/listings", require("./src/routes/listing.routes"));
 
 //Usuarios endpoint
-app.use("/api/usuarios", require("./src/routes/usuarios.routes"));
+app.use("/api/users", require("./src/routes/user.routes"));
 
 //Swagger endpoint
-
 app.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //Error handling endpoints
-
 app.use((req, res, next) => {
   const error = new Error("Not found");
   error.status = 404;

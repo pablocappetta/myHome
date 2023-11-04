@@ -1,10 +1,11 @@
-const UsuariosModel = require("../models/Usuarios");
-const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
+const ValidationError = mongoose.Error.ValidationError;
+const UserModel = require("../models/User");
 
-class UsuariosService {
+class RealtorUserService {
   async getUsers() {
     try {
-      const users = await UsuariosModel.find();
+      const users = await UserModel.find();
       return users;
     } catch (err) {
       console.error(err);
@@ -14,7 +15,7 @@ class UsuariosService {
 
   async getUserById(id) {
     try {
-      let user = await UsuariosModel.findOne({ _id: id });
+      const user = await UserModel.findOne({ _id: id });
       return user;
     } catch (err) {
       console.error(err);
@@ -24,7 +25,7 @@ class UsuariosService {
 
   async getUserByEmail(email) {
     try {
-      let user = await UsuariosModel.findOne({ email });
+      const user = await UserModel.findOne({ email });
       return user;
     } catch (err) {
       console.error(err);
@@ -33,20 +34,20 @@ class UsuariosService {
   }
 
   async createUser(user) {
+    const isUserRegistered = await this.getUserByEmail(user.email);
+    if (isUserRegistered) {
+      throw new Error("El usuario ya existe");
+    }
     try {
-      let isUserRegistered = await UsuariosModel.findOne({ email: user.email });
-      if (isUserRegistered) {
-        throw new Error("El usuario ya existe");
-      } else {
-        user.password = await bcrypt.hash(user.password, 10);
-        await UsuariosModel.create(user);
-        return user;
-      }
+      return await UserModel.create(user);
     } catch (err) {
       console.error(err);
+      if (err instanceof ValidationError) {
+        throw new Error("Invalid input data.");
+      }
       throw new Error("Error en createUser Service");
     }
   }
 }
 
-module.exports = new UsuariosService();
+module.exports = new RealtorUserService();

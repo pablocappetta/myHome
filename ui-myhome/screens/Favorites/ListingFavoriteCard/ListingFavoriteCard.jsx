@@ -1,32 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Card, Text } from "react-native-paper";
-import ListingTypeChip from "../ListingTypeChip/ListingTypeChip";
+import { Card, IconButton, Text, Dialog, Button } from "react-native-paper";
 import commaNumber from "comma-number";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../../contexts/ThemeContext";
+import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
 
-const ListingCard = ({ listing, type }) => {
-  const sharedStyles = {
-    position: "relative",
-  };
-
+const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
   const styles = StyleSheet.create({
-    highlighted: {
-      ...sharedStyles,
-      marginLeft: 6,
-      marginRight: 6,
-    },
     listingImage: {
-      width: "100%",
-      height: type === "highlighted" ? 271 : 195,
-    },
-    recent: {
-      ...sharedStyles,
+      width: 180,
+      height: 128,
     },
     listingTypeChip: {
       position: "absolute",
       zIndex: 1,
-      right: 8,
+      left: 8,
       top: 8,
     },
     priceContainer: {
@@ -36,39 +24,49 @@ const ListingCard = ({ listing, type }) => {
       alignlistings: "center",
       marginTop: 12,
       position: "absolute",
-      top: 56,
-      right: 16,
+      right: 8,
+      top: 72,
     },
-    cardContentContainer: { display: "flex", flexDirection: "column" },
+    cardContentContainer: {
+      display: "flex",
+      flexDirection: "column",
+      position: "absolute",
+      width: 172,
+      top: 8,
+      right: 8,
+    },
   });
 
   const { theme } = useTheme();
 
   return (
-    <Card
-      style={type === "highlighted" ? styles.highlighted : styles.recent}
-      width={180}
-      height={type === "highlighted" ? 376 : 300}
-    >
+    <Card>
       <View style={styles.listingTypeChip}>
         <ListingTypeChip listingType={listing.listingType}>
           {listing.listingType}
         </ListingTypeChip>
+        <IconButton
+          icon="heart"
+          size={16}
+          mode="contained"
+          style={{ bottom: 38, left: 126 }}
+          onPress={() => handleRemoveFavorite(listing)}
+        />
       </View>
       <Card.Cover
         source={{ uri: listing.image }}
         style={styles.listingImage}
         defaultSource={
           theme.dark
-            ? require("../../assets/images/darkBlurredImage.jpg")
-            : require("../../assets/images/blurredImage.jpg")
+            ? require("../../../assets/images/darkBlurredImage.jpg")
+            : require("../../../assets/images/blurredImage.jpg")
         }
       />
       <Card.Content style={styles.cardContentContainer}>
-        <Text variant="titleSmall" style={{ marginTop: 6 }}>
+        <Text variant="titleMedium" style={{ marginTop: 6 }} numberOfLines={1}>
           {listing.type}
         </Text>
-        <Text variant="bodySmall" numberOfLines={2} style={{ width: "100%" }}>
+        <Text variant="bodySmall" numberOfLines={1}>
           {listing.location}
         </Text>
         <View style={styles.priceContainer}>
@@ -92,4 +90,6 @@ const ListingCard = ({ listing, type }) => {
   );
 };
 
-export default ListingCard;
+
+
+export default ListingFavoriteCard;

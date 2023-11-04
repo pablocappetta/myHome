@@ -24,7 +24,7 @@ const UserProfile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
-        <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Perfil" />
       </Appbar.Header>
       <View style={styles.profileContainer}>
@@ -68,12 +68,12 @@ const UserProfile = ({ navigation }) => {
 
         <View style={styles.actions}>
           <Button
-            icon="cog"
+            icon="heart"
             mode="contained-tonal"
             style={styles.actionButton}
-            onPress={() => navigation.navigate("Ajustes")}
+            onPress={() => {}}
           >
-            Ajustes
+            Ver Favoritos
           </Button>
           <Button
             icon="home"

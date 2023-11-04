@@ -17,6 +17,7 @@ import {
   Switch,
   Text,
   TextInput,
+  Button
 } from "react-native-paper";
 import MapView from "react-native-maps";
 import Carousel from "react-native-reanimated-carousel";
@@ -179,10 +180,11 @@ export const ListingPost = ({ navigation, ...props }) => {
     setBalcon(!balcon);
   };
 
+
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
-        <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={listing.location} />
       </Appbar.Header>
 
@@ -278,8 +280,10 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <View style={styles.actionButtonsContainer}>
                 <IconButton
-                  icon="calendar-month"
-                  onPress={() => console.debug("Agendar visita")}
+                  icon={"calendar-clock"}
+                  onPress={() =>
+                    navigation.navigate("Booking", { screen: "Date" })
+                  }
                 />
                 <IconButton
                   icon={like ? "heart" : "heart-outline"}
@@ -291,8 +295,10 @@ export const ListingPost = ({ navigation, ...props }) => {
                   onPress={() => console.debug("Share TBD")}
                 />
                 <IconButton
-                  icon="message-text-outline"
-                  onPress={() => console.debug("Enviar pregunta")}
+                  icon="comment-question-outline"
+                  onPress={() => 
+                    navigation.navigate("SendQuestion", { screen: "SendQuestion" })
+                  }
                 />
               </View>
             )}
@@ -755,6 +761,10 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 16,
     paddingHorizontal: 16,
+  },
+  button: {
+    marginVertical: 16,
+    marginHorizontal: 20,
   },
 });
 

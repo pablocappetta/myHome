@@ -3,7 +3,9 @@ require("dotenv").config();
 
 const dbConnection = async () => {
   try {
-    await mongoose.connect(process.env.CONNECTION_STRING);
+    await mongoose.connect(process.env.CONNECTION_STRING, {
+      dbName: "myHome-PROD",
+    });
     console.log("La conexión con la BD se ha realizado correctamente.");
   } catch (err) {
     console.error(err);

@@ -34,7 +34,7 @@ const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
-        <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
       </Appbar.Header>
       <ScrollView vertical automaticallyAdjustKeyboardInsets={true}>
         <KeyboardAvoidingView
@@ -68,6 +68,7 @@ const Login = ({ navigation }) => {
                         mode="outlined"
                         style={styles.input}
                         error={isEmailError}
+                        keyboardType="email-address"
                       />
                       <HelperText type="error" visible={isEmailError}>
                         {errors.email}
@@ -80,6 +81,7 @@ const Login = ({ navigation }) => {
                         mode="outlined"
                         style={styles.input}
                         error={isPasswordError}
+                        keyboardType="default"
                       />
                       <HelperText type="error" visible={isPasswordError}>
                         {errors.password}

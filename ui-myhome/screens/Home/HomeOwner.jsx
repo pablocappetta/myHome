@@ -27,7 +27,7 @@ const HomeOwner = ({navigation}) => {
             )}
             <Text variant="titleLarge">
                 ¡Hola,{" "}
-                <Text className="font-bold" numberOfLines={1}>
+                <Text className="font-bold" style={styles.userNameGreeting} numberOfLines={1}>
                 {isUserLogged ? user.name : "invitado"}
                 </Text>
                 !

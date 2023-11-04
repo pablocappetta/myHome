@@ -1,28 +1,23 @@
-import React, { useRef, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React, { useRef } from "react";
+import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import {
   Switch,
   List,
-  RadioButton,
   Appbar,
   IconButton,
+  Card,
+  Text,
+  Button,
+  Avatar,
+  Divider,
 } from "react-native-paper";
 import { useTheme } from "../../contexts/ThemeContext";
-import { currencyOptions, languageOptions } from "./SettingsUtils";
 import { useScrollToTop } from "@react-navigation/native";
+import { useUserContext } from "../../contexts/UserContext";
 
-const Settings = () => {
+const Settings = ({ navigation }) => {
   const { theme, toggleTheme } = useTheme();
-  const [language, setLanguage] = useState("es");
-  const [currency, setCurrency] = useState("ARS");
-
-  const handleLanguageChange = (value) => {
-    setLanguage(value);
-  };
-
-  const handleCurrencyChange = (value) => {
-    setCurrency(value);
-  };
+  const { user, isUserLogged } = useUserContext();
 
   const ref = useRef(null);
 
@@ -31,9 +26,75 @@ const Settings = () => {
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
-        <Appbar.Content title="Ajustes" />
+        <Appbar.Content title="Mi Cuenta" />
       </Appbar.Header>
       <ScrollView style={styles.settingsContainer} ref={ref}>
+        {!isUserLogged ? (
+          <View style={styles.topBannerContainer}>
+            <Card>
+              <IconButton icon={"home-circle"} size={32} />
+              <Card.Content>
+                <Text>
+                  Accedé a tus reservas, favoritos y publicaciones desde tu
+                  cuenta. Si no estás registrado, podés hacerlo desde acá.
+                </Text>
+              </Card.Content>
+
+              <Card.Actions style={styles.topBannerCardActionsContainer}>
+                <Button
+                  onPress={() => navigation.navigate("Login")}
+                  width={138}
+                >
+                  Ingresar
+                </Button>
+                <Button
+                  onPress={() => navigation.navigate("Register")}
+                  width={138}
+                >
+                  Registrarse
+                </Button>
+              </Card.Actions>
+            </Card>
+          </View>
+        ) : (
+          <View style={styles.containerUserDetails}>
+            <Avatar.Image size={48} source={{ uri: user.profilePicture }} />
+
+            <View style={{ display: "flex", flexDirection: "column" }}>
+              <Text variant="titleLarge" numberOfLines={1}>
+                {user.name + " " + user.lastName}
+              </Text>
+              <Text variant="labelSmall" numberOfLines={1}>
+                {user.email}
+              </Text>
+            </View>
+          </View>
+        )}
+        <View style={styles.userActionsButtonContainer}>
+          <TouchableOpacity
+            onPress={() =>
+              isUserLogged
+                ? navigation.navigate("Perfil")
+                : navigation.navigate("Login")
+            }
+            style={styles.userActionsButton}
+          >
+            <Card>
+              <Card.Content style={styles.userActionsButtonCardContent}>
+                <IconButton icon={"account"} style={{ marginLeft: 0 }} />
+                <Text>Mi Perfil</Text>
+              </Card.Content>
+            </Card>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {}} style={styles.userActionsButton}>
+            <Card>
+              <Card.Content style={styles.userActionsButtonCardContent}>
+                <IconButton icon={"book"} style={{ marginLeft: 0 }} />
+                <Text>Mis Reservas</Text>
+              </Card.Content>
+            </Card>
+          </TouchableOpacity>
+        </View>
         <List.Section>
           <List.Subheader>Modo Oscuro</List.Subheader>
           <List.Item
@@ -44,46 +105,60 @@ const Settings = () => {
               />
             )}
             right={() => (
-              <Switch value={theme.dark} onValueChange={toggleTheme} />
+              <Switch
+                value={theme.dark}
+                onValueChange={toggleTheme}
+                style={{ alignSelf: "center" }}
+              />
             )}
+            onPress={toggleTheme}
+          />
+        </List.Section>
+        <List.Section>
+          <List.Subheader>Ayuda</List.Subheader>
+          <List.Item
+            title="Preguntas frecuentes / Ayuda"
+            left={() => <IconButton icon={"help-circle-outline"} />}
+            right={() => <IconButton icon={"chevron-right"} />}
+            onPress={() => navigation.navigate("FAQ")}
+          />
+        </List.Section>
+        <List.Section>
+          <List.Subheader>Privacidad y legal</List.Subheader>
+          <List.Item
+            title="Políticas de privacidad"
+            left={() => <IconButton icon={"file-document-outline"} />}
+            right={() => <IconButton icon={"chevron-right"} />}
+            onPress={() => navigation.navigate("Privacidad")}
+          />
+          <Divider />
+          <List.Item
+            title="Términos y condiciones"
+            left={() => <IconButton icon={"information-outline"} />}
+            right={() => <IconButton icon={"chevron-right"} />}
+            onPress={() => navigation.navigate("TermsAndConditions")}
           />
         </List.Section>
 
         <List.Section>
-          <List.Subheader>Idioma</List.Subheader>
-          {languageOptions.map((option) => (
-            <List.Item
-              key={option.value}
-              title={option.label}
-              onPress={() => handleLanguageChange(option.value)}
-              left={() => (
-                <RadioButton.Android
-                  value={option.value}
-                  status={language === option.value ? "checked" : "unchecked"}
-                  onPress={() => handleLanguageChange(option.value)}
-                />
-              )}
-            />
-          ))}
+          <List.Subheader>Seguridad de la cuenta</List.Subheader>
+          <List.Item
+            title="Cambiar contraseña"
+            left={() => <IconButton icon={"shield-account-outline"} />}
+            right={() => <IconButton icon={"chevron-right"} />}
+            onPress={() => navigation.navigate("ChangePassword")}
+          />
+          <Divider />
+          <List.Item
+            title="Cerrar sesión"
+            left={() => <IconButton icon={"logout"} />}
+            onPress={() => navigation.navigate("Logout")}
+          />
         </List.Section>
 
-        <List.Section>
-          <List.Subheader>Moneda</List.Subheader>
-          {currencyOptions.map((option) => (
-            <List.Item
-              key={option.value}
-              title={option.label}
-              onPress={() => handleCurrencyChange(option.value)}
-              left={() => (
-                <RadioButton.Android
-                  value={option.value}
-                  status={currency === option.value ? "checked" : "unchecked"}
-                  onPress={() => handleCurrencyChange(option.value)}
-                />
-              )}
-            />
-          ))}
-        </List.Section>
+        <Text style={{ paddingVertical: 24 }}>
+          Versión de la aplicación: {require("../../package.json").version}
+        </Text>
       </ScrollView>
     </View>
   );
@@ -93,10 +168,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  settingsContainer: {
-    flex: 1,
-    paddingLeft: 16,
+  topBannerContainer: {
+    marginTop: 16,
+    width: "98%",
+    alignSelf: "center",
+  },
+  topBannerCardActionsContainer: {
+    alignSelf: "center",
+    marginTop: 8,
+    marginBottom: 8,
+    gap: 16,
     paddingRight: 16,
+  },
+  userActionsButtonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 16,
+    marginTop: 16,
+    width: "99%",
+    alignSelf: "center",
+  },
+  userActionsButton: { width: "47%" },
+  userActionsButtonCardContent: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    height: 64,
+  },
+  containerUserDetails: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 24,
+    marginTop: 24,
+    marginBottom: 8,
+    paddingHorizontal: 8,
+  },
+  settingsContainer: {
+    paddingHorizontal: 16,
   },
 });
 
