@@ -247,7 +247,7 @@ paths:
                 $ref: "#/components/schemas/Listing"
         "400":
           description: Invalid input data
-    get: #!!!!!!!!!!!!!!!!!!!!!
+    get:
       summary: Get list of listings.
       tags:
         - Listings
@@ -258,7 +258,7 @@ paths:
           schema:
             $ref: "#/components/schemas/ListingType"
         - in: query
-          name: country
+          name: state
           required: true
           type: string
         - in: query
@@ -681,7 +681,7 @@ components:
         name:
           required: true
           type: string
-        last_name:
+        lastName:
           required: true
           type: string
         email:
@@ -689,6 +689,8 @@ components:
           type: string
           format: email
         phone:
+          type: string
+        avatar:
           type: string
     Realtor:
       type: object
@@ -719,9 +721,14 @@ components:
     Listing:
       type: object
       properties:
-        id:
+        listingId:
           readOnly: true
           type: integer
+        title:
+          required: true
+          type: string
+        description:
+          type: string
         property:
           required: true
           $ref: "#/components/schemas/Property"
@@ -754,14 +761,6 @@ components:
     Property:
       type: object
       properties:
-        title:
-          required: true
-          type: string
-        realtorId:
-          readOnly: true
-          type: integer
-        description:
-          type: string
         age:
           required: true
           type: integer
@@ -787,7 +786,7 @@ components:
             - PH
             - Local
             - Oficina
-            - Galpon
+            - Galpón
             - Terreno
         sqm:
           required: true
@@ -803,25 +802,33 @@ components:
           required: true
           type: string
           enum:
-            - Norte
-            - Sur
-            - Este
-            - Oeste
+            - N
+            - NE
+            - E
+            - SE
+            - S
+            - SO
+            - O
+            - NO
         relativeOrientation:
           required: true
           type: string
           enum:
             - Frente
             - Contrafrente
-        numberOfRooms:
+            - Lateral
+        rooms:
           required: true
           type: integer
-        numberOfBathrooms:
+        bathrooms:
           required: true
           type: integer
         numberOfGarages:
           required: true
           type: integer
+        hasGarden:
+          required: true
+          type: boolean
         hasTerrace:
           required: true
           type: boolean
@@ -836,7 +843,7 @@ components:
           type: array
           items:
             type: string
-        pictures:
+        photos:
           required: true
           type: array
           items:
@@ -860,6 +867,18 @@ components:
     Address:
       type: object
       properties:
+        state:
+          required: true
+          type: string
+        city:
+          required: true
+          type: string
+        neighborhood:
+          required: true
+          type: string
+        zipCode:
+          required: true
+          type: string
         street:
           required: true
           type: string
@@ -869,18 +888,6 @@ components:
         floor:
           type: string
         apartment:
-          type: string
-        neighborhood:
-          required: true
-          type: string
-        city:
-          required: true
-          type: string
-        state:
-          required: true
-          type: string
-        zipCode:
-          required: true
           type: string
     Reservation:
       type: object
@@ -901,9 +908,9 @@ components:
           readOnly: true
           type: string
           enum:
-            - pending
-            - payed
-            - cancelled
+            - Pendiente
+            - Pagada
+            - Cancelada
         wasReviewed:
           readOnly: true
           type: boolean

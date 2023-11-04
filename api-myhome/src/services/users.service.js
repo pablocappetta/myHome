@@ -1,4 +1,6 @@
-const UserModel = require("../models/Users");
+const mongoose = require("mongoose");
+const ValidationError = mongoose.Error.ValidationError;
+const UserModel = require("../models/User");
 const bcrypt = require("bcrypt");
 
 class UserService {
@@ -33,17 +35,18 @@ class UserService {
   }
 
   async createUser(user) {
+    const isUserRegistered = await this.getUserByEmail(user.email);
+    if (isUserRegistered) {
+      throw new Error("El usuario ya existe");
+    }
     try {
-      const isUserRegistered = await UserModel.findOne({ email: user.email });
-      if (isUserRegistered) {
-        throw new Error("El usuario ya existe");
-      } else {
-        user.password = await bcrypt.hash(user.password, 10);
-        await UserModel.create(user);
-        return user;
-      }
+      // user.password = await bcrypt.hash(user.password, 10); guardo esta linea para el login con realtor
+      return await UserModel.create(user);
     } catch (err) {
       console.error(err);
+      if (err instanceof ValidationError) {
+        throw new Error("Invalid input data.");
+      }
       throw new Error("Error en createUser Service");
     }
   }
