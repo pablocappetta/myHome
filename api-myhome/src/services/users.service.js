@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const ValidationError = mongoose.Error.ValidationError;
 const UserModel = require("../models/User");
 
-class UserService {
+class RealtorUserService {
   async getUsers() {
     try {
       const users = await UserModel.find();
@@ -50,4 +50,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService();
+module.exports = new RealtorUserService();

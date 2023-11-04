@@ -1,4 +1,4 @@
-const RealtorModel = require("../models/realtor.model");
+const RealtorModel = require("../models/Realtor");
 const bcrypt = require("bcrypt");
 
 class RealtorService {
@@ -86,3 +86,5 @@ class RealtorService {
     // TODO: esto creo que va en otro service?
   }
 }
+
+module.exports = new RealtorService();

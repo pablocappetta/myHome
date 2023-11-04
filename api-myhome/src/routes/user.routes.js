@@ -15,16 +15,11 @@ router.get("/", UserController.getUsuarios); //GET USUARIOS
 //Crea un usuario
 router.post(
   "/",
-  // [
-  //   check("name").not().isEmpty(),
-  //   check("last_name").not().isEmpty(),
-  //   check("email").not().isEmpty(),
-  //   check("password").not().isEmpty(),
-  //   check("role").not().isEmpty(),
-  //   check("google").not().isEmpty(),
-  //   check("phone").not().isEmpty(),
-  //   checkFields,
-  // ],
+  [
+    check("email").not().isEmpty(),
+    check("password").not().isEmpty(),
+    checkFields,
+  ],
   UserController.createUsuario
 ); //POST USUARIOS
 
