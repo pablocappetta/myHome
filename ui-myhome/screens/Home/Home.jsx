@@ -12,7 +12,7 @@ import {
   getFilteredListingByQuery,
   getFilteredListingByType,
   segmentedButtons,
-} from "../Login/HomeUtils";
+} from "./HomeUtils";
 import ListingCard from "../../components/ListingCard/ListingCard";
 import {
   mockedHighlightedListings,
@@ -75,28 +75,26 @@ const Home = ({ navigation }) => {
     setIsQueryActive(false);
   };
 
-
-
   return (
     <SafeAreaView>
       <ScrollView vertical ref={ref}>
-            <TouchableOpacity
-            style={styles.userHomeWelcomeHeader}
-            onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
-            >
-            {isUserLogged ? (
-                <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
-            ) : (
-                <Avatar.Icon size={36} icon="account" />
-            )}
-            <Text variant="titleLarge">
-                ¡Hola,{" "}
-                <Text className="font-bold" style={styles.userNameGreeting} numberOfLines={1}>
-                {isUserLogged ? user.name : "invitado"}
-                </Text>
-                !
+        <TouchableOpacity
+          style={styles.userHomeWelcomeHeader}
+          onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
+        >
+          {isUserLogged ? (
+            <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+          ) : (
+            <Avatar.Icon size={36} icon="account" />
+          )}
+          <Text variant="titleLarge">
+            ¡Hola,{" "}
+            <Text style={styles.userNameGreeting} numberOfLines={1}>
+              {isUserLogged ? user.name : "invitado"}
             </Text>
-            </TouchableOpacity>
+            !
+          </Text>
+        </TouchableOpacity>
         <View>
           <SegmentedButtons
             buttons={segmentedButtons}

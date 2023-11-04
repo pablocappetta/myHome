@@ -5,7 +5,7 @@ import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
 
-const ListingReservationCard = ({ navigation, reservation, handleRemoveFavorite }) => {
+const ListingReservationCard = ({navigation, reservation, handleRemoveFavorite }) => {
   const styles = StyleSheet.create({
     reservationImage: {
       width: 170,
