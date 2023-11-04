@@ -23,15 +23,15 @@ class RealtorController {
     }
   }
 
-  async getRealtorById(req, res) {
-    const { id } = req.params;
+  async getRealtorByLoginEmail(req, res) {
+    const { email } = req.params;
     try {
-      const realtor = await RealtorService.getRealtorById(id);
+      const realtor = await RealtorService.getRealtorByLoginEmail(email);
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
       return res.status(500).json({
-        method: "getRealtorById",
+        method: "getRealtorByLoginEmail",
         message: err,
       });
     }

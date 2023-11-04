@@ -12,17 +12,7 @@ class RealtorService {
     }
   }
 
-  async getRealtorById(id) {
-    try {
-      const realtor = await RealtorModel.findOne({ _id: id });
-      return realtor;
-    } catch (err) {
-      console.error(err);
-      throw new Error("Error en getRealtorById Service");
-    }
-  }
-
-  async getRealtorsByLoginEmail(loginEmail) {
+  async getRealtorByLoginEmail(loginEmail) {
     try {
       const realtor = await RealtorModel.findOne({ loginEmail });
       return realtor;

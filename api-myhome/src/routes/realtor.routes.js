@@ -22,4 +22,7 @@ router.post(
   RealtorController.createRealtor
 ); //POST USUARIOS
 
+//Obtiene un usuario por su loginEmail
+router.get("/:email", RealtorController.getRealtorByLoginEmail); //GET USUARIOS
+
 module.exports = router;
