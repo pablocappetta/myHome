@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const ValidationError = mongoose.Error.ValidationError;
 const UserModel = require("../models/User");
-const bcrypt = require("bcrypt");
 
 class UserService {
   async getUsers() {
@@ -40,7 +39,6 @@ class UserService {
       throw new Error("El usuario ya existe");
     }
     try {
-      // user.password = await bcrypt.hash(user.password, 10); guardo esta linea para el login con realtor
       return await UserModel.create(user);
     } catch (err) {
       console.error(err);
