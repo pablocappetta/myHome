@@ -1,4 +1,4 @@
-const ListingModel = require("../models/listing.model");
+const ListingModel = require("../models/Listing");
 
 class ListingService {
   async createListing(listing) {
@@ -10,37 +10,10 @@ class ListingService {
     }
   }
 
-  async getListingsByPlace(listingType, state, city, neighborhood) {
-    let query = {
-      listingType: listingType,
-      state: state,
-      city: city,
-    };
-    if (neighborhood) {
-      query.neighborhood = neighborhood;
-    }
+  async getListings() {
     try {
-      const listings = await ListingModel.find(query);
+      const listings = await ListingModel.find();
       return listings;
-    } catch (err) {
-      console.error(err);
-      throw new Error("Error en getListings Service");
-    }
-  }
-
-  async getListingsInRadius(latitude, longitude, radius) {
-    try {
-      return await ListingModel.find({
-        location: {
-          $near: {
-            $maxDistance: radius,
-            $geometry: {
-              type: "Point",
-              coordinates: [longitude, latitude],
-            },
-          },
-        },
-      });
     } catch (err) {
       console.error(err);
       throw new Error("Error en getListings Service");
@@ -55,4 +28,30 @@ class ListingService {
       throw new Error("Error en getListingById Service");
     }
   }
+
+  async updateListing(listing) {
+    try {
+      return await ListingModel.findOneAndUpdate(
+        { _id: listing._id },
+        listing,
+        {
+          new: true,
+        }
+      );
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en updateListing Service");
+    }
+  }
+
+  async deleteListing(listing) {
+    try {
+      return await ListingModel.deleteOne({ _id: listing._id });
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en deleteListing Service");
+    }
+  }
 }
+
+module.exports = new ListingService();

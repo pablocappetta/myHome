@@ -29,8 +29,11 @@ app.use("/", express.static(path.join(__dirname, "./public")));
 //Realtor endpoint
 app.use("/api/realtors", require("./src/routes/realtor.routes"));
 
+//Listings endpoint
+app.use("/api/listings", require("./src/routes/listing.routes"));
+
 //Usuarios endpoint
-app.use("/api/realtorUsers", require("./src/routes/user.routes"));
+app.use("/api/users", require("./src/routes/user.routes"));
 
 //Swagger endpoint
 app.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
