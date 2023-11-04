@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  functions = "src"
+
+[dev]
+  command = "npm start" 
+
+[[redirects]]
+  from = "/api/*"
+  to = "http://localhost:8000/api/:splat" 
+  status = 200
