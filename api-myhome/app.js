@@ -26,13 +26,11 @@ app.set("json spaces", 2);
 //Raiz
 app.use("/", express.static(path.join(__dirname, "./public")));
 
-//Test endpoint
-app.get("/test", (req, res) => {
-  res.status(200).send({ message: "You are connected to the project" });
-});
+//Realtor endpoint
+app.use("/api/realtors", require("./src/routes/realtor.routes"));
 
 //Usuarios endpoint
-app.use("/api/users", require("./src/routes/user.routes"));
+app.use("/api/realtorUsers", require("./src/routes/user.routes"));
 
 //Swagger endpoint
 app.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
