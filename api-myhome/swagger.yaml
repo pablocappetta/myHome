@@ -1,0 +1,936 @@
+openapi: 3.0.2
+info:
+  title: myHome API Documentation
+  version: 1.0.0
+  description: API endpoints for the myHome application
+servers:
+  - url: http://localhost:8000/api
+    description: Development server
+paths:
+  /realtors:
+    post:
+      summary: Register a new realtor agency
+      tags:
+        - Realtors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Realtor"
+      responses:
+        "201":
+          description: Successfully registered the agency
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
+        "400":
+          description: Invalid input data
+  /realtors/me:
+    get:
+      summary: Get current realtor's profile
+      tags:
+        - Realtors
+      responses:
+        "200":
+          description: Realtor profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
+        "401":
+          description: Unauthorized access
+    put:
+      summary: Update current realtor's profile
+      tags:
+        - Realtors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Realtor"
+      responses:
+        "200":
+          description: Realtor profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized access
+    delete:
+      summary: Delete current realtor's profile
+      tags:
+        - Realtors
+      responses:
+        "204":
+          description: Realtor profile deleted successfully
+        "401":
+          description: Unauthorized access
+  /realtors/login:
+    post:
+      summary: Log in as a realtor
+      tags:
+        - Realtors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            type: object
+            schema:
+              properties:
+                email:
+                  required: true
+                  type: string
+                  format: email
+                password:
+                  required: true
+                  type: string
+      responses:
+        "200":
+          description: Realtor logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
+        "401":
+          description: Unauthorized
+  /realtors/{realtorId}:
+    get:
+      summary: Get realtor details by ID
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Realtor details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
+        "404":
+          description: Realtor not found
+  /realtors/{realtorId}/message: #Los mensajes no se ven desde la app. Se manda un mail.
+    post:
+      summary: Send a message to a realtor
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            type: object
+            required: true
+            schema:
+              properties:
+                name:
+                  required: true
+                  type: string
+                email:
+                  required: true
+                  type: string
+                  format: email
+                phone:
+                  required: true
+                  type: string
+                message:
+                  required: true
+                  type: string
+      responses:
+        "201":
+          description: Message sent successfully
+        "400":
+          description: Invalid input data
+  /realtors/password-reset:
+    post:
+      summary: Send password reset email
+      tags:
+        - Realtors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            type: object
+            schema:
+              properties:
+                email:
+                  required: true
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Password reset email sent successfully
+        "400":
+          description: Invalid input data
+  /realtors/password-reset/{token}:
+    post:
+      summary: Reset password
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            type: object
+            schema:
+              properties:
+                password:
+                  required: true
+                  type: string
+      responses:
+        "200":
+          description: Password reset successfully
+        "400":
+          description: Invalid input data
+  /realtors/{realtorId}/listings:
+    get:
+      summary: Get list of listings for a realtor
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of listings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+        "404":
+          description: Realtor not found
+  /listings:
+    post:
+      summary: Add a new listing
+      tags:
+        - Listings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Listing"
+      responses:
+        "201":
+          description: Listing added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "400":
+          description: Invalid input data
+    get:
+      summary: Get list of listings.
+      tags:
+        - Listings
+      parameters:
+        - in: query
+          name: listingType
+          required: true
+          schema:
+            $ref: "#/components/schemas/ListingType"
+        - in: query
+          name: state
+          required: true
+          type: string
+        - in: query
+          name: city
+          required: true
+          type: string
+        - in: query
+          name: neighborhood
+          type: string
+      responses:
+        "200":
+          description: List of listings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+  /listings/nearby:
+    get:
+      summary: Get list of listings nearby
+      tags:
+        - Listings
+      parameters:
+        - in: query
+          name: latitude
+          required: true
+          type: number
+        - in: query
+          name: longitude
+          required: true
+          type: number
+        - in: query
+          name: radius
+          description: Radius in kilometers
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: List of listings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+  /listings/{listingId}:
+    get:
+      summary: Get listing details by ID
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Listing details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "404":
+          description: Listing not found
+    put:
+      summary: Update listing details
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Listing"
+      responses:
+        "200":
+          description: Listing details updated successfully
+        "400":
+          description: Invalid input data
+        "404":
+          description: Listing not found
+    delete:
+      summary: Delete a listing
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Listing deleted successfully
+        "404":
+          description: Listing not found
+  /listings/{listingId}/visits:
+    get:
+      summary: Get list of visits for a listing
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of visits retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Visit"
+        "404":
+          description: Listing not found
+    post:
+      summary: Schedule a visit for a listing
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Visit"
+      responses:
+        "201":
+          description: Visit scheduled successfully
+        "400":
+          description: Invalid input data or time slot not available
+  /listings/{listingId}/reservation:
+    post:
+      summary: Reserve a listing for rent
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+      responses:
+        "201":
+          description: Listing reserved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "400":
+          description: Invalid input data or already reserved
+        "405":
+          description: Listing not available for reservation. It is not for rent.
+    get:
+      summary: Get reservation details for a listing
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Reservation details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "404":
+          description: Listing not found
+  /reservations/{reservationId}/payment:
+    post:
+      summary: Make a payment for a reservation
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: reservationId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            type: object
+            schema:
+              properties:
+                cardNumber:
+                  required: true
+                  type: string
+                cardHolder:
+                  required: true
+                  type: string
+                expirationDate:
+                  required: true
+                  type: string
+                  format: date
+                cvv:
+                  required: true
+                  type: string
+      responses:
+        "201":
+          description: Payment made successfully
+        "400":
+          description: Invalid input data
+  /reservations/{reservationId}/review:
+    post:
+      summary: Add a review for a reservation
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: reservationId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Review"
+      responses:
+        "201":
+          description: Review added successfully
+        "400":
+          description: Invalid input data
+  /users:
+    post:
+      summary: Register a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: Successfully registered the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input data
+  /users/login:
+    post:
+      summary: Log in as a user with Google
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                token:
+                  required: true
+                  type: string
+                email:
+                  required: true
+                  type: string
+      responses:
+        "200":
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+  /users/me:
+    get:
+      summary: Get current user's profile
+      tags:
+        - Users
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized access
+    put:
+      summary: Update current user's profile
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized access
+    delete:
+      summary: Delete current user's profile
+      tags:
+        - Users
+      responses:
+        "204":
+          description: User profile deleted successfully
+        "401":
+          description: Unauthorized access
+  /users/me/favorites:
+    get:
+      summary: Get list of favorite listings
+      tags:
+        - Users
+      responses:
+        "200":
+          description: List of favorite listings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+  /users/me/favorites/{listingId}:
+    post:
+      summary: Add listing to favorites
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "201":
+          description: Listing added to favorites successfully
+        "404":
+          description: Listing not found
+    delete:
+      summary: Remove listing from favorites
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Listing removed from favorites successfully
+        "404":
+          description: Listing not found
+components:
+  schemas:
+    Review:
+      type: object
+      properties:
+        date:
+          required: true
+          type: string
+          format: date-time
+        rating:
+          required: true
+          type: number
+        comment:
+          required: true
+          type: string
+        userId:
+          required: true
+          type: integer
+    User:
+      type: object
+      properties:
+        name:
+          required: true
+          type: string
+        lastName:
+          required: true
+          type: string
+        email:
+          required: true
+          type: string
+          format: email
+        phone:
+          type: string
+        avatar:
+          type: string
+    Realtor:
+      type: object
+      properties:
+        realtorId:
+          readOnly: true
+          type: integer
+        name:
+          required: true
+          type: string
+        loginEmail:
+          required: true
+          type: string
+        password:
+          required: true
+          type: string
+          writeOnly: true
+        contactEmail:
+          required: true
+          type: string
+        logo:
+          type: string
+        reviews:
+          readOnly: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Review"
+    Listing:
+      type: object
+      properties:
+        listingId:
+          readOnly: true
+          type: integer
+        title:
+          required: true
+          type: string
+        description:
+          type: string
+        property:
+          required: true
+          $ref: "#/components/schemas/Property"
+        realtorId:
+          required: true
+          type: integer
+        type:
+          required: true
+          $ref: "#/components/schemas/ListingType"
+        status:
+          readOnly: true
+          type: string
+          enum:
+            - disponible
+            - reservada
+            - vendida
+            - cancelada
+        creationDate:
+          readOnly: true
+          type: string
+          format: date-time
+        price:
+          required: true
+          $ref: "#/components/schemas/Price"
+    ListingType:
+      type: string
+      enum:
+        - venta
+        - alquiler
+    Property:
+      type: object
+      properties:
+        age:
+          required: true
+          type: integer
+        address:
+          required: true
+          $ref: "#/components/schemas/Address"
+        geolocation:
+          required: true
+          type: object
+          properties:
+            latitude:
+              required: true
+              type: number
+            longitude:
+              required: true
+              type: number
+        type:
+          required: true
+          type: string
+          enum:
+            - Casa
+            - Departamento
+            - PH
+            - Local
+            - Oficina
+            - Galpón
+            - Terreno
+        sqm:
+          required: true
+          type: object
+          properties:
+            covered:
+              required: true
+              type: integer
+            uncovered:
+              required: true
+              type: integer
+        cardinalOrientation:
+          required: true
+          type: string
+          enum:
+            - N
+            - NE
+            - E
+            - SE
+            - S
+            - SO
+            - O
+            - NO
+        relativeOrientation:
+          required: true
+          type: string
+          enum:
+            - Frente
+            - Contrafrente
+            - Lateral
+        rooms:
+          required: true
+          type: integer
+        bathrooms:
+          required: true
+          type: integer
+        numberOfGarages:
+          required: true
+          type: integer
+        hasGarden:
+          required: true
+          type: boolean
+        hasTerrace:
+          required: true
+          type: boolean
+        hasBalcony:
+          required: true
+          type: boolean
+        hasStorageUnit:
+          required: true
+          type: boolean
+        amenities:
+          required: true
+          type: array
+          items:
+            type: string
+        photos:
+          required: true
+          type: array
+          items:
+            type: string
+        video:
+          type: string
+        expensesPrice:
+          $ref: "#/components/schemas/Price"
+    Price:
+      type: object
+      properties:
+        amount:
+          required: true
+          type: number
+        currency:
+          required: true
+          type: string
+          enum:
+            - USD
+            - ARS
+    Address:
+      type: object
+      properties:
+        state:
+          required: true
+          type: string
+        city:
+          required: true
+          type: string
+        neighborhood:
+          required: true
+          type: string
+        zipCode:
+          required: true
+          type: string
+        street:
+          required: true
+          type: string
+        number:
+          required: true
+          type: integer
+        floor:
+          type: string
+        apartment:
+          type: string
+    Reservation:
+      type: object
+      properties:
+        listingId:
+          required: true
+          type: integer
+          format: int64
+        userId:
+          required: true
+          type: integer
+          format: int64
+        reservationDate:
+          readOnly: true
+          type: string
+          format: date-time
+        status:
+          readOnly: true
+          type: string
+          enum:
+            - Pendiente
+            - Pagada
+            - Cancelada
+        wasReviewed:
+          readOnly: true
+          type: boolean
+    Visit:
+      type: object
+      properties:
+        userId:
+          required: true
+          type: integer
+        date:
+          required: true
+          type: string
+          format: date
+        time:
+          required: true
+          type: string
+          enum:
+            - mañana
+            - tarde
+        creationDate:
+          readOnly: true
+          type: string
+          format: date-time

@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const usuariosController = require("../controllers/usuarios.controller");
+const UserController = require("../controllers/user.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
 
@@ -10,23 +10,26 @@ const router = Router();
 router.post("/jwt", checkJwt);
 
 //Devuelve todos los usuarios
-router.get("/", usuariosController.getUsuarios); //GET USUARIOS
+router.get("/", UserController.getUsuarios); //GET USUARIOS
 
 //Crea un usuario
 router.post(
   "/",
-  [
-    check("name").not().isEmpty(),
-    check("lastname").not().isEmpty(),
-    check("email").not().isEmpty(),
-    check("password").not().isEmpty(),
-    checkFields,
-  ],
-  usuariosController.createUsuario
+  // [
+  //   check("name").not().isEmpty(),
+  //   check("last_name").not().isEmpty(),
+  //   check("email").not().isEmpty(),
+  //   check("password").not().isEmpty(),
+  //   check("role").not().isEmpty(),
+  //   check("google").not().isEmpty(),
+  //   check("phone").not().isEmpty(),
+  //   checkFields,
+  // ],
+  UserController.createUsuario
 ); //POST USUARIOS
 
 //Devuelve un usuario por id
-router.get("/:id", usuariosController.getUsuarioById); //GET USUARIOS BY ID
+router.get("/:id", UserController.getUsuarioById); //GET USUARIOS BY ID
 
 //Loguea un usuario
 router.post(
@@ -36,7 +39,7 @@ router.post(
     check("password").not().isEmpty(),
     checkFields,
   ],
-  usuariosController.login
+  UserController.login
 );
 
 module.exports = router;
