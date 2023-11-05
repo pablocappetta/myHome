@@ -12,7 +12,7 @@ import {
   getFilteredListingByQuery,
   getFilteredListingByType,
   segmentedButtons,
-} from "./HomeUtils";
+} from "../Login/HomeUtils";
 import ListingCard from "../../components/ListingCard/ListingCard";
 import {
   mockedHighlightedListings,
@@ -58,15 +58,14 @@ const Home = ({ navigation }) => {
   };
 
   const handleSearchSubmitChange = ({ nativeEvent }) => {
-    navigation.navigate("Search", { searchQuery: nativeEvent.text });
-    // setSearchQuery(nativeEvent.text);
-    // setHighlightedListing(
-    //   getFilteredListingByQuery(highlightedListings, nativeEvent.text)
-    // );
-    // setRecentListings(
-    //   getFilteredListingByQuery(recentListings, nativeEvent.text)
-    // );
-    // setIsQueryActive(true);
+    setSearchQuery(nativeEvent.text);
+    setHighlightedListing(
+      getFilteredListingByQuery(highlightedListings, nativeEvent.text)
+    );
+    setRecentListings(
+      getFilteredListingByQuery(recentListings, nativeEvent.text)
+    );
+    setIsQueryActive(true);
   };
 
   const handleSearchClearIconPress = () => {
@@ -76,26 +75,28 @@ const Home = ({ navigation }) => {
     setIsQueryActive(false);
   };
 
+
+
   return (
     <SafeAreaView>
       <ScrollView vertical ref={ref}>
-        <TouchableOpacity
-          style={styles.userHomeWelcomeHeader}
-          onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
-        >
-          {isUserLogged ? (
-            <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
-          ) : (
-            <Avatar.Icon size={36} icon="account" />
-          )}
-          <Text variant="titleLarge">
-            ¡Hola,{" "}
-            <Text style={styles.userNameGreeting} numberOfLines={1}>
-              {isUserLogged ? user.name : "invitado"}
+            <TouchableOpacity
+            style={styles.userHomeWelcomeHeader}
+            onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
+            >
+            {isUserLogged ? (
+                <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+            ) : (
+                <Avatar.Icon size={36} icon="account" />
+            )}
+            <Text variant="titleLarge">
+                ¡Hola,{" "}
+                <Text className="font-bold" style={styles.userNameGreeting} numberOfLines={1}>
+                {isUserLogged ? user.name : "invitado"}
+                </Text>
+                !
             </Text>
-            !
-          </Text>
-        </TouchableOpacity>
+            </TouchableOpacity>
         <View>
           <SegmentedButtons
             buttons={segmentedButtons}
