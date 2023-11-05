@@ -715,6 +715,9 @@ components:
           type: string
         logo:
           type: string
+        phone:
+          required: true
+          type: string
         reviews:
           readOnly: true
           type: array

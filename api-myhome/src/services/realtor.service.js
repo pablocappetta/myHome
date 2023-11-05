@@ -71,10 +71,6 @@ class RealtorService {
   async passwordReset(realtorId) {
     // TODO:
   }
-
-  async login(loginEmail, password) {
-    // TODO: esto creo que va en otro service?
-  }
 }
 
 module.exports = new RealtorService();
