@@ -9,6 +9,11 @@ const morgan = require("morgan");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = YAML.load("./swagger.yaml");
+const http = require("http");
+const https = require("https");
+const fs = require("fs");
+
+const isLocal = process.env.NODE_ENV === "local";
 
 //Middleware
 app.use(morgan("dev"));
@@ -45,6 +50,24 @@ app.use((req, res, next) => {
   next(error);
 });
 
+if (!isLocal) {
+  https
+    .createServer(
+      {
+        key: fs.readFileSync("key.pem"),
+        cert: fs.readFileSync("cert.pem"),
+      },
+      app
+    )
+    .listen(process.env.PORT, () => {
+      console.log(`Secured server running on port ${process.env.PORT}`);
+    });
+} else {
+  http.createServer(app).listen(process.env.PORT, () => {
+    console.log(`Non-secure server running on port ${process.env.PORT}`);
+  });
+}
+
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
@@ -52,11 +75,6 @@ app.use((error, req, res, next) => {
       message: error.message,
     },
   });
-});
-
-//Listener y puerto
-app.listen(process.env.PORT, () => {
-  console.log("Puerto: " + process.env.PORT);
 });
 
 module.exports = app;
