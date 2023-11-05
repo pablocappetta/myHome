@@ -29,6 +29,7 @@ import Search from "../Home/Search/Search";
 import ListingReservationCard from "../Reservations/ListingReservationCard/ListingReservationCard";
 import Register from "../Login/Register/Register";
 import { useUserContext } from "../../contexts/UserContext";
+import ForgotPassword from "../Login/ForgotPassword/ForgotPassword";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -109,6 +110,7 @@ const SearchScreenRoutes = () => {
       <Stack.Screen name="Booking" component={BookingRoutes} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="SendQuestion" component={SendQuestion} />
       <Stack.Screen name="Review" component={Review} />
       <Stack.Screen name="Search" component={Search} />
