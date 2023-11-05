@@ -36,4 +36,7 @@ router.post(
   ListingController.createListing
 ); //POST USUARIOS
 
+//Obtener todos los listing
+router.get("/", ListingController.getListings);
+
 module.exports = router;
