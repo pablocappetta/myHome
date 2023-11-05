@@ -1,11 +1,13 @@
 openapi: 3.0.2
 info:
-  title: myHome API Documentation
+  title: myHome API
   version: 1.0.0
   description: API endpoints for the myHome application
 servers:
   - url: http://3.144.94.74:8000/api
     description: Development server
+  - url: http://localhost:8000/api
+    description: Local server 
 paths:
   /realtors:
     post:
@@ -99,18 +101,18 @@ paths:
                 $ref: "#/components/schemas/Realtor"
         "401":
           description: Unauthorized
-  /realtors/{email}:
+  /realtors/{realtorId}:
     get:
-      summary: Get realtor details by email
+      summary: Get realtor details by id
       tags:
         - Realtors
       parameters:
         - in: path
-          name: email
+          name: realtorId
           required: true
           schema:
-            type: string
-            format: email
+            type: integer
+            format: int64
       responses:
         "200":
           description: Realtor details retrieved successfully
@@ -712,6 +714,9 @@ components:
           required: true
           type: string
         logo:
+          type: string
+        phone:
+          required: true
           type: string
         reviews:
           readOnly: true
