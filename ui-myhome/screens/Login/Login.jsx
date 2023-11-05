@@ -14,6 +14,8 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useUserContext } from "../../contexts/UserContext";
 import { mockedUser } from "./mock/MockedLoginData";
+import { REACT_APP_API_URL } from "@env";
+
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -27,9 +29,32 @@ const Login = ({ navigation }) => {
   const { setUser } = useUserContext();
 
   const handleLogin = (values) => {
-    setUser(mockedUser);
-    console.log(values);
-    navigation.navigate("Home");
+    const requestBody = {
+      email: values.email,
+      password: values.password,
+    };
+    fetch(REACT_APP_API_URL + "realtors/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(json);
+      setUser({
+        ...json.data,
+        isRealtor: true,
+        token: json.token,
+      })
+      navigation.navigate("Home");
+
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    // navigation.navigate("Home");
   };
 
   return (
