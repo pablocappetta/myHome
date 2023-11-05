@@ -25,6 +25,7 @@ const RealtorSchema = new Schema(
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
       },
     ],
+    phone: { type: String, required: true },
     creationDate: { type: Date, default: Date.now },
   },
   { versionKey: false }
