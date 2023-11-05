@@ -13,7 +13,7 @@
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/stack": "^6.3.17",
     "@types/react": "~18.2.14",
-    "comma-number": "^2.1.0",
+        "comma-number": "^2.1.0",
     "expo": "~49.0.7",
     "expo-status-bar": "~1.6.0",
     "formik": "^2.4.3",
@@ -38,7 +38,8 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "react-native-dotenv": "^3.4.9"
   },
   "private": true
 }

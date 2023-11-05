@@ -12,25 +12,51 @@ import {
 import { TextInput, Button, HelperText, Appbar, IconButton, Divider, Text } from "react-native-paper";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useUserContext } from "../../contexts/UserContext";
-import { mockedUser } from "./mock/MockedLoginData";
+import { useUserContext } from "../../../contexts/UserContext";
+import { REACT_APP_API_URL } from "@env";
 
 const validationSchema = yup.object().shape({
   email: yup
     .string()
     .email("Ingresá un correo electrónico válido")
     .required("El correo electrónico es obligatorio"),
-  password: yup.string().required("La contraseña es obligatoria"),
+    password: yup.string().required("La contraseña es obligatoria"),
+    name: yup.string().required("El nombre es obligatorio"),
 });
 
-const Login = ({ navigation }) => {
+const Register = ({ navigation }) => {
   const { setUser } = useUserContext();
 
-  const handleLogin = (values) => {
-    setUser(mockedUser);
+
+  const handleRegister = (values) => {
+    const requestBody = {
+        name: values.name,
+        loginEmail: values.email,
+        password: values.password,
+        contactEmail: values.email,
+        // logo: "https://dummyimage.com/600x400/000/fff"
+    }
+    console.log(requestBody);
+    fetch(REACT_APP_API_URL + 'realtors', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setUser(data);
+            navigation.navigate("Home");
+        })
+        .catch(error => {
+            console.log(error);
+        });
     console.log(values);
-    navigation.navigate("Home");
+    
   };
+
 
   return (
     <View style={styles.container}>
@@ -42,9 +68,9 @@ const Login = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.loginContainer}>
+            <View style={styles.registerContainer}>
               <Image
-                source={require("../../assets/images/logo.png")}
+                source={require("../../../assets/images/logo.png")}
                 style={{
                   width: 120,
                   height: 120,
@@ -60,43 +86,16 @@ const Login = ({ navigation }) => {
                   marginBottom: 16,
                   color: "#FFFFFF",
                 }}
-              >Ingresar como usuario</Text>
-              <Button
-                icon={({ size, color }) => (
-                  <Image
-                    source={require("../../assets/images/google.png")}
-                    style={{
-                      width: size * 1.5,
-                      height: size * 1.5,
-                      tintColor: color,
-                    }}
-                  />
-                )}
-                mode="contained"
-                onPress={() => console.log("Google login pressed")}
-                style={styles.button}
-              >
-                Continuar con Google
-              </Button>
-              <Divider style={{ marginVertical: 16 }} />
-              <Text
-                style={{
-                  fontSize: 24,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  marginTop: 16,
-                  marginBottom: 16,
-                  color: "#FFFFFF",
-                }}
-              >¿Sos propietario?</Text>
+              >Crear tu cuenta</Text>
               <Formik
-                initialValues={{ email: "", password: "" }}
+                initialValues={{ email: "", name: "", password: "" }}
                 validationSchema={validationSchema}
-                onSubmit={handleLogin}
+                onSubmit={handleRegister}
               >
                 {({ handleChange, handleSubmit, values, errors, touched }) => {
                   const isEmailError = touched.email && !!errors.email;
                   const isPasswordError = touched.password && !!errors.password;
+                  const isNameError = touched.name && !!errors.name;
                   return (
                     <>
                       <TextInput
@@ -110,6 +109,18 @@ const Login = ({ navigation }) => {
                       />
                       <HelperText type="error" visible={isEmailError}>
                         {errors.email}
+                      </HelperText>
+                      <TextInput
+                        label="Nombre"
+                        value={values.name}
+                        onChangeText={handleChange("name")}
+                        mode="outlined"
+                        style={styles.input}
+                        error={isNameError}
+                        keyboardType="default"
+                      />
+                      <HelperText type="error" visible={isNameError}>
+                        {errors.name}
                       </HelperText>
                       <TextInput
                         label="Contraseña"
@@ -132,10 +143,12 @@ const Login = ({ navigation }) => {
                           !values.email ||
                           !values.password ||
                           isPasswordError ||
-                          isEmailError
+                          isEmailError ||
+                        !values.name ||
+                            isNameError
                         }
                       >
-                        Ingresar
+                        Registrarse
                       </Button>
                       <View style={{
                         flexDirection: 'column', justifyContent: 'space-between', marginTop: 16,
@@ -145,9 +158,8 @@ const Login = ({ navigation }) => {
                           color: '#6750A4',
                           fontWeight: 'bold',
                         }}
-                        onPress={() => navigation.navigate('ForgotPassword')}
-                        >Me olvide mi contraseña</Text>
-                        <Text style={{ color: '#6750A4', fontWeight: 'bold' }} onPress={() => navigation.navigate('Register')}>¿No tenés cuenta? Registrarse</Text>
+                        onPress={() => navigation.navigate('Login')}
+                        >Ya tenes cuenta? Ingresar</Text>
                       </View>
                     </>
                   );
@@ -166,7 +178,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  loginContainer: {
+  registerContainer: {
     padding: 32,
     justifyContent: "center",
   },
@@ -175,4 +187,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Register;

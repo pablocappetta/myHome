@@ -20,6 +20,7 @@ import Review from "../Review/Review";
 import Reservations from "../Reservations/Reservations";
 import Search from "../Home/Search/Search";
 import ListingReservationCard from "../Reservations/ListingReservationCard/ListingReservationCard";
+import Register from "../Login/Register/Register";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -53,6 +54,7 @@ const SearchScreenRoutes = () => {
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="SendQuestion" component={SendQuestion} />
       <Stack.Screen name="Review" component={Review} />
       <Stack.Screen name="Search" component={Search} />
