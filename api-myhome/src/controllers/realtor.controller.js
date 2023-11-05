@@ -1,6 +1,8 @@
 let instance = null;
 require("dotenv").config();
 const RealtorService = require("../services/realtor.service");
+const AuthService = require("../services/auth.service");
+const jwt = require("jsonwebtoken");
 
 class RealtorController {
   static getInstance() {
@@ -23,15 +25,15 @@ class RealtorController {
     }
   }
 
-  async getRealtorById(req, res) {
-    const { id } = req.params;
+  async getRealtorByLoginEmail(req, res) {
+    const { email } = req.params;
     try {
-      const realtor = await RealtorService.getRealtorById(id);
+      const realtor = await RealtorService.getRealtorByLoginEmail(email);
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
       return res.status(500).json({
-        method: "getRealtorById",
+        method: "getRealtorByLoginEmail",
         message: err,
       });
     }
@@ -89,6 +91,48 @@ class RealtorController {
       return res.status(500).json({
         method: "getRealtorByToken",
         message: err,
+      });
+    }
+  }
+
+  async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      let isUserRegistered = await AuthService.hasValidCredentials(
+        email,
+        password
+      );
+      if (isUserRegistered) {
+        const user = await RealtorService.getRealtorByLoginEmail(email);
+
+        const token = jwt.sign(user.toJSON(), process.env.PRIVATE_KEY, {
+          expiresIn: "1d",
+        });
+
+        return res.status(200).json({
+          status: 200,
+          token,
+          data: {
+            id: user._id,
+            name: user.name,
+            loginEmail: user.loginEmail,
+            contactEmail: user.contactEmail,
+            photo: user.photo,
+            reviews: user.reviews,
+            creationDate: user.creationDate,
+          },
+          message: "Token created successfully.",
+        });
+      } else {
+        return res.status(401).json({
+          message: "Unauthorized.",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({
+        method: "login",
+        message: err.message,
       });
     }
   }
