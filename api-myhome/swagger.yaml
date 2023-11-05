@@ -1,11 +1,13 @@
 openapi: 3.0.2
 info:
-  title: myHome API Documentation
+  title: myHome API
   version: 1.0.0
   description: API endpoints for the myHome application
 servers:
   - url: http://3.144.94.74:8000/api
     description: Development server
+  - url: http://localhost:8000/api
+    description: Local server
 paths:
   /realtors:
     post:
