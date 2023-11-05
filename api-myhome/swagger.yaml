@@ -101,18 +101,18 @@ paths:
                 $ref: "#/components/schemas/Realtor"
         "401":
           description: Unauthorized
-  /realtors/{email}:
+  /realtors/{realtorId}:
     get:
-      summary: Get realtor details by email
+      summary: Get realtor details by id
       tags:
         - Realtors
       parameters:
         - in: path
-          name: email
+          name: realtorId
           required: true
           schema:
-            type: string
-            format: email
+            type: integer
+            format: int64
       responses:
         "200":
           description: Realtor details retrieved successfully

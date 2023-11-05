@@ -31,7 +31,9 @@ class RealtorService {
     }
     try {
       realtor.password = await bcrypt.hash(realtor.password, 10);
-      return await RealtorModel.create(realtor);
+      const createdRealtor = await RealtorModel.create(realtor);
+      createdRealtor.password = undefined;
+      return createdRealtor;
     } catch (err) {
       console.error(err);
       throw new Error("Error en createRealtor Service");
@@ -57,6 +59,24 @@ class RealtorService {
     } catch {
       console.error(err);
       throw new Error("Error en updateRealtor Service");
+    }
+  }
+
+  async login(loginEmail, password) {
+    try {
+      const realtor = await this.getRealtorByLoginEmail(loginEmail);
+      if (!realtor) {
+        throw new Error("Unauthorized.");
+      }
+      const isPasswordOk = await bcrypt.compare(password, realtor.password);
+      if (!isPasswordOk) {
+        throw new Error("Unauthorized.");
+      }
+      realtor.password = undefined;
+      return realtor;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   }
 
