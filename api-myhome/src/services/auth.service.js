@@ -1,11 +1,11 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const UserModel = require("../models/User");
+const RealtorModel = require("../models/Realtor");
 
 class AuthService {
-  async hasValidCredentials(email, password) {
+  async hasValidCredentials(loginEmail, password) {
     try {
-      const user = await UserModel.findOne({ email });
+      const user = await RealtorModel.findOne({ loginEmail });
 
       const passwordMatch = bcrypt.compareSync(password, user.password);
 
