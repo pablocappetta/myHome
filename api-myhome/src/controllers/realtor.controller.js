@@ -112,6 +112,15 @@ class RealtorController {
         return res.status(200).json({
           status: 200,
           token,
+          data: {
+            id: user._id,
+            name: user.name,
+            loginEmail: user.loginEmail,
+            contactEmail: user.contactEmail,
+            photo: user.photo,
+            reviews: user.reviews,
+            creationDate: user.creationDate,
+          },
           message: "Token created successfully.",
         });
       } else {
