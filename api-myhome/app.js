@@ -45,11 +45,11 @@ app.use("/api/users", require("./src/routes/user.routes"));
 //Swagger endpoint
 app.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-//Error handling endpoints
+//Error handling endpoint. Tiene que estar ultimo en la cadena de middlewares
+app.use(handleError);
+
 app.use((req, res, next) => {
-  const error = new Error("Not found");
-  error.status = 404;
-  next(error);
+  res.status(404).send({ code: 404, message: "Not Found" });
 });
 
 if (!isLocal) {
@@ -69,14 +69,5 @@ if (!isLocal) {
     console.log(`Non-secure server running on port ${process.env.PORT}`);
   });
 }
-
-app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
-    error: {
-      message: error.message,
-    },
-  });
-});
 
 module.exports = app;
