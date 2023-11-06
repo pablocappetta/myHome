@@ -26,7 +26,7 @@ class RealtorController {
   }
 
   async getRealtorByLoginEmail(req, res) {
-    const { email } = req.params;
+    const { email } = req.params || req.body;
     try {
       const realtor = await RealtorService.getRealtorByLoginEmail(email);
       return res.status(200).json(realtor);
@@ -104,9 +104,7 @@ class RealtorController {
       const token = jwt.sign(realtor.toJSON(), process.env.PRIVATE_KEY, {
         expiresIn: "1d",
       });
-      res.cookie("jwt", token, { httpOnly: true, secure: false }); //TODO: cambiar a true si implementamos https
-
-      return res.status(200).json({ realtor });
+      return res.status(200).json({ token: token });
     } catch (err) {
       console.error(err);
       if (err.message === "Unauthorized.") {

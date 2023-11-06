@@ -10,33 +10,18 @@ const router = Router();
 router.post("/jwt", checkJwt);
 
 //Crea una listing
-router.post(
-  "/",
-  [
-    check("title").not().isEmpty(),
-    check("description").not().isEmpty(),
-    check("property").not().isEmpty(),
-    check("cardinalOrientation").not().isEmpty(),
-    check("relativeOrientation").not().isEmpty(),
-    check("rooms").not().isEmpty(),
-    check("bathrooms").not().isEmpty(),
-    check("parking").not().isEmpty(),
-    check("hasGarden").not().isEmpty(),
-    check("hasTerrace").not().isEmpty(),
-    check("hasBalcony").not().isEmpty(),
-    check("hasStorageUnit").not().isEmpty(),
-    check("amenities").not().isEmpty(),
-    check("photos").not().isEmpty(),
-    check("expensesPrice").not().isEmpty(),
-    check("realtorId").not().isEmpty(),
-    check("type").not().isEmpty(),
-    check("price").not().isEmpty(),
-    checkFields,
-  ],
-  ListingController.createListing
-); //POST USUARIOS
+router.post("/", ListingController.createListing); //POST REALTORS
 
 //Obtener todos los listing
-router.get("/", ListingController.getListings);
+router.get(
+  "/",
+  [
+    check("listingType").not().isEmpty(),
+    check("state").not().isEmpty(),
+    check("city").not().isEmpty(),
+    checkFields,
+  ],
+  ListingController.getListingsByPlace
+);
 
 module.exports = router;
