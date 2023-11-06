@@ -30,7 +30,7 @@ const ForgotPassword = ({ navigation }) => {
                     email: values.email,
             }
             console.log(requestBody);
-            fetch(REACT_APP_API_URL + 'realtors/password-reset', {
+            fetch("http://3.144.94.74:8000/api/" + 'realtors/password-reset', {
                     method: 'POST',
                     headers: {
                             'Content-Type': 'application/json'

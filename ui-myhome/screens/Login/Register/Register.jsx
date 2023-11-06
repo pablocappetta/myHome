@@ -42,7 +42,7 @@ const Register = ({ navigation }) => {
                     // logo: "https://dummyimage.com/600x400/000/fff"
             }
             console.log(requestBody);
-            fetch(REACT_APP_API_URL + 'realtors', {
+            fetch("http://3.144.94.74:8000/api/" + 'realtors', {
                     method: 'POST',
                     headers: {
                             'Content-Type': 'application/json'

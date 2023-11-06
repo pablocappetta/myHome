@@ -33,7 +33,9 @@ const Login = ({ navigation }) => {
       email: values.email,
       password: values.password,
     };
-    fetch(REACT_APP_API_URL + "realtors/login", {
+    
+    console.log("http://3.144.94.74:8000/api/" + "realtors/login")
+    fetch("http://3.144.94.74:8000/api/" + "realtors/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
