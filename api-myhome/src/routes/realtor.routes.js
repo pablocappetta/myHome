@@ -126,4 +126,7 @@ router.post("/password-reset/:token", async (req, res) => {
   }
 });
 
+//Obtiene detalles del realtor por id
+router.get("/id/:id", RealtorController.getRealtorById);
+
 module.exports = router;

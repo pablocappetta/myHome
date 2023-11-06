@@ -33,6 +33,17 @@ class RealtorController {
     }
   }
 
+  async getRealtorById(req, res) {
+    const { id } = req.params;
+    try {
+      const realtor = await RealtorService.getRealtorById(id);
+      return res.status(200).json(realtor);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   async createRealtor(req, res) {
     const { body } = req;
     try {

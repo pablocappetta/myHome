@@ -80,6 +80,15 @@ class RealtorService {
     }
   }
 
+  async getRealtorById(id) {
+    try {
+      return await RealtorModel.findOne({ _id: id });
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en getRealtorById Service");
+    }
+  }
+
   async sendMessage(realtorId, message) {
     // TODO:
   }
