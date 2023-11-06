@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, ScrollView } from "react-native";
 import { notifications } from "./mock/notificationsMock";
 import Notification from "../../components/Notification/Notification";
-import { Text, Divider } from "react-native-paper";
+import { Text, Divider, Appbar } from "react-native-paper";
 
 const Notifications = ({ navigation }) => {
   const [notificaciones, setNotificaciones] = useState(
@@ -10,9 +10,11 @@ const Notifications = ({ navigation }) => {
   );
 
   return (
-    <View className="mt-[60px] px-4">
-      <Text className="text-[25px] font-bold pl-4">Notificaciones</Text>
-      <ScrollView vertical className="mt-6">
+    <View style={{ flex: 1 }}>
+      <Appbar.Header elevated={true}>
+        <Appbar.Content title={"Notificaciones"} />
+      </Appbar.Header>
+      <ScrollView vertical>
         {notificaciones
           .map((noti) => (
             <TouchableOpacity

@@ -15,20 +15,21 @@ const Favorites = ({ navigation }) => {
   useScrollToTop(ref);
 
   const handleRemoveFromFavoritesAction = () => {
-    //filter listing to remove from listings 
-    const newListings = listings.filter(listing => listing.id !== listingToRemove.id);
+    //filter listing to remove from listings
+    const newListings = listings.filter(
+      (listing) => listing.id !== listingToRemove.id
+    );
     setListingToRemove(null);
     setListings(newListings);
     setDialogVisible(false);
-  }
+  };
 
   const [dialogVisible, setDialogVisible] = useState(false);
 
   const handleRemoveFavorite = (listing) => {
     setListingToRemove(listing);
     setDialogVisible(true);
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -43,27 +44,45 @@ const Favorites = ({ navigation }) => {
               key={listing.id}
               onPress={() => navigation.navigate("Post", listing)}
             >
-              <ListingFavoriteCard listing={listing}
+              <ListingFavoriteCard
+                listing={listing}
                 handleRemoveFavorite={handleRemoveFavorite}
               />
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-      <Dialog visible={dialogVisible} onDismiss={() => {
-        setDialogVisible(false)
-        setListingToRemove(null)
-      }}>
+      <Dialog
+        visible={dialogVisible}
+        onDismiss={() => {
+          setDialogVisible(false);
+          setListingToRemove(null);
+        }}
+      >
         <Dialog.Title>Eliminar favorito</Dialog.Title>
         <Dialog.Content>
-          <Text>Estas seguro de que queres eliminar esta propiedad de tus favoritos?</Text>
+          <Text>
+            ¿Estás seguro de que querés eliminar esta propiedad de tus
+            favoritos?
+          </Text>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={() => {
-            setListingToRemove(null)
-            setDialogVisible(false)
-          }}>Volver</Button>
-          <Button onPress={handleRemoveFromFavoritesAction}>Si, eliminar</Button>
+          <Button
+            onPress={() => {
+              setListingToRemove(null);
+              setDialogVisible(false);
+            }}
+          >
+            Volver
+          </Button>
+          <Button
+            onPress={handleRemoveFromFavoritesAction}
+            mode="contained"
+            buttonColor={"#FF5A5F"}
+            textColor="#FFFFFF"
+          >
+            Eliminar favorito
+          </Button>
         </Dialog.Actions>
       </Dialog>
     </View>

@@ -6,12 +6,12 @@ const NotificationView = ({ navigation, ...props }) => {
   const notification = props.route.params;
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Appbar.Header elevated={true}>
         <Appbar.BackAction
           onPress={() => navigation.navigate("Notificaciones")}
         />
-        <Appbar.Content title={"Notificacion"} />
+        <Appbar.Content title={"Notificación"} />
       </Appbar.Header>
       <View className="px-6 py-4">
         <View className="flex flex-row items-center mb-4">
