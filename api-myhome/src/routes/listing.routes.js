@@ -34,7 +34,7 @@ router.get(
 router.get("/:id", ListingController.getListingById);
 
 //Obtener listing por realtor
-router.get("/realtor/:id", ListingController.getListingsByRealtorId);
+router.get("/realtor/:realtorId", ListingController.getListingsByRealtorId);
 
 //Actualizar listing
 router.put("/", ListingController.updateListing);

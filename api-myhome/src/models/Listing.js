@@ -20,11 +20,11 @@ const ListingSchema = new Schema(
       geoLocation: {
         latitude: {
           type: Number,
-          required: true,
+          // required: true, //TODO: Descomentar
         },
         longitude: {
           type: Number,
-          required: true,
+          // required: true, //TODO: Descomentar
         },
       },
       type: {
