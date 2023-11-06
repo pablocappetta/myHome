@@ -15,6 +15,18 @@
           "buildType": "app-bundle",
           "image": "latest"
         }
+      },
+      "preview":
+      {
+        "ios":
+        {
+          "simulator": true
+        },
+        "android":
+        {
+          "buildType": "apk",
+          "image": "latest"
+        }
       }
     }
   }

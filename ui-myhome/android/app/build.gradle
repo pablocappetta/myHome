@@ -81,7 +81,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.myhome"
+    namespace 'com.serg2404.myhome'
     defaultConfig {
         applicationId 'com.serg2404.myhome'
         minSdkVersion rootProject.ext.minSdkVersion
