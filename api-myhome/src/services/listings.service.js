@@ -20,6 +20,25 @@ class ListingService {
     }
   }
 
+  async getListingsByPlace(listingType, state, city, neighborhood) {
+    let query = {
+      type: listingType,
+      "property.address.state": state,
+      "property.address.city": city,
+    };
+    if (neighborhood) {
+      query["property.address.neighborhood"] = neighborhood;
+    }
+    try {
+      console.log(query);
+      const listings = await ListingModel.find(query);
+      return listings;
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en getListings Service");
+    }
+  }
+
   async getListingById(id) {
     try {
       return await ListingModel.findOne({ _id: id });

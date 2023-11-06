@@ -23,6 +23,23 @@ class ListingController {
     }
   }
 
+  async getListingsByPlace(req, res) {
+    try {
+      const listings = await ListingService.getListingsByPlace(
+        req.query.listingType,
+        req.query.state,
+        req.query.city,
+        req.query.neighborhood
+      );
+      return res.status(200).json(listings);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({
+        description: "Internal Server Error",
+      });
+    }
+  }
+
   async getListingById(req, res) {
     const { id } = req.params;
     try {
@@ -38,9 +55,8 @@ class ListingController {
   }
 
   async createListing(req, res) {
-    const { body } = req;
     try {
-      const listing = await ListingService.createListing(body);
+      const listing = await ListingService.createListing(req.body);
       return res.status(201).json(listing);
     } catch (err) {
       console.error(err);
