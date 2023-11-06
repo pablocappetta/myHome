@@ -94,9 +94,9 @@ class ListingController {
   }
 
   async getListingsByRealtorId(req, res) {
-    const { id } = req.params;
+    const realtorId = req.params.realtorId;
     try {
-      const listings = await ListingService.getListingsByRealtorId(id);
+      const listings = await ListingService.getListingsByRealtorId(realtorId);
       return res.status(200).json(listings);
     } catch (err) {
       console.error(err);
