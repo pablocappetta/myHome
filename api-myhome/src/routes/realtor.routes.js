@@ -64,16 +64,11 @@ router.post("/password-reset", async (req, res) => {
       to: loginEmail,
       subject: "myHome - Solicitud de restablecimiento contraseña",
       html: `
-      <p>Hola,</p>
-      <p>Has solicitado restablecer tu contraseña. Por favor, ingresa tu nueva contraseña a continuación:</p>
-      <form action="https://3.144.94.74:8000/api/password-reset/${token}" method="POST">
-        <label for="password">Nueva Contraseña:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Restablecer Contraseña</button>
-      </form>
+      <p>¡Hola, ${realtor.name}</p>
+      <p>Has solicitado restablecer tu contraseña. Para hacerlo, por favor copiá el siguiente código en la aplicación: ${token}</p>
       <p>Si no solicitaste este restablecimiento de contraseña, puedes ignorar este mensaje.</p>
       <p>Saludos,</p>
-      <b>myHome</b>
+      <b>El equipo de myHome</b>
       `,
     };
 
