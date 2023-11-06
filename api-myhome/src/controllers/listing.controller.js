@@ -92,6 +92,17 @@ class ListingController {
       });
     }
   }
+
+  async getListingsByRealtorId(req, res) {
+    const { id } = req.params;
+    try {
+      const listings = await ListingService.getListingsByRealtorId(id);
+      return res.status(200).json(listings);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
 }
 
 module.exports = ListingController.getInstance();

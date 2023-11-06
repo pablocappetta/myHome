@@ -4,8 +4,6 @@ info:
   version: 1.0.0
   description: API endpoints for the myHome application
 servers:
-  - url: http://3.144.94.74:8000/api
-    description: Development server
   - url: http://localhost:8000/api
     description: Local server
 paths:
@@ -204,28 +202,6 @@ paths:
           description: Password reset successfully
         "400":
           description: Invalid input data
-  /realtors/{realtorId}/listings:
-    get:
-      summary: Get list of listings for a realtor
-      tags:
-        - Realtors
-      parameters:
-        - in: path
-          name: realtorId
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List of listings retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Listing"
-        "404":
-          description: Realtor not found
   /listings:
     post:
       summary: Add a new listing
@@ -482,6 +458,28 @@ paths:
           description: Invalid input data
         "404":
           description: Listing not found
+  /listings/realtor/{realtorId}:
+    get:
+      summary: Get list of listings for a realtor
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of listings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+        "404":
+          description: Realtor not found
   /reservations/{reservationId}/payment:
     post:
       summary: Make a payment for a reservation
@@ -791,7 +789,7 @@ components:
         address:
           required: true
           $ref: "#/components/schemas/Address"
-        geolocation:
+        geoLocation:
           required: true
           type: object
           properties:

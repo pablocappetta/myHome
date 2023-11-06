@@ -84,6 +84,15 @@ class ListingService {
       throw new Error("Error en addImagesToListing Service");
     }
   }
+
+  async getListingsByRealtorId(realtorId) {
+    try {
+      return await ListingModel.find({ realtorId });
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en getListingsByRealtorId Service");
+    }
+  }
 }
 
 module.exports = new ListingService();
