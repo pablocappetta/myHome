@@ -3,6 +3,8 @@ const { Schema } = mongoose;
 
 const ListingSchema = new Schema(
   {
+    title: { type: String, required: true },
+    description: String,
     property: {
       age: Number,
       address: {
@@ -16,8 +18,14 @@ const ListingSchema = new Schema(
         apartment: String,
       },
       geoLocation: {
-        latitude: mongoose.Schema.Types.Decimal128,
-        longitude: mongoose.Schema.Types.Decimal128,
+        latitude: {
+          type: Number,
+          required: true,
+        },
+        longitude: {
+          type: Number,
+          required: true,
+        },
       },
       type: {
         type: String,
@@ -54,7 +62,7 @@ const ListingSchema = new Schema(
       photos: [String],
       video: String,
       expensesPrice: {
-        amount: mongoose.Schema.Types.Decimal128,
+        amount: Number,
         currency: { type: String, enum: ["USD", "ARS"] },
       },
     },
@@ -65,7 +73,7 @@ const ListingSchema = new Schema(
       enum: ["disponible", "reservada", "vendida", "cancelada"],
     },
     price: {
-      amount: mongoose.Schema.Types.Decimal128,
+      amount: Number,
       currency: { type: String, enum: ["USD", "ARS"] },
     },
     creationDate: { type: Date, default: Date.now },

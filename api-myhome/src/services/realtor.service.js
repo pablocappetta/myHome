@@ -12,17 +12,7 @@ class RealtorService {
     }
   }
 
-  async getRealtorById(id) {
-    try {
-      const realtor = await RealtorModel.findOne({ _id: id });
-      return realtor;
-    } catch (err) {
-      console.error(err);
-      throw new Error("Error en getRealtorById Service");
-    }
-  }
-
-  async getRealtorsByLoginEmail(loginEmail) {
+  async getRealtorByLoginEmail(loginEmail) {
     try {
       const realtor = await RealtorModel.findOne({ loginEmail });
       return realtor;
@@ -33,7 +23,7 @@ class RealtorService {
   }
 
   async createRealtor(realtor) {
-    const isRealtorRegistered = await this.getRealtorsByLoginEmail(
+    const isRealtorRegistered = await this.getRealtorByLoginEmail(
       realtor.loginEmail
     );
     if (isRealtorRegistered) {
@@ -41,7 +31,9 @@ class RealtorService {
     }
     try {
       realtor.password = await bcrypt.hash(realtor.password, 10);
-      return await RealtorModel.create(realtor);
+      const createdRealtor = await RealtorModel.create(realtor);
+      createdRealtor.password = undefined;
+      return createdRealtor;
     } catch (err) {
       console.error(err);
       throw new Error("Error en createRealtor Service");
@@ -70,6 +62,24 @@ class RealtorService {
     }
   }
 
+  async login(loginEmail, password) {
+    try {
+      const realtor = await this.getRealtorByLoginEmail(loginEmail);
+      if (!realtor) {
+        throw new Error("Unauthorized.");
+      }
+      const isPasswordOk = await bcrypt.compare(password, realtor.password);
+      if (!isPasswordOk) {
+        throw new Error("Unauthorized.");
+      }
+      realtor.password = undefined;
+      return realtor;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   async sendMessage(realtorId, message) {
     // TODO:
   }
@@ -80,10 +90,6 @@ class RealtorService {
 
   async passwordReset(realtorId) {
     // TODO:
-  }
-
-  async login(loginEmail, password) {
-    // TODO: esto creo que va en otro service?
   }
 }
 

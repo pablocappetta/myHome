@@ -20,11 +20,12 @@ const RealtorSchema = new Schema(
     reviews: [
       {
         date: Date,
-        rating: mongoose.Schema.Types.Decimal128,
+        rating: Number,
         comment: String,
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
       },
     ],
+    phone: { type: String, required: true },
     creationDate: { type: Date, default: Date.now },
   },
   { versionKey: false }

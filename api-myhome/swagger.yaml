@@ -1,11 +1,13 @@
 openapi: 3.0.2
 info:
-  title: myHome API Documentation
+  title: myHome API
   version: 1.0.0
   description: API endpoints for the myHome application
 servers:
   - url: http://3.144.94.74:8000/api
     description: Development server
+  - url: http://localhost:8000/api
+    description: Local server
 paths:
   /realtors:
     post:
@@ -101,7 +103,7 @@ paths:
           description: Unauthorized
   /realtors/{realtorId}:
     get:
-      summary: Get realtor details by ID
+      summary: Get realtor details by id
       tags:
         - Realtors
       parameters:
@@ -109,8 +111,7 @@ paths:
           name: realtorId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "200":
           description: Realtor details retrieved successfully
@@ -130,8 +131,7 @@ paths:
           name: realtorId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       requestBody:
         content:
           application/json:
@@ -214,8 +214,7 @@ paths:
           name: realtorId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "200":
           description: List of listings retrieved successfully
@@ -315,8 +314,7 @@ paths:
           name: listingId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "200":
           description: Listing details retrieved successfully
@@ -335,8 +333,7 @@ paths:
           name: listingId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       requestBody:
         required: true
         content:
@@ -359,8 +356,7 @@ paths:
           name: listingId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "204":
           description: Listing deleted successfully
@@ -376,8 +372,7 @@ paths:
           name: listingId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "200":
           description: List of visits retrieved successfully
@@ -398,8 +393,7 @@ paths:
           name: listingId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       requestBody:
         required: true
         content:
@@ -421,8 +415,7 @@ paths:
           name: listingId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       requestBody:
         required: true
         content:
@@ -449,8 +442,7 @@ paths:
           name: listingId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "200":
           description: Reservation details retrieved successfully
@@ -458,6 +450,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Reservation"
+        "404":
+          description: Listing not found
+  /listings/{listingId}/images:
+    post:
+      summary: Upload images for a listing
+      tags:
+        - Listings
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "201":
+          description: Images uploaded successfully
+        "400":
+          description: Invalid input data
         "404":
           description: Listing not found
   /reservations/{reservationId}/payment:
@@ -650,8 +672,7 @@ paths:
           name: listingId
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "204":
           description: Listing removed from favorites successfully
@@ -697,7 +718,7 @@ components:
       properties:
         realtorId:
           readOnly: true
-          type: integer
+          type: string
         name:
           required: true
           type: string
@@ -713,6 +734,9 @@ components:
           type: string
         logo:
           type: string
+        phone:
+          required: true
+          type: string
         reviews:
           readOnly: true
           type: array
@@ -723,7 +747,7 @@ components:
       properties:
         listingId:
           readOnly: true
-          type: integer
+          type: string
         title:
           required: true
           type: string
@@ -734,7 +758,7 @@ components:
           $ref: "#/components/schemas/Property"
         realtorId:
           required: true
-          type: integer
+          type: string
         type:
           required: true
           $ref: "#/components/schemas/ListingType"
@@ -894,8 +918,7 @@ components:
       properties:
         listingId:
           required: true
-          type: integer
-          format: int64
+          type: string
         userId:
           required: true
           type: integer

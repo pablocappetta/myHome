@@ -3,6 +3,12 @@ const { check } = require("express-validator");
 const ListingController = require("../controllers/listing.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
+const ImgurStorage = require("multer-storage-imgur");
+const multer = require("multer");
+
+const upload = multer({
+  storage: ImgurStorage({ clientId: process.env.IMGUR_CLIENT_ID }),
+});
 
 const router = Router();
 
@@ -10,30 +16,31 @@ const router = Router();
 router.post("/jwt", checkJwt);
 
 //Crea una listing
-router.post(
+router.post("/", ListingController.createListing); //POST REALTORS
+
+//Obtener todos los listing
+router.get(
   "/",
   [
-    check("title").not().isEmpty(),
-    check("description").not().isEmpty(),
-    check("property").not().isEmpty(),
-    check("cardinalOrientation").not().isEmpty(),
-    check("relativeOrientation").not().isEmpty(),
-    check("rooms").not().isEmpty(),
-    check("bathrooms").not().isEmpty(),
-    check("parking").not().isEmpty(),
-    check("hasGarden").not().isEmpty(),
-    check("hasTerrace").not().isEmpty(),
-    check("hasBalcony").not().isEmpty(),
-    check("hasStorageUnit").not().isEmpty(),
-    check("amenities").not().isEmpty(),
-    check("photos").not().isEmpty(),
-    check("expensesPrice").not().isEmpty(),
-    check("realtorId").not().isEmpty(),
-    check("type").not().isEmpty(),
-    check("price").not().isEmpty(),
+    check("listingType").not().isEmpty(),
+    check("state").not().isEmpty(),
+    check("city").not().isEmpty(),
     checkFields,
   ],
-  ListingController.createListing
-); //POST USUARIOS
+  ListingController.getListingsByPlace
+);
+
+//Obtener listing por id
+router.get("/:id", ListingController.getListingById);
+
+//Actualizar listing
+router.put("/", ListingController.updateListing);
+
+//Agregar imagenes a un listing
+router.post(
+  "/:id/images",
+  upload.array("images", 10),
+  ListingController.addImages
+);
 
 module.exports = router;

@@ -16,10 +16,22 @@ class ListingController {
       return res.status(200).json(listings);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getListings",
-        message: err,
-      });
+      throw err;
+    }
+  }
+
+  async getListingsByPlace(req, res) {
+    try {
+      const listings = await ListingService.getListingsByPlace(
+        req.query.listingType,
+        req.query.state,
+        req.query.city,
+        req.query.neighborhood
+      );
+      return res.status(200).json(listings);
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   }
 
@@ -30,24 +42,17 @@ class ListingController {
       return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getListingById",
-        message: err,
-      });
+      throw err;
     }
   }
 
   async createListing(req, res) {
-    const { body } = req;
     try {
-      const listing = await ListingService.createListing(body);
+      const listing = await ListingService.createListing(req.body);
       return res.status(201).json(listing);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "createListing",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -58,10 +63,7 @@ class ListingController {
       return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "updateListing",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -72,8 +74,20 @@ class ListingController {
       return res.status(204).json();
     } catch (err) {
       console.error(err);
+      throw err;
+    }
+  }
+
+  async addImages(req, res) {
+    const { id } = req.params;
+    const images = req.files;
+    try {
+      const listing = await ListingService.addImages(id, images);
+      return res.status(200).json(listing);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({
-        method: "deleteListing",
+        method: "addImages",
         message: err,
       });
     }

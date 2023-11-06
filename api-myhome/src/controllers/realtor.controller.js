@@ -1,6 +1,8 @@
 let instance = null;
 require("dotenv").config();
 const RealtorService = require("../services/realtor.service");
+const AuthService = require("../services/auth.service");
+const jwt = require("jsonwebtoken");
 
 class RealtorController {
   static getInstance() {
@@ -16,24 +18,18 @@ class RealtorController {
       return res.status(200).json(realtors);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getRealtors",
-        message: err,
-      });
+      throw err;
     }
   }
 
-  async getRealtorById(req, res) {
-    const { id } = req.params;
+  async getRealtorByLoginEmail(req, res) {
+    const { email } = req.params || req.body;
     try {
-      const realtor = await RealtorService.getRealtorById(id);
+      const realtor = await RealtorService.getRealtorByLoginEmail(email);
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getRealtorById",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -44,10 +40,7 @@ class RealtorController {
       return res.status(201).json(realtor);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "createRealtor",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -58,10 +51,7 @@ class RealtorController {
       return res.status(204).json();
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "deleteRealtor",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -72,10 +62,7 @@ class RealtorController {
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "updateRealtor",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -86,10 +73,33 @@ class RealtorController {
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getRealtorByToken",
-        message: err,
+      throw err;
+    }
+  }
+
+  async login(req, res) {
+    try {
+      const realtor = await RealtorService.login(
+        req.body.email,
+        req.body.password
+      );
+      const token = jwt.sign(realtor.toJSON(), process.env.PRIVATE_KEY, {
+        expiresIn: "1d",
       });
+      const user = await RealtorService.getRealtorByLoginEmail(req.body.email);
+      const data = {
+        _id: user._id,
+        name: user.name,
+        loginEmail: user.loginEmail,
+        phone: user.phone,
+        logo: user?.logo,
+        reviews: user?.reviews,
+        creationDate: user.creationDate,
+      };
+      return res.status(200).json({ token: token, data: data });
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   }
 }
