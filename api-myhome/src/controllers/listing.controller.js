@@ -16,10 +16,7 @@ class ListingController {
       return res.status(200).json(listings);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getListings",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -34,9 +31,7 @@ class ListingController {
       return res.status(200).json(listings);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        description: "Internal Server Error",
-      });
+      throw err;
     }
   }
 
@@ -47,10 +42,7 @@ class ListingController {
       return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getListingById",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -60,10 +52,7 @@ class ListingController {
       return res.status(201).json(listing);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "createListing",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -74,10 +63,7 @@ class ListingController {
       return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "updateListing",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -88,10 +74,7 @@ class ListingController {
       return res.status(204).json();
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "deleteListing",
-        message: err,
-      });
+      throw err;
     }
   }
 

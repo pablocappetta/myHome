@@ -12,6 +12,7 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 const http = require("http");
 const https = require("https");
 const fs = require("fs");
+const { handleError } = require("./src/middlewares/errorHandler");
 
 const isLocal = process.env.NODE_ENV === "local";
 
@@ -19,6 +20,7 @@ const isLocal = process.env.NODE_ENV === "local";
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(handleError);
 
 //CORS
 app.use(cors());
