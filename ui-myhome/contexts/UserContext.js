@@ -13,6 +13,7 @@ export const UserProvider = ({ children }) => {
     isVerified: null,
     isRealtor: null,
     token: null,
+    _id: null,
   });
 
   const [isUserLogged, setIsUserLogged] = useState(false);
@@ -30,7 +31,8 @@ export const UserProvider = ({ children }) => {
     user,
     setUser,
     isUserLogged,
-    getUserType
+    getUserType,
+    setIsUserLogged
   };
 
   return <UserContext.Provider value={store}>{children}</UserContext.Provider>;
