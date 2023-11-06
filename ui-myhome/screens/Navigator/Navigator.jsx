@@ -46,7 +46,7 @@ const HomeScreenRoutes = () => {
     >
       <Stack.Screen name="Home" component={HomeOwner} />
       <Stack.Screen name="Perfil" component={UserProfile} />
-      <Stack.Screen name="Login" component={Signin} />
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="NewPost" component={NewPost} />
