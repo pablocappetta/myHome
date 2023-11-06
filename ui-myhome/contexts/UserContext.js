@@ -20,7 +20,7 @@ export const UserProvider = ({ children }) => {
   const getUserType = () => {
     if (user.isRealtor) return "realtor";
     return "regular";
-  }
+  };
 
   useEffect(() => {
     setIsUserLogged(user.name !== null);
@@ -30,7 +30,8 @@ export const UserProvider = ({ children }) => {
     user,
     setUser,
     isUserLogged,
-    getUserType
+    getUserType,
+    setIsUserLogged,
   };
 
   return <UserContext.Provider value={store}>{children}</UserContext.Provider>;
