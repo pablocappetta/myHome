@@ -65,7 +65,8 @@ router.post("/password-reset", async (req, res) => {
       subject: "myHome - Solicitud de restablecimiento contraseña",
       html: `
       <p>¡Hola, ${realtor.name}</p>
-      <p>Has solicitado restablecer tu contraseña. Para hacerlo, por favor copiá el siguiente código en la aplicación: ${token}</p>
+      <p>Has solicitado restablecer tu contraseña. Para hacerlo, por favor copiá el siguiente código en la aplicación:</p>
+      <p><b>${token}</b></p>
       <p>Si no solicitaste este restablecimiento de contraseña, puedes ignorar este mensaje.</p>
       <p>Saludos,</p>
       <b>El equipo de myHome</b>
