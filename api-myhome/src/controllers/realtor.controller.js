@@ -18,10 +18,7 @@ class RealtorController {
       return res.status(200).json(realtors);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getRealtors",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -32,10 +29,7 @@ class RealtorController {
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getRealtorByLoginEmail",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -46,10 +40,7 @@ class RealtorController {
       return res.status(201).json(realtor);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "createRealtor",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -60,10 +51,7 @@ class RealtorController {
       return res.status(204).json();
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "deleteRealtor",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -74,10 +62,7 @@ class RealtorController {
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "updateRealtor",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -88,10 +73,7 @@ class RealtorController {
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        method: "getRealtorByToken",
-        message: err,
-      });
+      throw err;
     }
   }
 
@@ -107,15 +89,7 @@ class RealtorController {
       return res.status(200).json({ token: token });
     } catch (err) {
       console.error(err);
-      if (err.message === "Unauthorized.") {
-        return res.status(401).json({
-          message: "Unauthorized.",
-        });
-      } else {
-        return res.status(500).json({
-          message: "Internal error.",
-        });
-      }
+      throw err;
     }
   }
 }
