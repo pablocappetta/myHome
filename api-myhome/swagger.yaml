@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API endpoints for the myHome application
 servers:
-  - url: https://3.144.94.74:8000/api
+  - url: http://3.144.94.74:8000/api
     description: Development server
   - url: http://localhost:8000/api
     description: Local server
