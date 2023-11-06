@@ -16,6 +16,8 @@ import * as yup from "yup";
 import { useUserContext } from "../../../contexts/UserContext";
 import { REACT_APP_API_URL } from "@env";
 
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
 const validationSchema = yup.object().shape({
   email: yup
     .string()
@@ -23,6 +25,7 @@ const validationSchema = yup.object().shape({
     .required("El correo electrónico es obligatorio"),
     password: yup.string().required("La contraseña es obligatoria"),
     name: yup.string().required("El nombre es obligatorio"),
+    phone: yup.string().matches(phoneRegExp, "Ingrese un formato valido para el numero de teléfono").required("El teléfono es obligatorio"),
 });
 
 const Register = ({ navigation }) => {
@@ -35,6 +38,7 @@ const Register = ({ navigation }) => {
                     loginEmail: values.email,
                     password: values.password,
                     contactEmail: values.email,
+                    phone: values.phone,
                     // logo: "https://dummyimage.com/600x400/000/fff"
             }
             console.log(requestBody);
@@ -99,6 +103,7 @@ const Register = ({ navigation }) => {
                                         const isEmailError = touched.email && !!errors.email;
                                         const isPasswordError = touched.password && !!errors.password;
                                         const isNameError = touched.name && !!errors.name;
+                                        const isPhoneError = touched.phone && !!errors.phone;
                                         return (
                                             <>
                                                 <TextInput
@@ -112,6 +117,18 @@ const Register = ({ navigation }) => {
                                                 />
                                                 <HelperText type="error" visible={isEmailError}>
                                                     {errors.email}
+                                                </HelperText>
+                                                <TextInput
+                                                    label="Teléfono"
+                                                    value={values.phone}
+                                                    onChangeText={handleChange("phone")}
+                                                    mode="outlined"
+                                                    style={styles.input}
+                                                    error={isPhoneError}
+                                                    keyboardType="email-address"
+                                                />
+                                                <HelperText type="error" visible={isPhoneError}>
+                                                    {errors.phone}
                                                 </HelperText>
                                                 <TextInput
                                                     label="Nombre"
@@ -148,7 +165,9 @@ const Register = ({ navigation }) => {
                                                         isPasswordError ||
                                                         isEmailError ||
                                                     !values.name ||
-                                                            isNameError
+                                                            isNameError || 
+                                                            !values.phone ||
+                                                            isPhoneError
                                                     }
                                                 >
                                                     Registrarse

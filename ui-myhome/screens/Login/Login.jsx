@@ -47,12 +47,7 @@ const Login = ({ navigation }) => {
         ...json.data,
         isRealtor: true,
         token: json.token,
-      })
-      localStorage.setItem("user", JSON.stringify({
-        ...json.data,
-        isRealtor: true,
-        token: json.token,
-      }));
+      });
       navigation.navigate("Home");
 
     })
