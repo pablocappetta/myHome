@@ -17,20 +17,22 @@ import { useUserContext } from "../../../contexts/UserContext";
 import { REACT_APP_API_URL } from "@env";
 
 const validationSchema = yup.object().shape({
-  email: yup
+  token: yup
     .string()
-    .email("Ingresá un correo electrónico válido")
-    .required("El correo electrónico es obligatorio"),
+    .required("El codigo es obligatorio"),
+    password: yup
+    .string()
+    .required("La contraseña es obligatoria"),
 });
 
-const ForgotPassword = ({ navigation }) => {
+const PasswordRecovery = ({ navigation }) => {
 
   const handlePasswordChange = (values) => {
     const requestBody = {
-                    email: values.email,
+                    password: values.password,
             }
             console.log(requestBody);
-            fetch("http://3.144.94.74:8000/api/" + 'realtors/password-reset', {
+            fetch("http://3.144.94.74:8000/api/" + 'realtors/password-reset/' + values.token, {
                     method: 'POST',
                     headers: {
                             'Content-Type': 'application/json'
@@ -39,8 +41,8 @@ const ForgotPassword = ({ navigation }) => {
             })
                     .then(response => {
                             if (response.ok) {
-                                ToastAndroid.show("Recibiras un mail para restablecer tu contraseña.", ToastAndroid.LONG);
-                                navigation.navigate("PasswordRecovery");
+                                ToastAndroid.show("Contraseña cambiada", ToastAndroid.LONG);
+                                navigation.navigate("Login");
                             } else {
                                 ToastAndroid.show("Ocurrio un error, intente de nuevo mas tarde.", ToastAndroid.LONG);
                             }
@@ -79,38 +81,54 @@ const ForgotPassword = ({ navigation }) => {
                                         marginBottom: 16,
                                         color: "#FFFFFF",
                                     }}
-                                >Recuperar Contraseña</Text>
+                                >Recuperar Contraseña - Ingresar OTP</Text>
                                 <Formik
-                                    initialValues={{ email: "" }}
+                                    initialValues={{ token: "", password: "" }}
                                     validationSchema={validationSchema}
                                     onSubmit={handlePasswordChange}
                                 >
                                     {({ handleChange, handleSubmit, values, errors, touched }) => {
-                                        const isEmailError = touched.email && !!errors.email;
+                                        const isTokenError = touched.token && !!errors.token;
+                                        const isPasswordError = touched.password && !!errors.password;
                                         return (
                                             <>
                                                 <TextInput
-                                                    label="Email"
-                                                    value={values.email}
-                                                    onChangeText={handleChange("email")}
+                                                    label="Token"
+                                                    value={values.token}
+                                                    onChangeText={handleChange("token")}
                                                     mode="outlined"
                                                     style={styles.input}
-                                                    error={isEmailError}
-                                                    keyboardType="email-address"
+                                                    error={isTokenError}
+                                                    keyboardType="default"
                                                 />
-                                                <HelperText type="error" visible={isEmailError}>
-                                                    {errors.email}
+                                                <HelperText type="info" visible={true}>
+                                                    Ingrese el codigo recibido por mail
+                                                </HelperText>
+                                                <TextInput
+                                                    label="Contraseña Nueva"
+                                                    value={values.password}
+                                                    onChangeText={handleChange("password")}
+                                                    mode="outlined"
+                                                    style={styles.input}
+                                                    error={isPasswordError}
+                                                    secureTextEntry={true}
+                                                    keyboardType="default"
+                                                />
+                                                <HelperText type="error" visible={isPasswordError}>
+                                                    Ingrese el codigo recibido por mail
                                                 </HelperText>
                                                 <Button
                                                     mode="contained"
                                                     onPress={handleSubmit}
                                                     style={styles.button}
                                                     disabled={
-                                                        !values.email ||
-                                                        isEmailError
+                                                        !values.token ||
+                                                        isTokenError ||
+                                                        !values.password ||
+                                                        isPasswordError
                                                     }
                                                 >
-                                                    Enviar
+                                                    Cambiar Contraseña
                                                 </Button>
                                             </>
                                         );
@@ -138,4 +156,4 @@ const ForgotPassword = ({ navigation }) => {
         },
     });
 
-    export default ForgotPassword;
+    export default PasswordRecovery;
