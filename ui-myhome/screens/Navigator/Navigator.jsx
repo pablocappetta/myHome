@@ -15,7 +15,6 @@ import NewPost from "../NewPost/NewPost";
 import HomeOwner from "../Home/HomeOwner";
 import NotificationView from "../Notifications/NotificationView";
 import Signin from "../Login/Signin";
-import Register from "../Login/Register";
 import { notifications } from "../Notifications/mock/notificationsMock";
 import BookingDate from "../Booking/BookingDate/BookingDate";
 import BookingInfo from "../Booking/BookingInfo/BookingInfo";
@@ -28,12 +27,14 @@ import Review from "../Review/Review";
 import Reservations from "../Reservations/Reservations";
 import Search from "../Home/Search/Search";
 import ListingReservationCard from "../Reservations/ListingReservationCard/ListingReservationCard";
+import Register from "../Login/Register/Register";
+import { useUserContext } from "../../contexts/UserContext";
+import ForgotPassword from "../Login/ForgotPassword/ForgotPassword";
 
 const Tab = createMaterialBottomTabNavigator();
 
 const Stack = createStackNavigator();
 
-const owner = false;
 
 const HomeScreenRoutes = () => {
   return (
@@ -108,6 +109,8 @@ const SearchScreenRoutes = () => {
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="SendQuestion" component={SendQuestion} />
       <Stack.Screen name="Review" component={Review} />
       <Stack.Screen name="Search" component={Search} />
@@ -185,6 +188,8 @@ const MyAccountScreenRoutes = () => {
 
 const Navigator = () => {
   const { theme } = useTheme();
+  const { getUserType } = useUserContext();
+  const owner = getUserType() === "realtor";
   if (owner) {
     return (
           <NavigationContainer theme={theme}>

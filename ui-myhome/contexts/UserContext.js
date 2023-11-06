@@ -11,9 +11,16 @@ export const UserProvider = ({ children }) => {
     email: null,
     profilePicture: null,
     isVerified: null,
+    isRealtor: null,
+    token: null,
   });
 
   const [isUserLogged, setIsUserLogged] = useState(false);
+
+  const getUserType = () => {
+    if (user.isRealtor) return "realtor";
+    return "regular";
+  }
 
   useEffect(() => {
     setIsUserLogged(user.name !== null);
@@ -23,6 +30,7 @@ export const UserProvider = ({ children }) => {
     user,
     setUser,
     isUserLogged,
+    getUserType
   };
 
   return <UserContext.Provider value={store}>{children}</UserContext.Provider>;

@@ -12,14 +12,17 @@ import {
 import { useUserContext } from "../../contexts/UserContext";
 
 const UserProfile = ({ navigation }) => {
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const openMenu = () => setMenuVisible(true);
 
   const closeMenu = () => setMenuVisible(false);
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    setUser({});
+    navigation.navigate("Login");
+  };
 
   return (
     <View style={styles.container}>
@@ -54,7 +57,7 @@ const UserProfile = ({ navigation }) => {
         <Text
           style={styles.fullName}
           numberOfLines={1}
-        >{`${user.name} ${user.lastName}`}</Text>
+        >{`${user.name}`}</Text>
         <View style={styles.emailContainer}>
           <Text style={styles.email} numberOfLines={1}>
             {user.email}
