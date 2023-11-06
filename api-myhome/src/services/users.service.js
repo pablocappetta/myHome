@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const ValidationError = mongoose.Error.ValidationError;
 const UserModel = require("../models/User");
+const { InternalServerError } = require("../middlewares/errorHandler");
 
 class RealtorUserService {
   async getUsers() {
@@ -9,7 +10,7 @@ class RealtorUserService {
       return users;
     } catch (err) {
       console.error(err);
-      throw new Error("Error en getUsers Service");
+      throw new InternalServerError("Error en getUsers Service");
     }
   }
 
