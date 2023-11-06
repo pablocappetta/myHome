@@ -140,7 +140,7 @@ const NewPost = ({ navigation }) => {
                 alignItems: "center",
               }}
               data={["USD", "ARS"]}
-              defaultValue={"ARS"}
+              defaultValue={"Seleccionar"}
               onSelect={(selectedItem, index) => {
                 setMoneda(selectedItem);
               }}
@@ -164,7 +164,7 @@ const NewPost = ({ navigation }) => {
                 alignItems: "center",
               }}
               data={["Alquiler", "Venta"]}
-              defaultValue={"Alquiler"}
+              defaultValue={"Seleccionar"}
               onSelect={(selectedItem, index) => {
                 setTipoOperacion(selectedItem);
               }}
@@ -201,7 +201,7 @@ const NewPost = ({ navigation }) => {
                 "Oficina",
                 "Duplex",
               ]}
-              defaultValue={"Casa"}
+              defaultValue={"Seleccionar"}
               onSelect={(selectedItem, index) => {
                 setTipoPropiedad(selectedItem);
               }}

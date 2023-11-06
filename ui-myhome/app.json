@@ -36,6 +36,15 @@
         "bundleIdentifier": "com.serg2404.myhome"
       }
     },
+    "preview": {
+      "PORT":3000,
+      "NODE_ENV":"development",
+      "DEBUG":true,
+      "REACT_APP_API_URL":"http://3.144.94.74:8000/api/",
+      "android": {
+        "package": "com.serg2404.myhome"
+      }
+    },
     "web": {
       "favicon": "./assets/favicon.png"
     },
