@@ -1,21 +1,47 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import { View, StyleSheet, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import ListingCard from '../../components/ListingCard/ListingCard';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useUserContext } from '../../contexts/UserContext';
 import { mockedHighlightedListings } from "./mock/MockedHomeData";
-import ListingCard from "../../components/ListingCard/ListingCard";
-import { ScrollView } from "react-native-gesture-handler";
-import { useUserContext } from "../../contexts/UserContext";
 import { Avatar, Text } from "react-native-paper";
 
 const HomeOwner = ({ navigation }) => {
   const { user, isUserLogged } = useUserContext();
+  const [highlightedListings, setHighlightedListing] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [highlightedListings, setHighlightedListing] = useState(
-    [].concat(mockedHighlightedListings)
-  );
+  const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+      fetch('http://3.144.94.74:8000/api/listings/realtor/' + user._id)
+          .then(response => response.json())
+          .then(data =>{ 
+              console.log(data);
+              setHighlightedListing(data)})
+          .catch(error => console.error(error))
+          .finally(() => setRefreshing(false));
+  }, []);
 
-  return (
-    <View>
-      <ScrollView vertical className="mt-10">
+  useEffect(() => {
+      fetch('http://3.144.94.74:8000/api/listings/realtor/' + user._id)
+          .then(response => response.json())
+          .then(data =>{ 
+              console.log(data);
+              setHighlightedListing(data)})
+          .catch(error => console.error(error))
+          .finally(() => setLoading(false));
+  }, []);
+  
+return (
+  <View>
+      <ScrollView
+          vertical
+          className="mt-10"
+          refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+      >
         <TouchableOpacity
           style={styles.userHomeWelcomeHeader}
           onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
@@ -37,19 +63,26 @@ const HomeOwner = ({ navigation }) => {
             !
           </Text>
         </TouchableOpacity>
-
         <Text className="font-bold text-[20px] pl-4 mt-6">
           Mis Publicaciones
         </Text>
         <View horizontal style={styles.listingCardsContainer}>
-          {highlightedListings.map((item, index) => (
-            <TouchableOpacity
-              key={index + item.id}
-              onPress={() => navigation.navigate("Post", item)}
-            >
-              <ListingCard listing={item} type={"recent"} />
-            </TouchableOpacity>
-          ))}
+        {loading ? (
+                <View style={styles.spinnerContainer}>
+                    <ActivityIndicator size="large" color="#6750a4" />
+                </View>
+            ) : (
+                <View horizontal style={styles.listingCardsContainer}>
+                    {highlightedListings.map((item, index) => (
+                    <TouchableOpacity
+                        key={index + item.id}
+                        onPress={() => navigation.navigate("Post", item)}
+                    >
+                        <ListingCard listing={item} type={"recent"} />
+                    </TouchableOpacity>
+                    ))}
+                </View>
+            )}
         </View>
       </ScrollView>
       <TouchableOpacity
@@ -61,7 +94,7 @@ const HomeOwner = ({ navigation }) => {
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   userHomeWelcomeHeader: {
