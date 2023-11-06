@@ -10,7 +10,7 @@ const router = Router();
 router.post("/jwt", checkJwt);
 
 //Devuelve todos los usuarios
-router.get("/", UserController.getUsuarios); //GET USUARIOS
+router.get("/", UserController.getUsers); //GET USUARIOS
 
 //Crea un usuario
 router.post(
@@ -20,11 +20,11 @@ router.post(
     check("password").not().isEmpty(),
     checkFields,
   ],
-  UserController.createUsuario
+  UserController.createUser
 ); //POST USUARIOS
 
 //Devuelve un usuario por id
-router.get("/:id", UserController.getUsuarioById); //GET USUARIOS BY ID
+router.get("/:id", UserController.getUserById); //GET USUARIOS BY ID
 
 //Loguea un usuario
 router.post(
