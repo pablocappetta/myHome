@@ -21,7 +21,7 @@ export const UserProvider = ({ children }) => {
   const getUserType = () => {
     if (user.isRealtor) return "realtor";
     return "regular";
-  }
+  };
 
   useEffect(() => {
     setIsUserLogged(user.name !== null);

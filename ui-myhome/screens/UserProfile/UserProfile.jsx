@@ -12,7 +12,7 @@ import {
 import { useUserContext } from "../../contexts/UserContext";
 
 const UserProfile = ({ navigation }) => {
-  const { user, setUser, setIsUserLogged } = useUserContext();
+  const { user, setIsUserLogged } = useUserContext();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const openMenu = () => setMenuVisible(true);
@@ -21,7 +21,6 @@ const UserProfile = ({ navigation }) => {
 
   const handleLogout = () => {
     setIsUserLogged(false);
-    setUser(null);
     navigation.navigate("Login");
   };
 
