@@ -111,7 +111,7 @@ router.post("/password-reset/:token", async (req, res) => {
     const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
 
     if (realtor) {
-      realtor.password = await bcrypt.hash(realtor.password, 10);
+      realtor.password = await bcrypt.hash(password, 10);
       await RealtorService.updateRealtor(realtor);
       res.status(200).json({
         message: "Contraseña actualizada correctamente",
