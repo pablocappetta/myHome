@@ -26,7 +26,7 @@ class RealtorController {
   }
 
   async getRealtorByLoginEmail(req, res) {
-    const { email } = req.params;
+    const { email } = req.params || req.body;
     try {
       const realtor = await RealtorService.getRealtorByLoginEmail(email);
       return res.status(200).json(realtor);
