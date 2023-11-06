@@ -6,6 +6,7 @@ const checkJwt = require("../middlewares/jwtValidator");
 const RealtorService = require("../services/realtor.service");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
 
 const router = Router();
 
