@@ -3,6 +3,8 @@ const { Schema } = mongoose;
 
 const ListingSchema = new Schema(
   {
+    title: { type: String, required: true },
+    description: String,
     property: {
       age: Number,
       address: {
