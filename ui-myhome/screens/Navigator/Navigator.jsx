@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
 import Home from "../Home/Home";
@@ -36,7 +36,6 @@ const Tab = createMaterialBottomTabNavigator();
 
 const Stack = createStackNavigator();
 
-
 const HomeScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -55,13 +54,12 @@ const HomeScreenRoutes = () => {
   );
 };
 
-
 const SettingsScreenRoutes = () => {
   return (
     <Stack.Navigator
       initialRouteName="Ajustes"
       screenOptions={{
-      headerShown: false,
+        headerShown: false,
       }}
     >
       <Stack.Screen name="Ajustes" component={Settings} />
@@ -73,13 +71,13 @@ const NotificationsScreenRoutes = () => {
   return (
     <Stack.Navigator
       initialRouteName="Notificaciones"
-      >
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="Notificaciones" component={Notifications} />
       <Stack.Screen name="Notificacion" component={NotificationView} />
     </Stack.Navigator>
   );
 };
-
 
 const BookingRoutes = () => {
   return (
@@ -120,10 +118,6 @@ const SearchScreenRoutes = () => {
   );
 };
 
-
-
-
-
 const FavoritesScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -139,8 +133,6 @@ const FavoritesScreenRoutes = () => {
   );
 };
 
-
-
 const ReservationsScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -149,7 +141,6 @@ const ReservationsScreenRoutes = () => {
         headerShown: false,
       }}
     >
-
       <Stack.Screen name="Mis Reservas" component={Reservations} />
       <Stack.Screen name="Post" component={ListingReservationCard} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
@@ -170,7 +161,7 @@ const UserProfileScreenRoutes = () => {
     </Stack.Navigator>
   );
 };
-    
+
 const MyAccountScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -179,7 +170,6 @@ const MyAccountScreenRoutes = () => {
         headerShown: false,
       }}
     >
-
       <Stack.Screen name="Mi Cuenta" component={Settings} />
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Login" component={Login} />
@@ -194,91 +184,90 @@ const Navigator = () => {
   const owner = getUserType() === "realtor";
   if (owner) {
     return (
-          <NavigationContainer theme={theme}>
-            <Tab.Navigator
-              initialRouteName="tabHome"
-              theme={theme}
-              activeColor={theme.colors.primary}
-              labeled={true}
-              barStyle={Platform.OS === "ios" && { height: 96 }}
-            >
-              <Tab.Screen
-                name="tabNotificaciones"
-                component={NotificationsScreenRoutes}
-                options={{
-                  tabBarLabel: "Notificaciones",
-                  tabBarIcon: "bell",
-                  tabBarBadge: notifications.length,
-                }}
-              />
-              <Tab.Screen
-                name="tabHome"
-                component={HomeScreenRoutes}
-                options={{
-                  tabBarLabel: "Mis Publicaciones",
-                  tabBarIcon: "file-document-multiple-outline",
-                }}
-              />
-              <Tab.Screen
-                name="tabPerfil"
-                component={UserProfileScreenRoutes}
-                options={{
-                  tabBarLabel: "Perfil",
-                  tabBarIcon: "account",
-                }}
-              />
-            </Tab.Navigator>
-          </NavigationContainer>
-        );
-      };
-      if (!owner) {
-        return (
-          <NavigationContainer theme={theme}>
-            <Tab.Navigator
-              initialRouteName="tabBuscar"
-              theme={theme}
-              activeColor={theme.colors.primary}
-              labeled={true}
-              barStyle={Platform.OS === "ios" && { height: 96 }}
-            >
-              <Tab.Screen
-  
-                name="tabBuscar"
-                component={SearchScreenRoutes}
-                options={{
-                  tabBarLabel: "Buscar",
-                  tabBarIcon: "magnify",
-                }}
-              />
-              <Tab.Screen
-                name="tabMisPublicaciones"
-                component={ReservationsScreenRoutes}
-                options={{
-                  tabBarLabel: "Mis Reservas",
-                  tabBarIcon: "book-outline",
-                }}
-              />
-              <Tab.Screen
-                name="tabFavoritos"
-                component={FavoritesScreenRoutes}
-                options={{
-                  tabBarLabel: "Favoritos",
-                  tabBarIcon: "heart-outline",
-                }}
-              />
-              <Tab.Screen
-                name="tabMiCuenta"
-                component={MyAccountScreenRoutes}
-                options={{
-                  tabBarLabel: "Mi Cuenta",
-                  tabBarIcon: "account-circle-outline",
-                }}
-              />
-            </Tab.Navigator>
-          </NavigationContainer>
-        );      
-    }
-}
+      <NavigationContainer theme={theme}>
+        <Tab.Navigator
+          initialRouteName="tabHome"
+          theme={theme}
+          activeColor={theme.colors.primary}
+          labeled={true}
+          barStyle={Platform.OS === "ios" && { height: 96 }}
+        >
+          <Tab.Screen
+            name="tabHome"
+            component={HomeScreenRoutes}
+            options={{
+              tabBarLabel: "Mis Publicaciones",
+              tabBarIcon: "file-document-multiple-outline",
+            }}
+          />
+          <Tab.Screen
+            name="tabNotificaciones"
+            component={NotificationsScreenRoutes}
+            options={{
+              tabBarLabel: "Notificaciones",
+              tabBarIcon: "bell",
+              tabBarBadge: notifications.length,
+            }}
+          />
 
+          <Tab.Screen
+            name="tabPerfil"
+            component={UserProfileScreenRoutes}
+            options={{
+              tabBarLabel: "Perfil",
+              tabBarIcon: "account",
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
+  if (!owner) {
+    return (
+      <NavigationContainer theme={theme}>
+        <Tab.Navigator
+          initialRouteName="tabBuscar"
+          theme={theme}
+          activeColor={theme.colors.primary}
+          labeled={true}
+          barStyle={Platform.OS === "ios" && { height: 96 }}
+        >
+          <Tab.Screen
+            name="tabBuscar"
+            component={SearchScreenRoutes}
+            options={{
+              tabBarLabel: "Buscar",
+              tabBarIcon: "magnify",
+            }}
+          />
+          <Tab.Screen
+            name="tabMisPublicaciones"
+            component={ReservationsScreenRoutes}
+            options={{
+              tabBarLabel: "Mis Reservas",
+              tabBarIcon: "book-outline",
+            }}
+          />
+          <Tab.Screen
+            name="tabFavoritos"
+            component={FavoritesScreenRoutes}
+            options={{
+              tabBarLabel: "Favoritos",
+              tabBarIcon: "heart-outline",
+            }}
+          />
+          <Tab.Screen
+            name="tabMiCuenta"
+            component={MyAccountScreenRoutes}
+            options={{
+              tabBarLabel: "Mi Cuenta",
+              tabBarIcon: "account-circle-outline",
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
+};
 
 export default Navigator;

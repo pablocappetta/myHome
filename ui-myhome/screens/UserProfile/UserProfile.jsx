@@ -20,8 +20,8 @@ const UserProfile = ({ navigation }) => {
   const closeMenu = () => setMenuVisible(false);
 
   const handleLogout = () => {
-    setUser({});
     setIsUserLogged(false);
+    setUser(null);
     navigation.navigate("Login");
   };
 
@@ -55,35 +55,34 @@ const UserProfile = ({ navigation }) => {
             leadingIcon={"delete"}
           />
         </Menu>
-        <Text
-          style={styles.fullName}
-          numberOfLines={1}
-        >{`${user.name}`}</Text>
+        <Text style={styles.fullName} numberOfLines={1}>{`${user.name}`}</Text>
         <View style={styles.emailContainer}>
           <Text style={styles.email} numberOfLines={1}>
-            {user.email}
+            {user.loginEmail}
           </Text>
           <IconButton
-            icon={user.isVerified ? "check" : "alert"}
+            icon={user.isRealtor ? "check" : "alert"}
             mode="contained"
             size={16}
           />
         </View>
 
         <View style={styles.actions}>
-          <Button
-            icon="heart"
-            mode="contained-tonal"
-            style={styles.actionButton}
-            onPress={() => {}}
-          >
-            Ver Favoritos
-          </Button>
+          {!user.isRealtor && (
+            <Button
+              icon="heart"
+              mode="contained-tonal"
+              style={styles.actionButton}
+              onPress={() => {}}
+            >
+              Ver Favoritos
+            </Button>
+          )}
           <Button
             icon="home"
             mode="contained-tonal"
             style={styles.actionButton}
-            onPress={() => {}}
+            onPress={() => navigation.navigate("tabHome")}
           >
             Mis Propiedades
           </Button>

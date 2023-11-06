@@ -9,13 +9,18 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { TextInput, Button, HelperText, Appbar, IconButton, Divider, Text } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  HelperText,
+  Appbar,
+  Divider,
+  Text,
+} from "react-native-paper";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useUserContext } from "../../contexts/UserContext";
-import { mockedUser } from "./mock/MockedLoginData";
 import { REACT_APP_API_URL } from "@env";
-
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -33,8 +38,8 @@ const Login = ({ navigation }) => {
       email: values.email,
       password: values.password,
     };
-    
-    console.log("http://3.144.94.74:8000/api/" + "realtors/login")
+
+    console.log("http://3.144.94.74:8000/api/" + "realtors/login");
     fetch("http://3.144.94.74:8000/api/" + "realtors/login", {
       method: "POST",
       headers: {
@@ -42,20 +47,19 @@ const Login = ({ navigation }) => {
       },
       body: JSON.stringify(requestBody),
     })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log(json);
-      setUser({
-        ...json.data,
-        isRealtor: true,
-        token: json.token,
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        setUser({
+          ...json.data,
+          isRealtor: true,
+          token: json.token,
+        });
+        navigation.navigate("Home");
+      })
+      .catch((error) => {
+        console.error(error);
       });
-      navigation.navigate("Home");
-
-    })
-    .catch((error) => {
-      console.error(error);
-    })
     // navigation.navigate("Home");
   };
 
@@ -85,9 +89,10 @@ const Login = ({ navigation }) => {
                   textAlign: "center",
                   marginTop: 16,
                   marginBottom: 16,
-                  color: "#FFFFFF",
                 }}
-              >Ingresar como usuario</Text>
+              >
+                Ingresar como usuario
+              </Text>
               <Button
                 icon={({ size, color }) => (
                   <Image
@@ -113,9 +118,10 @@ const Login = ({ navigation }) => {
                   textAlign: "center",
                   marginTop: 16,
                   marginBottom: 16,
-                  color: "#FFFFFF",
                 }}
-              >¿Sos propietario?</Text>
+              >
+                ¿Sos propietario?
+              </Text>
               <Formik
                 initialValues={{ email: "", password: "" }}
                 validationSchema={validationSchema}
@@ -164,23 +170,33 @@ const Login = ({ navigation }) => {
                       >
                         Ingresar
                       </Button>
-                      <View style={{
-                        flexDirection: 'column', justifyContent: 'space-between', marginTop: 16,
-                        alignContent: 'center', alignItems: 'center'
-                      }}>
-                        <Text style={{
-                          color: '#6750A4',
-                          fontWeight: 'bold',
+                      <View
+                        style={{
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                          marginTop: 16,
+                          alignContent: "center",
+                          alignItems: "center",
+                          gap: 16,
                         }}
-                        onPress={() => navigation.navigate('ForgotPassword')}
-                        >Me olvide mi contraseña</Text>
-                        <Text style={{ color: '#6750A4', fontWeight: 'bold' }} onPress={() => navigation.navigate('Register')}>¿No tenés cuenta? Registrarse</Text>
+                      >
+                        <Text
+                          variant="labelLarge"
+                          onPress={() => navigation.navigate("ForgotPassword")}
+                        >
+                          Me olvidé mi contraseña
+                        </Text>
+                        <Text
+                          variant="labelLarge"
+                          onPress={() => navigation.navigate("Register")}
+                        >
+                          ¿No tenés cuenta? ¡Registrate!
+                        </Text>
                       </View>
                     </>
                   );
                 }}
               </Formik>
-
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
