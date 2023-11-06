@@ -71,6 +71,19 @@ class ListingService {
       throw new Error("Error en deleteListing Service");
     }
   }
+
+  async addImages(listing, images) {
+    const listingFromDb = await this.getListingById(listing);
+    const imageLinks = images.map((image) => image.link);
+    try {
+      listingFromDb.property.photos =
+        listingFromDb.property.photos.concat(imageLinks);
+      return await this.updateListing(listingFromDb);
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en addImagesToListing Service");
+    }
+  }
 }
 
 module.exports = new ListingService();

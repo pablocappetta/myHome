@@ -94,6 +94,21 @@ class ListingController {
       });
     }
   }
+
+  async addImages(req, res) {
+    const { id } = req.params;
+    const images = req.files;
+    try {
+      const listing = await ListingService.addImages(id, images);
+      return res.status(200).json(listing);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({
+        method: "addImages",
+        message: err,
+      });
+    }
+  }
 }
 
 module.exports = ListingController.getInstance();

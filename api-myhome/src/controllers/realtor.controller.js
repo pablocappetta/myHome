@@ -104,7 +104,17 @@ class RealtorController {
       const token = jwt.sign(realtor.toJSON(), process.env.PRIVATE_KEY, {
         expiresIn: "1d",
       });
-      return res.status(200).json({ token: token });
+      const user = await RealtorService.getRealtorByLoginEmail(req.body.email);
+      const data = {
+        _id: user._id,
+        name: user.name,
+        loginEmail: user.loginEmail,
+        phone: user.phone,
+        logo: user?.logo,
+        reviews: user?.reviews,
+        creationDate: user.creationDate,
+      };
+      return res.status(200).json({ token: token, data: data });
     } catch (err) {
       console.error(err);
       if (err.message === "Unauthorized.") {
