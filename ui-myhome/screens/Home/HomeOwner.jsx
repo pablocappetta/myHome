@@ -1,9 +1,14 @@
-import { View, StyleSheet, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import ListingCard from '../../components/ListingCard/ListingCard';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useUserContext } from '../../contexts/UserContext';
-import { mockedHighlightedListings } from "./mock/MockedHomeData";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  RefreshControl,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import ListingCard from "../../components/ListingCard/ListingCard";
+import { ScrollView } from "react-native-gesture-handler";
+import { useUserContext } from "../../contexts/UserContext";
 import { Avatar, Text } from "react-native-paper";
 
 const HomeOwner = ({ navigation }) => {
@@ -13,34 +18,36 @@ const HomeOwner = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const onRefresh = React.useCallback(() => {
-      setRefreshing(true);
-      fetch('http://3.144.94.74:8000/api/listings/realtor/' + user._id)
-          .then(response => response.json())
-          .then(data =>{ 
-              console.log(data);
-              setHighlightedListing(data)})
-          .catch(error => console.error(error))
-          .finally(() => setRefreshing(false));
+    setRefreshing(true);
+    fetch("http://3.144.94.74:8000/api/listings/realtor/" + user._id)
+      .then((response) => response.json())
+      .then((data) => {
+        setHighlightedListing(data);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setRefreshing(false));
   }, []);
 
   useEffect(() => {
-      fetch('http://3.144.94.74:8000/api/listings/realtor/' + user._id)
-          .then(response => response.json())
-          .then(data =>{ 
-              console.log(data);
-              setHighlightedListing(data)})
-          .catch(error => console.error(error))
-          .finally(() => setLoading(false));
+    fetch("http://3.144.94.74:8000/api/listings/realtor/" + user._id)
+      .then((response) => response.json())
+      .then((data) => {
+        setHighlightedListing(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setLoading(false));
   }, []);
-  
-return (
-  <View>
+
+  return (
+    <View>
       <ScrollView
-          vertical
-          className="mt-10"
-          refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+        vertical
+        className="mt-10 min-h-[680px]"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <TouchableOpacity
           style={styles.userHomeWelcomeHeader}
@@ -64,37 +71,38 @@ return (
           </Text>
         </TouchableOpacity>
         <Text className="font-bold text-[20px] pl-4 mt-6">
-          Mis Publicaciones
+          Mis publicaciones
         </Text>
         <View horizontal style={styles.listingCardsContainer}>
-        {loading ? (
-                <View style={styles.spinnerContainer}>
-                    <ActivityIndicator size="large" color="#6750a4" />
-                </View>
-            ) : (
-                <View horizontal style={styles.listingCardsContainer}>
-                    {highlightedListings.map((item, index) => (
-                    <TouchableOpacity
-                        key={index + item.id}
-                        onPress={() => navigation.navigate("Post", item)}
-                    >
-                        <ListingCard listing={item} type={"recent"} />
-                    </TouchableOpacity>
-                    ))}
-                </View>
-            )}
+          {loading ? (
+            <View style={styles.spinnerContainer}>
+              <ActivityIndicator size="large" color="#6750a4" />
+            </View>
+          ) : (
+            <View horizontal style={styles.listingCardsContainer}>
+              {highlightedListings.length > 0 &&
+                highlightedListings.map((item, index) => (
+                  <TouchableOpacity
+                    key={index + item._id}
+                    onPress={() => navigation.navigate("Post", item)}
+                  >
+                    <ListingCard listing={item} type={"recent"} />
+                  </TouchableOpacity>
+                ))}
+            </View>
+          )}
         </View>
       </ScrollView>
       <TouchableOpacity
         TouchableOpacity
         onPress={() => navigation.navigate("NewPost")}
-        className="absolute right-3 bottom-3 rounded-full bg-[#6750a4] h-16 w-16 flex items-center justify-center"
+        className="absolute right-3 bottom-8 rounded-full bg-[#6750a4] h-16 w-16 flex items-center justify-center"
       >
         <Text className="text-[30px] text-white">+</Text>
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   userHomeWelcomeHeader: {

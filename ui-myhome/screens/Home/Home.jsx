@@ -77,160 +77,164 @@ const Home = ({ navigation }) => {
 
   return (
     <SafeAreaView>
-      <ScrollView vertical ref={ref}>
-        <TouchableOpacity
-          style={styles.userHomeWelcomeHeader}
-          onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
-        >
-          {isUserLogged ? (
-            <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
-          ) : (
-            <Avatar.Icon size={36} icon="account" />
-          )}
-          <Text variant="titleLarge">
-            ¡Hola,{" "}
-            <Text
-              className="font-bold"
-              style={styles.userNameGreeting}
-              numberOfLines={1}
-            >
-              {isUserLogged ? user.name : "invitado"}
-            </Text>
-            !
-          </Text>
-        </TouchableOpacity>
-        <View>
-          <SegmentedButtons
-            buttons={segmentedButtons}
-            value={filterSelection}
-            onValueChange={handleButtonFilterChange}
-            style={styles.segmentedButtons}
-          />
-        </View>
-
-        <View style={styles.searchBarContainer}>
-          <Searchbar
-            placeholder="Buscar..."
-            onChangeText={handleSearchStringChange}
-            onSubmitEditing={handleSearchSubmitChange}
-            onClearIconPress={handleSearchClearIconPress}
-            value={searchQuery}
-          />
-        </View>
-
-        {highlightedListings.length > 0 && !isQueryActive && (
-          <View>
-            <View style={styles.listingHeader}>
+      {!user.isRealtor && (
+        <ScrollView vertical ref={ref}>
+          <TouchableOpacity
+            style={styles.userHomeWelcomeHeader}
+            onPress={() =>
+              navigation.navigate(isUserLogged ? "Perfil" : "Login")
+            }
+          >
+            {isUserLogged ? (
+              <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+            ) : (
+              <Avatar.Icon size={36} icon="account" />
+            )}
+            <Text variant="titleLarge">
+              ¡Hola,{" "}
               <Text
-                variant="titleLarge"
-                style={{
-                  paddingHorizontal: 16,
-                }}
+                className="font-bold"
+                style={styles.userNameGreeting}
+                numberOfLines={1}
               >
-                Destacados
+                {isUserLogged ? user.name : "invitado"}
               </Text>
-              <TouchableOpacity>
+              !
+            </Text>
+          </TouchableOpacity>
+          <View>
+            <SegmentedButtons
+              buttons={segmentedButtons}
+              value={filterSelection}
+              onValueChange={handleButtonFilterChange}
+              style={styles.segmentedButtons}
+            />
+          </View>
+
+          <View style={styles.searchBarContainer}>
+            <Searchbar
+              placeholder="Buscar..."
+              onChangeText={handleSearchStringChange}
+              onSubmitEditing={handleSearchSubmitChange}
+              onClearIconPress={handleSearchClearIconPress}
+              value={searchQuery}
+            />
+          </View>
+
+          {highlightedListings.length > 0 && !isQueryActive && (
+            <View>
+              <View style={styles.listingHeader}>
                 <Text
-                  variant="labelLarge"
+                  variant="titleLarge"
                   style={{
                     paddingHorizontal: 16,
                   }}
                 >
-                  Ver más
+                  Destacados
                 </Text>
-              </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text
+                    variant="labelLarge"
+                    style={{
+                      paddingHorizontal: 16,
+                    }}
+                  >
+                    Ver más
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
+                <View style={styles.listingCardsContainer}>
+                  {highlightedListings.map((item, index) => (
+                    <TouchableOpacity
+                      key={index + item.id}
+                      onPress={() => navigation.navigate("Post", item)}
+                    >
+                      <ListingCard listing={item} type={"highlighted"} />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </ScrollView>
             </View>
-            <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
-              <View style={styles.listingCardsContainer}>
+          )}
+
+          {recentListings.length > 0 && !isQueryActive && (
+            <View>
+              <View style={styles.listingHeader}>
+                <Text
+                  variant="titleLarge"
+                  style={{
+                    paddingHorizontal: 16,
+                  }}
+                >
+                  Últimas publicaciones
+                </Text>
+                <TouchableOpacity>
+                  <Text
+                    variant="labelLarge"
+                    style={{
+                      paddingHorizontal: 16,
+                    }}
+                  >
+                    Ver más
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View horizontal style={styles.listingCardsContainer}>
+                {recentListings.map((item, index) => (
+                  <TouchableOpacity
+                    key={index + item.id}
+                    onPress={() => navigation.navigate("Post", item)}
+                  >
+                    <ListingCard listing={item} type={"recent"} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
+
+          {searchQuery.length > 0 && isQueryActive && (
+            <View>
+              <View style={styles.listingHeader}>
+                <Text
+                  variant="titleLarge"
+                  style={{
+                    paddingHorizontal: 16,
+                  }}
+                >
+                  Resultados de la búsqueda
+                </Text>
+                <TouchableOpacity>
+                  <Text
+                    variant="labelLarge"
+                    style={{
+                      paddingHorizontal: 16,
+                    }}
+                  >
+                    Ver más
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View horizontal style={styles.listingCardsContainer}>
                 {highlightedListings.map((item, index) => (
                   <TouchableOpacity
                     key={index + item.id}
                     onPress={() => navigation.navigate("Post", item)}
                   >
-                    <ListingCard listing={item} type={"highlighted"} />
+                    <ListingCard listing={item} type={"recent"} />
                   </TouchableOpacity>
                 ))}
               </View>
-            </ScrollView>
-          </View>
-        )}
+            </View>
+          )}
 
-        {recentListings.length > 0 && !isQueryActive && (
-          <View>
-            <View style={styles.listingHeader}>
-              <Text
-                variant="titleLarge"
-                style={{
-                  paddingHorizontal: 16,
-                }}
-              >
-                Últimas publicaciones
-              </Text>
-              <TouchableOpacity>
-                <Text
-                  variant="labelLarge"
-                  style={{
-                    paddingHorizontal: 16,
-                  }}
-                >
-                  Ver más
-                </Text>
-              </TouchableOpacity>
+          {!highlightedListings.length > 0 && !recentListings.length > 0 && (
+            <View style={styles.noListingResultsContainer}>
+              <Text variant="labelLarge">No hay publicaciones</Text>
             </View>
-            <View horizontal style={styles.listingCardsContainer}>
-              {recentListings.map((item, index) => (
-                <TouchableOpacity
-                  key={index + item.id}
-                  onPress={() => navigation.navigate("Post", item)}
-                >
-                  <ListingCard listing={item} type={"recent"} />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        )}
-
-        {searchQuery.length > 0 && isQueryActive && (
-          <View>
-            <View style={styles.listingHeader}>
-              <Text
-                variant="titleLarge"
-                style={{
-                  paddingHorizontal: 16,
-                }}
-              >
-                Resultados de la búsqueda
-              </Text>
-              <TouchableOpacity>
-                <Text
-                  variant="labelLarge"
-                  style={{
-                    paddingHorizontal: 16,
-                  }}
-                >
-                  Ver más
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View horizontal style={styles.listingCardsContainer}>
-              {highlightedListings.map((item, index) => (
-                <TouchableOpacity
-                  key={index + item.id}
-                  onPress={() => navigation.navigate("Post", item)}
-                >
-                  <ListingCard listing={item} type={"recent"} />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        )}
-
-        {!highlightedListings.length > 0 && !recentListings.length > 0 && (
-          <View style={styles.noListingResultsContainer}>
-            <Text variant="labelLarge">No hay publicaciones</Text>
-          </View>
-        )}
-      </ScrollView>
+          )}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

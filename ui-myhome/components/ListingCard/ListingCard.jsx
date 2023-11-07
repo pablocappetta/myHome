@@ -51,12 +51,12 @@ const ListingCard = ({ listing, type }) => {
       height={type === "highlighted" ? 376 : 300}
     >
       <View style={styles.listingTypeChip}>
-        <ListingTypeChip listingType={listing.listingType}>
-          {listing.listingType}
+        <ListingTypeChip listingType={listing?.listingType || listing.type}>
+          {listing?.listingType || listing?.type?.toUpperCase()}
         </ListingTypeChip>
       </View>
       <Card.Cover
-        source={{ uri: listing.image }}
+        source={{ uri: listing?.image || listing?.property?.photos[0] }}
         style={styles.listingImage}
         defaultSource={
           theme.dark
@@ -66,10 +66,10 @@ const ListingCard = ({ listing, type }) => {
       />
       <Card.Content style={styles.cardContentContainer}>
         <Text variant="titleSmall" style={{ marginTop: 6 }}>
-          {listing.type}
+          {listing?.property?.type || listing?.type}
         </Text>
         <Text variant="bodySmall" numberOfLines={2} style={{ width: "100%" }}>
-          {listing.location}
+          {listing?.location || listing?.property?.address?.neighborhood}
         </Text>
         <View style={styles.priceContainer}>
           <View
@@ -80,10 +80,12 @@ const ListingCard = ({ listing, type }) => {
             }}
           >
             <Text variant="bodyLarge" style={{ fontWeight: 600 }}>
-              {listing.currency}
+              {listing?.currency || listing?.price?.currency}
             </Text>
             <Text variant="bodyLarge" style={{ fontWeight: 800 }}>
-              ${commaNumber(listing.price)}
+              $
+              {commaNumber(listing?.price?.amount) ||
+                commaNumber(listing?.price)}
             </Text>
           </View>
         </View>

@@ -17,7 +17,6 @@ import {
   Switch,
   Text,
   TextInput,
-  Button
 } from "react-native-paper";
 import MapView from "react-native-maps";
 import Carousel from "react-native-reanimated-carousel";
@@ -28,12 +27,15 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
+import { useUserContext } from "../../../contexts/UserContext";
 
 //Es un work in progress. Tengo un quilombo de estilos y cosas por todos lados. No me juzguen :P
 
 export const ListingPost = ({ navigation, ...props }) => {
+  const { user, isUserLogged } = useUserContext();
+
   // Si es owner
-  const [isOwner, setIsOwner] = useState(true);
+  const [isOwner, setIsOwner] = useState(user?.isRealtor || false);
 
   //toggle edit
   const [edit, setEdit] = useState(false);
@@ -180,7 +182,6 @@ export const ListingPost = ({ navigation, ...props }) => {
     setBalcon(!balcon);
   };
 
-
   return (
     <View style={styles.container}>
       <Appbar.Header elevated={true}>
@@ -198,7 +199,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             panGestureHandlerProps={{
               activeOffsetX: [-10, 10],
             }}
-            data={[listing.image, listing.image, listing.image]}
+            data={listing?.property?.photos || [listing?.image]}
             renderItem={({ item, index }) => (
               <View style={styles.containerImageCarousel}>
                 {imageLoading && (
@@ -264,8 +265,10 @@ export const ListingPost = ({ navigation, ...props }) => {
                 }}
               />
             ) : (
-              <ListingTypeChip listingType={listing.listingType}>
-                {listing.listingType}
+              <ListingTypeChip
+                listingType={listing?.property?.type || listing?.listingType}
+              >
+                {listing?.type.toUpperCase() || listing?.listingType}
               </ListingTypeChip>
             )}
             {isOwner ? (
@@ -296,8 +299,10 @@ export const ListingPost = ({ navigation, ...props }) => {
                 />
                 <IconButton
                   icon="comment-question-outline"
-                  onPress={() => 
-                    navigation.navigate("SendQuestion", { screen: "SendQuestion" })
+                  onPress={() =>
+                    navigation.navigate("SendQuestion", {
+                      screen: "SendQuestion",
+                    })
                   }
                 />
               </View>
@@ -307,7 +312,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             <View style={styles.containerHomeLocationDetails}>
               {edit ? (
                 <TextInput
-                  value={listing.type}
+                  value={listing?.property?.type || listing?.type}
                   className="rounded-t-md w-[170px] "
                   label={"Tipo propiedad"}
                   onChange={(property) => handleProperty(property)}
@@ -318,12 +323,12 @@ export const ListingPost = ({ navigation, ...props }) => {
                   variant="titleLarge"
                   style={{ color: theme.colors.primary, fontWeight: 800 }}
                 >
-                  {listing.type}
+                  {listing?.title || listing?.type}
                 </Text>
               )}
               {edit ? (
                 <TextInput
-                  value={listing.location}
+                  value={listing?.property?.neighborhood || listing?.location}
                   className="rounded-t-md w-[170px]"
                   label={"Ubicacion"}
                   onChange={(location) => handleLocation(location)}
@@ -334,7 +339,8 @@ export const ListingPost = ({ navigation, ...props }) => {
                   variant="labelLarge"
                   style={{ color: theme.colors.secondary }}
                 >
-                  {listing.location}
+                  {listing?.property?.address?.neighborhood ||
+                    listing?.location}
                 </Text>
               )}
             </View>
@@ -343,7 +349,10 @@ export const ListingPost = ({ navigation, ...props }) => {
               <View>
                 {edit ? (
                   <TextInput
-                    value={commaNumber(listing.price)}
+                    value={
+                      commaNumber(listing?.price?.amount) ||
+                      commaNumber(listing.price)
+                    }
                     className="rounded-t-md w-[100px]"
                     label={"Precio"}
                     onChange={(price) => handlePrice(price)}
@@ -351,12 +360,16 @@ export const ListingPost = ({ navigation, ...props }) => {
                   />
                 ) : (
                   <Text variant="titleLarge" style={styles.price}>
-                    {commaNumber(listing.price)}
+                    {commaNumber(listing?.price?.amount) ||
+                      commaNumber(listing.price)}
                   </Text>
                 )}
                 {edit ? (
                   <TextInput
-                    value={"50,000"}
+                    value={
+                      commaNumber(listing?.property?.expensesPrice?.amount) ||
+                      commaNumber(listing.price)
+                    }
                     className="rounded-t-md w-[100px]"
                     label={"Expensas"}
                     onChange={(expenses) => handleExpenses(expenses)}
@@ -367,7 +380,8 @@ export const ListingPost = ({ navigation, ...props }) => {
                     variant="labelSmall"
                     style={{ color: theme.colors.secondary }}
                   >
-                    +50,000 expensas
+                    {commaNumber(listing?.property?.expensesPrice?.amount) ||
+                      commaNumber(listing.price)}
                   </Text>
                 )}
               </View>
@@ -382,7 +396,9 @@ export const ListingPost = ({ navigation, ...props }) => {
               </List.Subheader>
               <View style={styles.containerListingOwner}>
                 <Avatar.Icon icon="account" size={36} />
-                <Text variant="titleMedium">Cosme Fulanito Rodriguez</Text>
+                <Text variant="titleMedium">
+                  {listing?.realtorId || "Cosme Fulanito Rodriguez"}
+                </Text>
               </View>
               <Divider />
             </View>
@@ -403,14 +419,15 @@ export const ListingPost = ({ navigation, ...props }) => {
               />
             ) : (
               <Text variant="bodyLarge" style={styles.description}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa
+                {listing.description ||
+                  `Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa
                 iste ea doloremque. Ipsum voluptatum aspernatur, facere magni
                 vero, non excepturi aperiam libero rem neque suscipit qui amet
                 vel fuga ducimus! Lorem ipsum dolor sit amet consectetur
                 adipisicing elit. Culpa iste ea doloremque. Ipsum voluptatum
                 aspernatur, facere magni vero, non excepturi aperiam libero rem
                 neque suscipit qui amet vel fuga ducimus! Lorem ipsum dolor sit
-                amet consectetur adipisicing
+                amet consectetur adipisicing`}
               </Text>
             )}
           </View>
@@ -422,16 +439,16 @@ export const ListingPost = ({ navigation, ...props }) => {
           <View style={styles.containerListingSpecialDetails}>
             {edit ? (
               <TextInput
-                value="120"
+                value={listing?.property?.sqm?.covered || "120"}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
-                label={"Cubiertos"}
+                label={"Metros"}
                 onChange={(cubiertos) => handleCubiertos(cubiertos)}
                 mode="outlined"
               />
             ) : (
               <List.Item
-                title="Cubiertos"
-                description="120 m2"
+                title="Metros"
+                description={listing?.property?.sqm?.covered || "120"}
                 left={(props) => <List.Icon {...props} icon="texture-box" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
@@ -439,7 +456,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             )}
             {edit ? (
               <TextInput
-                value="20"
+                value={listing?.property?.sqm?.uncovered || "120"}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Descubiertos"}
                 onChange={(descubiertos) => handleDescubiertos(descubiertos)}
@@ -448,7 +465,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <List.Item
                 title="descubiertos"
-                description="20 m2"
+                description={listing?.property?.sqm?.uncovered || "120"}
                 left={(props) => <List.Icon {...props} icon="texture-box" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
@@ -456,7 +473,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             )}
             {edit ? (
               <TextInput
-                value="4"
+                value={listing?.property?.rooms || "4"}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Ambientes"}
                 onChange={(ambientes) => handleAmbientes(ambientes)}
@@ -465,7 +482,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <List.Item
                 title="Ambientes"
-                description="4"
+                description={listing?.property?.rooms || "4"}
                 left={(props) => <List.Icon {...props} icon="floor-plan" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
@@ -473,7 +490,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             )}
             {edit ? (
               <TextInput
-                value="2"
+                value={listing?.property?.bedrooms || "4"}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Dormitorios"}
                 onChange={(dormitorios) => handleDormitorios(dormitorios)}
@@ -482,7 +499,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <List.Item
                 title="Dormitorios"
-                description="2"
+                description={listing?.property?.bedrooms || "4"}
                 left={(props) => (
                   <List.Icon {...props} icon="bed-king-outline" />
                 )}
@@ -492,7 +509,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             )}
             {edit ? (
               <TextInput
-                value="2"
+                value={listing?.property?.bathrooms || "4"}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Baños"}
                 onChange={(baños) => handleBaños(baños)}
@@ -501,7 +518,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <List.Item
                 title="Baños"
-                description="2"
+                description={listing?.property?.bathrooms || "4"}
                 left={(props) => <List.Icon {...props} icon="toilet" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
@@ -509,7 +526,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             )}
             {edit ? (
               <TextInput
-                value="4"
+                value={listing?.property?.age || "4"}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Antiguedad"}
                 onChange={(antiguedad) => handleAntiguedad(antiguedad)}
@@ -518,7 +535,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <List.Item
                 title="Antigüedad"
-                description="4"
+                description={listing?.property?.age || "4"}
                 left={(props) => <List.Icon {...props} icon="clock-outline" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
@@ -526,7 +543,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             )}
             {edit ? (
               <TextInput
-                value="Sur"
+                value={listing?.property?.cardinalOrientation || "N"}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Or. Absoluta"}
                 onChange={(orAbsoluta) => handleOrAbsoluta(orAbsoluta)}
@@ -535,7 +552,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <List.Item
                 title="Or. Absoluta"
-                description="Excelente"
+                description={listing?.property?.cardinalOrientation || "N"}
                 left={(props) => <List.Icon {...props} icon="sign-direction" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
@@ -543,7 +560,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             )}
             {edit ? (
               <TextInput
-                value=""
+                value={listing?.property?.relativeOrientation || "Frente"}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Or. Relativa"}
                 onChange={(orRelativa) => handleOrRelativa(orRelativa)}
@@ -552,7 +569,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <List.Item
                 title="Or. Relativa"
-                description="Excelente"
+                description={listing?.property?.relativeOrientation || "Frente"}
                 left={(props) => <List.Icon {...props} icon="sign-direction" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
