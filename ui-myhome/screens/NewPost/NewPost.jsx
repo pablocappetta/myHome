@@ -3,8 +3,11 @@ import React, { useEffect } from "react";
 import { Appbar, Text, Switch, TextInput } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import * as ImagePicker from "expo-image-picker";
+import { useUserContext } from "../../contexts/UserContext";
 
 const NewPost = ({ navigation }) => {
+  const { user } = useUserContext();
+
   const [encabezado, setEncabezado] = React.useState("");
   const [descripcion, setDescripcion] = React.useState("");
   const [valor, setValor] = React.useState("");
@@ -63,7 +66,7 @@ const NewPost = ({ navigation }) => {
     }
   };
 
-  const handleAddProperty = () => {
+  const handleAddProperty = async () => {
     // Manejo de errores
     if (
       encabezado == "" ||
@@ -93,8 +96,75 @@ const NewPost = ({ navigation }) => {
       if (images.length == 0) {
         alert("Por favor, suba al menos una imagen");
       } else {
-        // TODO: Agregar propiedad a la base de datos
-        navigation.navigate("Home");
+        const requestBody = {
+          realtorId: user._id,
+          title: encabezado,
+          description: descripcion,
+          property: {
+            age: parseInt(antiguedad),
+            address: {
+              state: provincia,
+              city: ciudad,
+              neighborhood: barrio,
+              zipCode: CP,
+              street: calle,
+              number: parseInt(numero),
+              floor: "",
+              apartment: "",
+            },
+            geoLocation: {
+              latitude: 0,
+              longitude: 0,
+            },
+            type: tipoPropiedad.charAt(0).toUpperCase() + tipoPropiedad.slice(1).toLowerCase(),
+            sqm: {
+              covered: parseInt(metrosCubiertos),
+              uncovered: parseInt(metrosDescubiertos),
+            },
+            cardinalOrientation: "N",
+            relativeOrientation: orientacionRelativa.charAt(0).toUpperCase() + orientacionRelativa.slice(1).toLowerCase(),
+            rooms: parseInt(ambientes),
+            bathrooms: parseInt(baños),
+            numberOfGarages: 0,
+            hasGarden: false,
+            hasTerrace: terraza,
+            hasBalcony: balcon,
+            hasStorageUnit: false,
+            amenities: [],
+            photos: [],
+            video: "",
+            expensesPrice: {
+              amount: parseInt(expensas),
+              currency: moneda.toUpperCase(),
+            },
+          },
+          type: tipoOperacion.toLowerCase(),
+          price: {
+            amount: parseInt(valor),
+            currency: moneda.toUpperCase(),
+          },
+        };
+        console.log(JSON.stringify(requestBody));
+        try {
+          const response = await fetch("http://3.144.94.74:8000/api/listings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+          });
+          if (response.ok) {
+            navigation.navigate("Home");
+          } else {
+            console.log(response);
+          }
+        } catch (error) {
+          console.log("Error al agregar la propiedad");
+        }
       }
     }
   };
