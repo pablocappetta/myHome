@@ -155,7 +155,23 @@ const NewPost = ({ navigation }) => {
           })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Success:", data);
+            const imageBody = {
+              images: images.map((image) => image?.uri),
+            }
+            console.log("http://3.144.94.74:8000/api/listings/" + data._id + "/images");
+            console.log(JSON.stringify(imageBody));
+            fetch("http://3.144.94.74:8000/api/listings/" + data._id + "/images", 
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": undefined,
+              },
+              body: JSON.stringify(imageBody),
+            }).then((response) => response.json())
+            .then((data) => {
+              console.log("Success:", data);
+              navigation.navigate("Home");
+            })
           });
           if (response.ok) {
             navigation.navigate("Home");
