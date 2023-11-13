@@ -57,7 +57,10 @@ const HomeOwner = ({ navigation }) => {
           onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
         >
           {isUserLogged ? (
-            <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+            <Avatar.Image
+              size={48}
+              source={{ uri: user?.profilePicture || user?.logo }}
+            />
           ) : (
             <Avatar.Icon size={36} icon="account" />
           )}
