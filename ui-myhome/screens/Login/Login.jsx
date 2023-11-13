@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -31,7 +31,11 @@ const validationSchema = yup.object().shape({
 });
 
 const Login = ({ navigation }) => {
-  const { setUser } = useUserContext();
+  const { user, setUser, isUserLogged } = useUserContext();
+
+  useEffect(() => {
+    if (isUserLogged) navigation.navigate("Home");
+  }, [isUserLogged]);
 
   const handleLogin = (values) => {
     const requestBody = {
@@ -39,7 +43,6 @@ const Login = ({ navigation }) => {
       password: values.password,
     };
 
-    console.log("http://3.144.94.74:8000/api/" + "realtors/login");
     fetch("http://3.144.94.74:8000/api/" + "realtors/login", {
       method: "POST",
       headers: {
@@ -60,7 +63,6 @@ const Login = ({ navigation }) => {
       .catch((error) => {
         console.error(error);
       });
-    // navigation.navigate("Home");
   };
 
   return (
@@ -107,6 +109,7 @@ const Login = ({ navigation }) => {
                 mode="contained"
                 onPress={() => console.log("Google login pressed")}
                 style={styles.button}
+                disabled
               >
                 Continuar con Google
               </Button>

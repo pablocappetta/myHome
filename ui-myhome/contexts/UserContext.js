@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const UserContext = createContext();
 
@@ -55,12 +56,33 @@ export const UserProvider = ({ children }) => {
     return "regular";
   };
 
+  const wipeUserData = () => {
+    setUser({
+      name: null,
+      lastName: null,
+      email: null,
+      profilePicture: null,
+      isVerified: null,
+      isRealtor: null,
+      token: null,
+      _id: null,
+    });
+    setIsUserLogged(false);
+    AsyncStorage.removeItem("user");
+  };
+
   useEffect(() => {
-    setIsUserLogged(user.name !== null);
+    setIsUserLogged(user.name !== null && user.token !== null);
   }, [user]);
 
   useEffect(() => {
-    if (isUserLogged && getUserDataFromAsyncStorage() === null) {
+    if (
+      isUserLogged &&
+      user.name !== null &&
+      user.token !== null &&
+      AsyncStorage.getItem("user") === null
+    ) {
+      console.log("HOLA PIPI");
       setUserDataToAsyncStorage(user);
     }
   }, [isUserLogged]);
@@ -75,6 +97,13 @@ export const UserProvider = ({ children }) => {
     getUserData();
   }, [AsyncStorage]);
 
+  useEffect(() => {
+    console.log(
+      "Datos de usuario actualizados:",
+      getUserDataFromAsyncStorage()
+    );
+  }, [user]);
+
   const store = {
     user,
     setUser,
@@ -83,6 +112,7 @@ export const UserProvider = ({ children }) => {
     setIsUserLogged,
     getUserDataFromAsyncStorage,
     setUserDataToAsyncStorage,
+    wipeUserData,
   };
 
   return <UserContext.Provider value={store}>{children}</UserContext.Provider>;

@@ -360,10 +360,7 @@ export const ListingPost = ({ navigation, ...props }) => {
               <View>
                 {edit ? (
                   <TextInput
-                    value={
-                      commaNumber(listing?.price?.amount) ||
-                      commaNumber(listing.price)
-                    }
+                    value={commaNumber(listing?.price?.amount) || "Mock"}
                     className="rounded-t-md w-[100px]"
                     label={"Precio"}
                     onChange={(price) => handlePrice(price)}
@@ -371,15 +368,14 @@ export const ListingPost = ({ navigation, ...props }) => {
                   />
                 ) : (
                   <Text variant="titleLarge" style={styles.price}>
-                    {commaNumber(listing?.price?.amount) ||
-                      commaNumber(listing.price)}
+                    {commaNumber(listing?.price?.amount) || "Mock"}
                   </Text>
                 )}
                 {edit ? (
                   <TextInput
                     value={
                       commaNumber(listing?.property?.expensesPrice?.amount) ||
-                      commaNumber(listing.price)
+                      "Mock"
                     }
                     className="rounded-t-md w-[100px]"
                     label={"Expensas"}
@@ -392,7 +388,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                     style={{ color: theme.colors.secondary }}
                   >
                     {commaNumber(listing?.property?.expensesPrice?.amount) ||
-                      commaNumber(listing.price)}
+                      "Mock"}
                   </Text>
                 )}
               </View>
@@ -663,7 +659,7 @@ export const ListingPost = ({ navigation, ...props }) => {
             </View>
           )}
 
-          <View style={{ marginVertical: 16 }}>
+          <View style={{ marginTop: 16, marginBottom: 32 }}>
             <View
               style={{
                 display: "flex",
@@ -692,8 +688,8 @@ export const ListingPost = ({ navigation, ...props }) => {
                   mode="contained"
                   onPress={() => navigation.navigate("SendQuestion")}
                   icon={"comment-question-outline"}
-                  buttonColor="#FFD700"
-                  textColor="#000000"
+                  buttonColor="#FFE088"
+                  textColor="#271D02"
                 >
                   Contactar
                 </Button>

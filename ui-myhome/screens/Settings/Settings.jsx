@@ -17,7 +17,12 @@ import { useUserContext } from "../../contexts/UserContext";
 
 const Settings = ({ navigation }) => {
   const { theme, toggleTheme } = useTheme();
-  const { user, isUserLogged } = useUserContext();
+  const { user, isUserLogged, wipeUserData } = useUserContext();
+
+  const handleLogout = () => {
+    wipeUserData();
+    navigation.navigate("Home");
+  };
 
   const ref = useRef(null);
 
@@ -149,13 +154,12 @@ const Settings = ({ navigation }) => {
             title="Cambiar contraseña"
             left={() => <IconButton icon={"shield-account-outline"} />}
             right={() => <IconButton icon={"chevron-right"} />}
-            onPress={() => navigation.navigate("ChangePassword")}
           />
           <Divider />
           <List.Item
             title="Cerrar sesión"
             left={() => <IconButton icon={"logout"} />}
-            onPress={() => navigation.navigate("Logout")}
+            onPress={handleLogout}
           />
         </List.Section>
 

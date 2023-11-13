@@ -98,16 +98,16 @@ const HomeOwner = ({ navigation }) => {
         onPress={() => navigation.navigate("NewPost")}
         style={{
           position: "absolute",
-          right: 16,
-          bottom: 16,
-          height: 56,
-          width: 56,
-          borderRadius: 28,
+          right: 8,
+          bottom: 24,
+          borderRadius: 60,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
         icon="plus"
+        size={40}
+        selected={true}
       />
     </View>
   );
