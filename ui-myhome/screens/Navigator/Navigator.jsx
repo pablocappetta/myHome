@@ -174,6 +174,7 @@ const MyAccountScreenRoutes = () => {
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Privacidad" component={PrivacyPolicy} />
+      <Stack.Screen name="Mis Reservas" component={Reservations} />
     </Stack.Navigator>
   );
 };

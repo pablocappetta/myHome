@@ -1,4 +1,10 @@
-import { View, ScrollView, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ToastAndroid,
+} from "react-native";
 import React, { useEffect } from "react";
 import { Appbar, Text, Switch, TextInput, Button } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
@@ -123,103 +129,84 @@ const NewPost = ({ navigation }) => {
         currency: moneda.toUpperCase(),
       },
     };
-    // const requestBody = {
-    //   realtorId: user._id,
-    //   title: "Mocked Title",
-    //   description: "Mocked Description",
-    //   property: {
-    //     age: 5, // Mocked age value
-    //     address: {
-    //       state: "Mocked State",
-    //       city: "Mocked City",
-    //       neighborhood: "Mocked Neighborhood",
-    //       zipCode: "MockedZipCode",
-    //       street: "Mocked Street",
-    //       number: 123, // Mocked number value
-    //       floor: "",
-    //       apartment: "",
-    //     },
-    //     geoLocation: {
-    //       latitude: 0,
-    //       longitude: 0,
-    //     },
-    //     type: "Departamento",
-    //     sqm: {
-    //       covered: 100, // Mocked covered square meters
-    //       uncovered: 50, // Mocked uncovered square meters
-    //     },
-    //     cardinalOrientation: "N",
-    //     relativeOrientation: "Frente",
-    //     rooms: 3, // Mocked number of rooms
-    //     bathrooms: 2, // Mocked number of bathrooms
-    //     numberOfGarages: 0,
-    //     hasGarden: false,
-    //     hasTerrace: false, // Mocked terrace value
-    //     hasBalcony: false, // Mocked balcony value
-    //     hasStorageUnit: false,
-    //     amenities: ["Amenity1", "Amenity2"], // Mocked amenities
-    //     photos: ["photo1.jpg", "photo2.jpg"], // Mocked photo URLs
-    //     video: "mockedVideoURL",
-    //     expensesPrice: {
-    //       amount: 200, // Mocked expenses amount
-    //       currency: "USD", // Mocked currency
-    //     },
-    //   },
-    //   type: "venta", // Mocked type value
-    //   price: {
-    //     amount: 100000, // Mocked price amount
-    //     currency: "USD", // Mocked currency
-    //   },
-    // };
 
     console.log(JSON.stringify(requestBody));
 
-    const response = await fetch("http://3.144.94.74:8000/api/listings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then(async (response) => {
-        const actualResponse = await response.json();
-        setListingId(actualResponse._id);
-        if (response?.ok && listingId) {
-          const imageRequestBody = new FormData();
-          images.forEach((image, index) => {
-            imageRequestBody.append("images", {
-              name: `image-${index}.jpg`,
-              type: "image/jpeg",
-              uri: image.uri,
-            });
-          });
-
-          await fetch(
-            `http://3.144.94.74:8000/api/listings/${listingId}/images`,
-            {
-              method: "POST",
-              body: imageRequestBody,
-            }
-          )
-            .then(async (response) => {
-              const actualResponse = await response.json();
-              console.debug(JSON.stringify(actualResponse));
-              setIsLoading(false);
-              // navigation.navigate("Home");
-              alert("Propiedad agregada con exito");
-            })
-            .catch((error) => {
-              console.error(error);
-              setIsLoading(false);
-              alert("Error al agregar propiedad");
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false);
-        alert("Error al agregar propiedad");
+    try {
+      const listingPost = await fetch("http://3.144.94.74:8000/api/listings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
       });
+
+      const awaitedResponse = await listingPost.json();
+
+      setListingId(awaitedResponse._id);
+
+      console.debug("Listing ID", listingId);
+
+      if (listingId) {
+        const imageRequestBody = new FormData();
+        images.forEach((image, index) => {
+          imageRequestBody.append("images", {
+            name: `image-${index}.jpg`,
+            type: "image/jpeg",
+            uri: image.uri,
+          });
+        });
+
+        const imagePostResponse = await fetch(
+          `http://3.144.94.74:8000/api/listings/${listingId}/images`,
+          {
+            method: "POST",
+            body: imageRequestBody,
+          }
+        );
+      }
+
+      if (listingPost.ok) {
+        setIsLoading(false);
+        ToastAndroid.show("Propiedad agregada", ToastAndroid.LONG);
+        navigation.navigate("Home");
+      } else {
+        setIsLoading(false);
+        ToastAndroid.show(
+          "Se agregó la propiedad, pero las imágenes no pudieron ser adjuntadas. Intenta de nuevo más tarde.",
+          ToastAndroid.LONG
+        );
+      }
+
+      setAmbientes("");
+      setAntiguedad("");
+      setBaños("");
+      setBarrio("");
+      setCalle("");
+      setCiudad("");
+      setCP("");
+      setCocheras(false);
+      setDescripcion("");
+      setDormitorios("");
+      setEncabezado("");
+      setExpensas("");
+      setMetrosCubiertos("");
+      setMetrosDescubiertos("");
+      setMoneda("");
+      setNumero("");
+      setOrientacionAbsoluta("");
+      setOrientacionRelativa("");
+      setProvincia("");
+      setTerraza(false);
+      setTipoOperacion("");
+      setTipoPropiedad("");
+      setValor("");
+      setImages([]);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      ToastAndroid.show("Error al agregar propiedad", ToastAndroid.LONG);
+    }
   };
 
   return (
@@ -498,21 +485,29 @@ const NewPost = ({ navigation }) => {
               </View>
             </View>
           </View>
-          {images.length < 0 ? (
-            <Text>No se añadieron imagenes</Text>
-          ) : (
-            <ScrollView horizontal>
-              {images
-                .map((image, index) => (
-                  <Image
-                    key={index}
-                    source={{ uri: image.uri }}
-                    style={{ width: 200, height: 200, margin: 5 }}
-                  />
-                ))
-                .reverse()}
-            </ScrollView>
-          )}
+          <Text className="text-[25px] mt-4 font-bold my-4">Imágenes</Text>
+          <View style={{ marginBottom: 16 }}>
+            {images.length < 0 ? (
+              <Text>No se añadieron imagenes</Text>
+            ) : (
+              <ScrollView horizontal>
+                {images
+                  .map((image, index) => (
+                    <Image
+                      key={index}
+                      source={{ uri: image.uri }}
+                      style={{
+                        width: 200,
+                        height: 200,
+                        margin: 5,
+                        borderRadius: 10,
+                      }}
+                    />
+                  ))
+                  .reverse()}
+              </ScrollView>
+            )}
+          </View>
           <View style={{ display: "flex", gap: 24 }}>
             <Button
               mode="outlined"

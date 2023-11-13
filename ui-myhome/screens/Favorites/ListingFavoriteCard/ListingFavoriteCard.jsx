@@ -4,6 +4,7 @@ import { Card, IconButton, Text, Dialog, Button } from "react-native-paper";
 import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
+import { upperCaseFirst } from "../../../helpers/helpers";
 
 const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
   const styles = StyleSheet.create({

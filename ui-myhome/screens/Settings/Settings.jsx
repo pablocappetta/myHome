@@ -94,7 +94,10 @@ const Settings = ({ navigation }) => {
               </Card.Content>
             </Card>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}} style={styles.userActionsButton}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Mis Reservas")}
+            style={styles.userActionsButton}
+          >
             <Card>
               <Card.Content style={styles.userActionsButtonCardContent}>
                 <IconButton icon={"book"} style={{ marginLeft: 0 }} />
