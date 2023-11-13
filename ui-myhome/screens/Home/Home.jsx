@@ -124,7 +124,10 @@ const Home = ({ navigation }) => {
             }
           >
             {isUserLogged ? (
-              <Avatar.Image size={36} source={{ uri: user.profilePicture }} />
+              <Avatar.Image
+                size={36}
+                source={{ uri: user?.logo || user?.profilePicture }}
+              />
             ) : (
               <Avatar.Icon size={36} icon="account" />
             )}

@@ -66,7 +66,7 @@ const Settings = ({ navigation }) => {
           <View style={styles.containerUserDetails}>
             <Avatar.Image
               size={48}
-              source={{ uri: user.logo || user.profilePicture }}
+              source={{ uri: user?.logo || user?.profilePicture }}
             />
 
             <View style={{ display: "flex", flexDirection: "column" }}>

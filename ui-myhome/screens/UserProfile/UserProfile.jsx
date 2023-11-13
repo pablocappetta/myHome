@@ -21,6 +21,7 @@ const UserProfile = ({ navigation }) => {
 
   const handleLogout = () => {
     wipeUserData();
+    navigation.navigate("tabMiCuenta");
     navigation.navigate("Home");
   };
 
@@ -40,7 +41,7 @@ const UserProfile = ({ navigation }) => {
             <TouchableOpacity onPress={openMenu}>
               <Avatar.Image
                 size={180}
-                source={{ uri: user.profilePicture }}
+                source={{ uri: user?.logo || user?.profilePicture }}
                 style={styles.avatar}
               />
             </TouchableOpacity>
