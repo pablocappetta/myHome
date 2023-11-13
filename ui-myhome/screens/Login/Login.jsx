@@ -31,11 +31,7 @@ const validationSchema = yup.object().shape({
 });
 
 const Login = ({ navigation }) => {
-  const { user, setUser, isUserLogged } = useUserContext();
-
-  useEffect(() => {
-    if (isUserLogged) navigation.navigate("tabHome");
-  }, [isUserLogged]);
+  const { setUser } = useUserContext();
 
   const handleLogin = (values) => {
     const requestBody = {
@@ -58,11 +54,13 @@ const Login = ({ navigation }) => {
           isRealtor: true,
           token: json.token,
         });
-        navigation.navigate("tabMiCuenta");
-        navigation.navigate("tabHome");
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        navigation.navigate("MiCuenta");
+        navigation.navigate("tabHome");
       });
   };
 

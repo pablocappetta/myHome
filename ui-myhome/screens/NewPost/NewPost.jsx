@@ -130,6 +130,8 @@ const NewPost = ({ navigation }) => {
       },
     };
 
+    console.log(JSON.stringify(requestBody));
+
     try {
       const listingPost = await fetch("http://3.144.94.74:8000/api/listings", {
         method: "POST",
@@ -137,36 +139,27 @@ const NewPost = ({ navigation }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
+      }).then((response) => response.json());
+
+      const imageRequestBody = new FormData();
+
+      images.forEach((image, index) => {
+        imageRequestBody.append("images", {
+          name: `image-${index}.jpg`,
+          type: "image/jpeg",
+          uri: image.uri,
+        });
       });
 
-      const awaitedResponse = await listingPost.json();
+      const imagePostResponse = await fetch(
+        `http://3.144.94.74:8000/api/listings/${listingPost._id}/images`,
+        {
+          method: "POST",
+          body: imageRequestBody,
+        }
+      );
 
-      while (listingId === null) {
-        setListingId(awaitedResponse._id);
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-
-      if (listingId) {
-        const imageRequestBody = new FormData();
-        images.forEach((image, index) => {
-          imageRequestBody.append("images", {
-            name: `image-${index}.jpg`,
-            type: "image/jpeg",
-            uri: image.uri,
-          });
-        });
-
-        const imagePostResponse = await fetch(
-          `http://3.144.94.74:8000/api/listings/${listingId}/images`,
-          {
-            method: "POST",
-            body: imageRequestBody,
-          }
-        );
-      }
-
-      if (listingPost.ok) {
+      if (imagePostResponse.ok) {
         setIsLoading(false);
         ToastAndroid.show("Propiedad agregada", ToastAndroid.LONG);
         navigation.navigate("Home");

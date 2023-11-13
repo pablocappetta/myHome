@@ -5,17 +5,21 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ListingCard from "../../components/ListingCard/ListingCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { useUserContext } from "../../contexts/UserContext";
 import { Avatar, Button, IconButton, Text } from "react-native-paper";
+import { useScrollToTop } from "@react-navigation/native";
 
 const HomeOwner = ({ navigation }) => {
   const { user, isUserLogged } = useUserContext();
   const [ownerListings, setOwnerListings] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -42,7 +46,14 @@ const HomeOwner = ({ navigation }) => {
 
   return (
     <View>
-      <ScrollView vertical className="mt-10 min-h-[680px]">
+      <ScrollView
+        vertical
+        className="mt-10 min-h-[680px]"
+        ref={ref}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <TouchableOpacity
           style={styles.userHomeWelcomeHeader}
           onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}

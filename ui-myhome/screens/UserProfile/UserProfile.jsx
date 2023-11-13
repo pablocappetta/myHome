@@ -21,7 +21,7 @@ const UserProfile = ({ navigation }) => {
 
   const handleLogout = () => {
     wipeUserData();
-    navigation.navigate("Login");
+    navigation.navigate("Home");
   };
 
   return (

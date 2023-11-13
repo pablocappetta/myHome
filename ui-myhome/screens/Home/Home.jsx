@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   View,
   TouchableOpacity,
@@ -6,8 +6,15 @@ import {
   StyleSheet,
   SafeAreaView,
   Touchable,
+  RefreshControl,
 } from "react-native";
-import { Avatar, Text, Searchbar, SegmentedButtons } from "react-native-paper";
+import {
+  Avatar,
+  Text,
+  Searchbar,
+  SegmentedButtons,
+  Button,
+} from "react-native-paper";
 import {
   getFilteredListingByQuery,
   getFilteredListingByType,
@@ -37,6 +44,10 @@ const Home = ({ navigation }) => {
   );
 
   const [filterSelection, setFilterSelection] = useState("todos");
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [loading, setLoading] = useState(true);
 
   const ref = useRef(null);
 
@@ -75,10 +86,37 @@ const Home = ({ navigation }) => {
     setIsQueryActive(false);
   };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetch("http://3.144.94.74:8000/api/listings/")
+      .then((response) => response.json())
+      .then((data) => {
+        setRecentListings(data);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://3.144.94.74:8000/api/listings/")
+      .then((response) => response.json())
+      .then((data) => {
+        setRecentListings(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <SafeAreaView>
       {!user.isRealtor && (
-        <ScrollView vertical ref={ref}>
+        <ScrollView
+          vertical
+          ref={ref}
+          refreshControl={<RefreshControl onRefresh={onRefresh} />}
+        >
           <TouchableOpacity
             style={styles.userHomeWelcomeHeader}
             onPress={() =>
@@ -147,7 +185,7 @@ const Home = ({ navigation }) => {
                 <View style={styles.listingCardsContainer}>
                   {highlightedListings.map((item, index) => (
                     <TouchableOpacity
-                      key={index + item.id}
+                      key={Math.random()}
                       onPress={() => navigation.navigate("Post", item)}
                     >
                       <ListingCard listing={item} type={"highlighted"} />
@@ -170,20 +208,21 @@ const Home = ({ navigation }) => {
                   Últimas publicaciones
                 </Text>
                 <TouchableOpacity>
-                  <Text
-                    variant="labelLarge"
-                    style={{
-                      paddingHorizontal: 16,
-                    }}
+                  <Button
+                    icon="refresh"
+                    animated
+                    selected
+                    onPress={onRefresh}
+                    loading={refreshing}
                   >
-                    Ver más
-                  </Text>
+                    {refreshing ? "Actualizando" : "Actualizar"}
+                  </Button>
                 </TouchableOpacity>
               </View>
               <View horizontal style={styles.listingCardsContainer}>
                 {recentListings.map((item, index) => (
                   <TouchableOpacity
-                    key={index + item.id}
+                    key={Math.random()}
                     onPress={() => navigation.navigate("Post", item)}
                   >
                     <ListingCard listing={item} type={"recent"} />
@@ -218,7 +257,7 @@ const Home = ({ navigation }) => {
               <View horizontal style={styles.listingCardsContainer}>
                 {highlightedListings.map((item, index) => (
                   <TouchableOpacity
-                    key={index + item.id}
+                    key={Math.random()}
                     onPress={() => navigation.navigate("Post", item)}
                   >
                     <ListingCard listing={item} type={"recent"} />

@@ -54,19 +54,6 @@ const HomeScreenRoutes = () => {
   );
 };
 
-const SettingsScreenRoutes = () => {
-  return (
-    <Stack.Navigator
-      initialRouteName="Ajustes"
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="Ajustes" component={Settings} />
-    </Stack.Navigator>
-  );
-};
-
 const NotificationsScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -136,12 +123,12 @@ const FavoritesScreenRoutes = () => {
 const ReservationsScreenRoutes = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Mis Reservas"
+      initialRouteName="MisReservas"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Mis Reservas" component={Reservations} />
+      <Stack.Screen name="MisReservas" component={Reservations} />
       <Stack.Screen name="Post" component={ListingReservationCard} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
     </Stack.Navigator>
@@ -165,16 +152,16 @@ const UserProfileScreenRoutes = () => {
 const MyAccountScreenRoutes = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Mi Cuenta"
+      initialRouteName="MiCuenta"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Mi Cuenta" component={Settings} />
+      <Stack.Screen name="MiCuenta" component={Settings} />
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Privacidad" component={PrivacyPolicy} />
-      <Stack.Screen name="Mis Reservas" component={Reservations} />
+      <Stack.Screen name="MisReservas" component={Reservations} />
     </Stack.Navigator>
   );
 };

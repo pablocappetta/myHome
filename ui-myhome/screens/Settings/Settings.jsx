@@ -21,7 +21,7 @@ const Settings = ({ navigation }) => {
 
   const handleLogout = () => {
     wipeUserData();
-    navigation.navigate("Home");
+    navigation.navigate("tabHome");
   };
 
   const ref = useRef(null);
@@ -96,7 +96,7 @@ const Settings = ({ navigation }) => {
             </Card>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Mis Reservas")}
+            onPress={() => navigation.navigate("MisReservas")}
             style={styles.userActionsButton}
           >
             <Card>
@@ -152,20 +152,22 @@ const Settings = ({ navigation }) => {
           />
         </List.Section>
 
-        <List.Section>
-          <List.Subheader>Seguridad de la cuenta</List.Subheader>
-          <List.Item
-            title="Cambiar contraseña"
-            left={() => <IconButton icon={"shield-account-outline"} />}
-            right={() => <IconButton icon={"chevron-right"} />}
-          />
-          <Divider />
-          <List.Item
-            title="Cerrar sesión"
-            left={() => <IconButton icon={"logout"} />}
-            onPress={handleLogout}
-          />
-        </List.Section>
+        {isUserLogged && (
+          <List.Section>
+            <List.Subheader>Seguridad de la cuenta</List.Subheader>
+            <List.Item
+              title="Cambiar contraseña"
+              left={() => <IconButton icon={"shield-account-outline"} />}
+              right={() => <IconButton icon={"chevron-right"} />}
+            />
+            <Divider />
+            <List.Item
+              title="Cerrar sesión"
+              left={() => <IconButton icon={"logout"} />}
+              onPress={handleLogout}
+            />
+          </List.Section>
+        )}
 
         <Text style={{ paddingVertical: 24 }}>
           Versión de la aplicación: {require("../../package.json").version}
