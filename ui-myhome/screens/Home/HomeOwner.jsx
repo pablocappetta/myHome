@@ -100,14 +100,12 @@ const HomeOwner = ({ navigation }) => {
           position: "absolute",
           right: 8,
           bottom: 24,
-          borderRadius: 60,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
         icon="plus"
         size={40}
-        selected={true}
       />
     </View>
   );

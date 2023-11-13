@@ -198,7 +198,7 @@ const Navigator = () => {
             component={HomeScreenRoutes}
             options={{
               tabBarLabel: "Mis Publicaciones",
-              tabBarIcon: "file-document-multiple-outline",
+              tabBarIcon: "home-circle-outline",
             }}
           />
           <Tab.Screen
