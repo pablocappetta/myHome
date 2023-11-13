@@ -42,8 +42,8 @@ const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
   return (
     <Card>
       <View style={styles.listingTypeChip}>
-        <ListingTypeChip listingType={listing.listingType}>
-          {listing.listingType}
+        <ListingTypeChip listingType={upperCaseFirst(listing.listingType)}>
+          {upperCaseFirst(listing.listingType)}
         </ListingTypeChip>
         <IconButton
           icon="heart"
@@ -89,7 +89,5 @@ const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
     </Card>
   );
 };
-
-
 
 export default ListingFavoriteCard;

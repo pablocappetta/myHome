@@ -4,6 +4,7 @@ import { Card, Text } from "react-native-paper";
 import ListingTypeChip from "../ListingTypeChip/ListingTypeChip";
 import commaNumber from "comma-number";
 import { useTheme } from "../../contexts/ThemeContext";
+import { upperCaseFirst } from "../../helpers/helpers";
 
 const ListingCard = ({ listing, type }) => {
   const sharedStyles = {
@@ -51,8 +52,10 @@ const ListingCard = ({ listing, type }) => {
       height={type === "highlighted" ? 376 : 300}
     >
       <View style={styles.listingTypeChip}>
-        <ListingTypeChip listingType={listing?.listingType || listing.type}>
-          {listing?.listingType || listing?.type?.toUpperCase()}
+        <ListingTypeChip
+          listingType={listing?.listingType || upperCaseFirst(listing?.type)}
+        >
+          {listing?.listingType || upperCaseFirst(listing?.type)}
         </ListingTypeChip>
       </View>
       <Card.Cover

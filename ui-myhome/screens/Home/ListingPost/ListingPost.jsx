@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -28,6 +28,18 @@ import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 import { useUserContext } from "../../../contexts/UserContext";
+import { upperCaseFirst } from "../../../helpers/helpers";
+
+const getNameFromId = async (id) => {
+  const response = await fetch(
+    `http://3.144.94.74:8000/api/realtors/id/${id}`,
+    {
+      method: "GET",
+    }
+  );
+  const data = await response.json();
+  return data;
+};
 
 //Es un work in progress. Tengo un quilombo de estilos y cosas por todos lados. No me juzguen :P
 
@@ -61,6 +73,17 @@ export const ListingPost = ({ navigation, ...props }) => {
   const [like, setLike] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const listing = props.route.params;
+  const [listingRealtorName, setListingRealtorName] = useState(null);
+  const [listingRealtorAvatar, setListingRealtorAvatar] = useState(null);
+
+  useEffect(() => {
+    const getListingRealtorData = async () => {
+      const realtorName = await getNameFromId(listing.realtorId);
+      setListingRealtorName(realtorName.name);
+      setListingRealtorAvatar(realtorName.logo);
+    };
+    getListingRealtorData();
+  }, [listing?.realtorId]);
 
   const handleLikePress = () => {
     setLike(!like);
@@ -268,7 +291,7 @@ export const ListingPost = ({ navigation, ...props }) => {
               <ListingTypeChip
                 listingType={listing?.property?.type || listing?.listingType}
               >
-                {listing?.type.toUpperCase() || listing?.listingType}
+                {upperCaseFirst(listing?.type) || listing?.listingType}
               </ListingTypeChip>
             )}
             {isOwner ? (
@@ -395,10 +418,12 @@ export const ListingPost = ({ navigation, ...props }) => {
                 Publicado por
               </List.Subheader>
               <View style={styles.containerListingOwner}>
-                <Avatar.Icon icon="account" size={36} />
-                <Text variant="titleMedium">
-                  {listing?.realtorId || "Cosme Fulanito Rodriguez"}
-                </Text>
+                {listingRealtorAvatar ? (
+                  <Avatar.Image source={listingRealtorAvatar} size={36} />
+                ) : (
+                  <Avatar.Icon icon="account" size={36} />
+                )}
+                <Text variant="titleMedium">{listingRealtorName}</Text>
               </View>
               <Divider />
             </View>
