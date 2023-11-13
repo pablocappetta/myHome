@@ -515,6 +515,7 @@ const NewPost = ({ navigation }) => {
               onPress={handleAddProperty}
               icon={"home"}
               loading={isLoading}
+              disabled={isLoading}
             >
               Agregar propiedad
             </Button>
