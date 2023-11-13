@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Appbar,
   Avatar,
+  Button,
   Divider,
   IconButton,
   List,
@@ -28,7 +29,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 import { useUserContext } from "../../../contexts/UserContext";
-import { upperCaseFirst } from "../../../helpers/helpers";
+import { isStringALink, upperCaseFirst } from "../../../helpers/helpers";
 
 const getNameFromId = async (id) => {
   const response = await fetch(
@@ -306,12 +307,6 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <View style={styles.actionButtonsContainer}>
                 <IconButton
-                  icon={"calendar-clock"}
-                  onPress={() =>
-                    navigation.navigate("Booking", { screen: "Date" })
-                  }
-                />
-                <IconButton
                   icon={like ? "heart" : "heart-outline"}
                   mode={like && "contained"}
                   onPress={handleLikePress}
@@ -319,14 +314,6 @@ export const ListingPost = ({ navigation, ...props }) => {
                 <IconButton
                   icon="share-variant"
                   onPress={() => console.debug("Share TBD")}
-                />
-                <IconButton
-                  icon="comment-question-outline"
-                  onPress={() =>
-                    navigation.navigate("SendQuestion", {
-                      screen: "SendQuestion",
-                    })
-                  }
                 />
               </View>
             )}
@@ -418,12 +405,14 @@ export const ListingPost = ({ navigation, ...props }) => {
                 Publicado por
               </List.Subheader>
               <View style={styles.containerListingOwner}>
-                {listingRealtorAvatar ? (
+                {listingRealtorAvatar && isStringALink(listingRealtorAvatar) ? (
                   <Avatar.Image source={listingRealtorAvatar} size={36} />
                 ) : (
                   <Avatar.Icon icon="account" size={36} />
                 )}
-                <Text variant="titleMedium">{listingRealtorName}</Text>
+                <Text variant="titleMedium">
+                  {listingRealtorName || "Mocked Name"}
+                </Text>
               </View>
               <Divider />
             </View>
@@ -673,22 +662,50 @@ export const ListingPost = ({ navigation, ...props }) => {
             </View>
           )}
 
-          <View className="w-full flex items-center mb-12 mt-6">
-            {edit ? (
-              <TouchableOpacity
-                className="bg-[#6750a4]  px-6 py-2 w-[300px] items-center rounded-2xl"
-                onPress={handleEdition}
+          <View style={{ marginVertical: 16 }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 24,
+                justifyContent: "center",
+              }}
+            >
+              {edit && isOwner && (
+                <Button mode="contained" onPress={handleEdition}>
+                  Guardar
+                </Button>
+              )}
+            </View>
+
+            {!isOwner && (
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 24,
+                  justifyContent: "center",
+                }}
               >
-                <Text className="text-white text-[17px] font-bold ">
-                  Guardar cambios
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity className="bg-[#6750a4]  px-6 py-2 w-[300px] items-center rounded-2xl">
-                <Text className="text-white text-[17px] font-bold ">
+                <Button
+                  mode="contained"
+                  onPress={() => navigation.navigate("SendQuestion")}
+                  icon={"comment-question-outline"}
+                  buttonColor="#FFD700"
+                  textColor="#000000"
+                >
+                  Contactar
+                </Button>
+                <Button
+                  mode="contained"
+                  onPress={() =>
+                    navigation.navigate("Booking", { screen: "Date" })
+                  }
+                  icon={"calendar-clock"}
+                >
                   Reservar
-                </Text>
-              </TouchableOpacity>
+                </Button>
+              </View>
             )}
           </View>
         </View>
