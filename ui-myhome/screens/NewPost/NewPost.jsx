@@ -1,6 +1,6 @@
 import { View, ScrollView, TouchableOpacity, Image } from "react-native";
 import React, { useEffect } from "react";
-import { Appbar, Text, Switch, TextInput } from "react-native-paper";
+import { Appbar, Text, Switch, TextInput, Button } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import * as ImagePicker from "expo-image-picker";
 import { useUserContext } from "../../contexts/UserContext";
@@ -34,12 +34,14 @@ const NewPost = ({ navigation }) => {
   const [balcon, setBalcon] = React.useState(false);
   const [orientacionRelativa, setOrientacionRelativa] = React.useState("");
   const [orientacionAbsoluta, setOrientacionAbsoluta] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const onToggleCocheras = () => setCocheras(!cocheras);
   const onToggleTerraza = () => setTerraza(!terraza);
   const onToggleBalcon = () => setBalcon(!balcon);
 
   const [images, setImages] = React.useState([]);
+  const [listingId, setListingId] = React.useState(null);
 
   useEffect(() => {
     (async () => {
@@ -61,128 +63,163 @@ const NewPost = ({ navigation }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setImages(result.assets);
     }
   };
 
   const handleAddProperty = async () => {
-    // Manejo de errores
-    if (
-      encabezado == "" ||
-      descripcion == "" ||
-      valor == "" ||
-      moneda == "" ||
-      tipoOperacion == "" ||
-      expensas == "" ||
-      tipoPropiedad == "" ||
-      provincia == "" ||
-      ciudad == "" ||
-      barrio == "" ||
-      calle == "" ||
-      numero == "" ||
-      CP == "" ||
-      metrosCubiertos == "" ||
-      metrosDescubiertos == "" ||
-      ambientes == "" ||
-      baños == "" ||
-      antiguedad == "" ||
-      dormitorios == "" ||
-      orientacionRelativa == "" ||
-      orientacionAbsoluta == ""
-    ) {
-      alert("Por favor, complete todos los campos");
-    } else {
-      if (images.length == 0) {
-        alert("Por favor, suba al menos una imagen");
-      } else {
-        const requestBody = {
-          realtorId: user._id,
-          title: encabezado,
-          description: descripcion,
-          property: {
-            age: parseInt(antiguedad),
-            address: {
-              state: provincia,
-              city: ciudad,
-              neighborhood: barrio,
-              zipCode: CP,
-              street: calle,
-              number: parseInt(numero),
-              floor: "",
-              apartment: "",
-            },
-            geoLocation: {
-              latitude: 0,
-              longitude: 0,
-            },
-            type: tipoPropiedad.charAt(0).toUpperCase() + tipoPropiedad.slice(1).toLowerCase(),
-            sqm: {
-              covered: parseInt(metrosCubiertos),
-              uncovered: parseInt(metrosDescubiertos),
-            },
-            cardinalOrientation: "N",
-            relativeOrientation: orientacionRelativa.charAt(0).toUpperCase() + orientacionRelativa.slice(1).toLowerCase(),
-            rooms: parseInt(ambientes),
-            bathrooms: parseInt(baños),
-            numberOfGarages: 0,
-            hasGarden: false,
-            hasTerrace: terraza,
-            hasBalcony: balcon,
-            hasStorageUnit: false,
-            amenities: [],
-            photos: [],
-            video: "",
-            expensesPrice: {
-              amount: parseInt(expensas),
-              currency: moneda.toUpperCase(),
-            },
-          },
-          type: tipoOperacion.toLowerCase(),
-          price: {
-            amount: parseInt(valor),
-            currency: moneda.toUpperCase(),
-          },
-        };
-        console.log(JSON.stringify(requestBody));
-        try {
-          const response = await fetch("http://3.144.94.74:8000/api/listings", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestBody),
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            const imageBody = {
-              images: images.map((image) => image?.uri),
-            }
-            console.log("http://3.144.94.74:8000/api/listings/" + data._id + "/images");
-            console.log(JSON.stringify(imageBody));
-            fetch("http://3.144.94.74:8000/api/listings/" + data._id + "/images", 
+    setIsLoading(true);
+
+    const requestBody = {
+      realtorId: user._id,
+      title: encabezado,
+      description: descripcion,
+      property: {
+        age: parseInt(antiguedad),
+        address: {
+          state: provincia,
+          city: ciudad,
+          neighborhood: barrio,
+          zipCode: CP,
+          street: calle,
+          number: parseInt(numero),
+          floor: "",
+          apartment: "",
+        },
+        geoLocation: {
+          latitude: 0,
+          longitude: 0,
+        },
+        type:
+          tipoPropiedad.charAt(0).toUpperCase() +
+          tipoPropiedad.slice(1).toLowerCase(),
+        sqm: {
+          covered: parseInt(metrosCubiertos),
+          uncovered: parseInt(metrosDescubiertos),
+        },
+        cardinalOrientation: "N",
+        relativeOrientation:
+          orientacionRelativa.charAt(0).toUpperCase() +
+          orientacionRelativa.slice(1).toLowerCase(),
+        rooms: parseInt(ambientes),
+        bathrooms: parseInt(baños),
+        numberOfGarages: 0,
+        hasGarden: false,
+        hasTerrace: terraza,
+        hasBalcony: balcon,
+        hasStorageUnit: false,
+        amenities: [],
+        photos: [],
+        video: "",
+        expensesPrice: {
+          amount: parseInt(expensas),
+          currency: moneda.toUpperCase(),
+        },
+      },
+      type: tipoOperacion.toLowerCase(),
+      price: {
+        amount: parseInt(valor),
+        currency: moneda.toUpperCase(),
+      },
+    };
+    // const requestBody = {
+    //   realtorId: user._id,
+    //   title: "Mocked Title",
+    //   description: "Mocked Description",
+    //   property: {
+    //     age: 5, // Mocked age value
+    //     address: {
+    //       state: "Mocked State",
+    //       city: "Mocked City",
+    //       neighborhood: "Mocked Neighborhood",
+    //       zipCode: "MockedZipCode",
+    //       street: "Mocked Street",
+    //       number: 123, // Mocked number value
+    //       floor: "",
+    //       apartment: "",
+    //     },
+    //     geoLocation: {
+    //       latitude: 0,
+    //       longitude: 0,
+    //     },
+    //     type: "Departamento",
+    //     sqm: {
+    //       covered: 100, // Mocked covered square meters
+    //       uncovered: 50, // Mocked uncovered square meters
+    //     },
+    //     cardinalOrientation: "N",
+    //     relativeOrientation: "Frente",
+    //     rooms: 3, // Mocked number of rooms
+    //     bathrooms: 2, // Mocked number of bathrooms
+    //     numberOfGarages: 0,
+    //     hasGarden: false,
+    //     hasTerrace: false, // Mocked terrace value
+    //     hasBalcony: false, // Mocked balcony value
+    //     hasStorageUnit: false,
+    //     amenities: ["Amenity1", "Amenity2"], // Mocked amenities
+    //     photos: ["photo1.jpg", "photo2.jpg"], // Mocked photo URLs
+    //     video: "mockedVideoURL",
+    //     expensesPrice: {
+    //       amount: 200, // Mocked expenses amount
+    //       currency: "USD", // Mocked currency
+    //     },
+    //   },
+    //   type: "venta", // Mocked type value
+    //   price: {
+    //     amount: 100000, // Mocked price amount
+    //     currency: "USD", // Mocked currency
+    //   },
+    // };
+
+    console.log(JSON.stringify(requestBody));
+
+    const response = await fetch("http://3.144.94.74:8000/api/listings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then(async (response) => {
+        const actualResponse = await response.json();
+        setListingId(actualResponse._id);
+        if (response?.ok && listingId) {
+          const imageRequestBody = new FormData();
+          images.forEach((image, index) => {
+            imageRequestBody.append("images", {
+              name: `image-${index}.jpg`,
+              type: "image/jpeg",
+              uri: image.uri,
+            });
+          });
+
+          await fetch(
+            `http://3.144.94.74:8000/api/listings/${listingId}/images`,
             {
               method: "POST",
-              headers: {
-                "Content-Type": undefined,
-              },
-              body: JSON.stringify(imageBody),
-            }).then((response) => response.json())
-            .then((data) => {
-              console.log("Success:", data);
-              navigation.navigate("Home");
+              body: imageRequestBody,
+            }
+          )
+            .then(async (response) => {
+              const actualResponse = await response.json();
+              console.debug(JSON.stringify(actualResponse));
+              setIsLoading(false);
+              // navigation.navigate("Home");
+              alert("Propiedad agregada con exito");
             })
-          });
-          if (response.ok) {
-            navigation.navigate("Home");
-          } else {
-            console.log(response);
-          }
-        } catch (error) {
-          console.log("Error al agregar la propiedad");
+            .catch((error) => {
+              console.error(error);
+              setIsLoading(false);
+              alert("Error al agregar propiedad");
+            });
         }
-      }
-    }
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+        alert("Error al agregar propiedad");
+      });
   };
 
   return (
@@ -201,12 +238,14 @@ const NewPost = ({ navigation }) => {
             label={"Encabezado"}
             value={encabezado}
             onChangeText={(encabezado) => setEncabezado(encabezado)}
+            mode="outlined"
           ></TextInput>
           <TextInput
             className="rounded-t-md "
             label={"Descripcion"}
             value={descripcion}
             onChangeText={(descripcion) => setDescripcion(descripcion)}
+            mode="outlined"
           ></TextInput>
           <View className="flex flex-row justify-between">
             <TextInput
@@ -214,16 +253,17 @@ const NewPost = ({ navigation }) => {
               label={"Valor"}
               value={valor}
               onChangeText={(valor) => setValor(valor)}
+              mode="outlined"
             ></TextInput>
             <SelectDropdown
               buttonStyle={{
                 backgroundColor: "#e7e0ec",
-                borderTopEndRadius: 10,
-                borderTopLeftRadius: 10,
+                borderRadius: 4,
                 width: 120,
-                height: 60,
+                height: 50,
                 justifyContent: "center",
                 alignItems: "center",
+                marginTop: 6,
               }}
               data={["USD", "ARS"]}
               defaultValue={"Seleccionar"}
@@ -242,12 +282,12 @@ const NewPost = ({ navigation }) => {
             <SelectDropdown
               buttonStyle={{
                 backgroundColor: "#e7e0ec",
-                borderTopEndRadius: 10,
-                borderTopLeftRadius: 10,
+                borderRadius: 4,
                 width: 170,
-                height: 60,
+                height: 50,
                 justifyContent: "center",
                 alignItems: "center",
+                marginTop: 6,
               }}
               data={["Alquiler", "Venta"]}
               defaultValue={"Seleccionar"}
@@ -266,18 +306,19 @@ const NewPost = ({ navigation }) => {
               label={"Expensas"}
               value={expensas}
               onChangeText={(expensas) => setExpensas(expensas)}
+              mode="outlined"
             ></TextInput>
           </View>
           <View className="flex flex-row justify-between mb-4">
             <SelectDropdown
               buttonStyle={{
                 backgroundColor: "#e7e0ec",
-                borderTopEndRadius: 10,
-                borderTopLeftRadius: 10,
+                borderRadius: 4,
                 width: 170,
-                height: 60,
+                height: 50,
                 justifyContent: "center",
                 alignItems: "center",
+                marginTop: 6,
               }}
               data={[
                 "Casa",
@@ -299,31 +340,35 @@ const NewPost = ({ navigation }) => {
               }}
             />
           </View>
-          <Text className="text-[25px] mt-4 font-bold my-4">Ubicacion</Text>
+          <Text className="text-[25px] mt-4 font-bold my-4">Ubicación</Text>
           <View className="flex mb-4">
             <TextInput
               className="rounded-t-md mb-2"
               label={"Provicia"}
               value={provincia}
               onChangeText={(provincia) => setProvincia(provincia)}
+              mode="outlined"
             ></TextInput>
             <TextInput
               className="rounded-t-md mb-2"
               label={"Ciudad"}
               value={ciudad}
               onChangeText={(ciudad) => setCiudad(ciudad)}
+              mode="outlined"
             ></TextInput>
             <TextInput
               className="rounded-t-md mb-2"
               label={"Barrio"}
               value={barrio}
               onChangeText={(barrio) => setBarrio(barrio)}
+              mode="outlined"
             ></TextInput>
             <TextInput
               className="rounded-t-md mb-2"
               label={"Calle"}
               value={calle}
               onChangeText={(calle) => setCalle(calle)}
+              mode="outlined"
             ></TextInput>
             <View className="flex flex-row gap-2">
               <TextInput
@@ -331,18 +376,20 @@ const NewPost = ({ navigation }) => {
                 label={"Numero"}
                 value={numero}
                 onChangeText={(numero) => setNumero(numero)}
+                mode="outlined"
               ></TextInput>
               <TextInput
                 className="rounded-t-md w-[170px]"
                 label={"CP"}
                 value={CP}
                 onChangeText={(CP) => setCP(CP)}
+                mode="outlined"
               ></TextInput>
             </View>
           </View>
 
           <Text className="text-[25px] mt-4 font-bold my-4">
-            Caracteristicas
+            Características
           </Text>
           <View mb-4>
             <View className="flex flex-row gap-2">
@@ -353,6 +400,7 @@ const NewPost = ({ navigation }) => {
                 onChangeText={(metrosCubiertos) =>
                   setMetrosCubiertos(metrosCubiertos)
                 }
+                mode="outlined"
               ></TextInput>
               <TextInput
                 className="rounded-t-md w-[170px] mb-2"
@@ -361,6 +409,7 @@ const NewPost = ({ navigation }) => {
                 onChangeText={(metrosDescubiertos) =>
                   setMetrosDescubiertos(metrosDescubiertos)
                 }
+                mode="outlined"
               ></TextInput>
             </View>
             <View className="flex flex-row gap-2">
@@ -369,12 +418,14 @@ const NewPost = ({ navigation }) => {
                 label={"Cant ambientes"}
                 value={ambientes}
                 onChangeText={(ambientes) => setAmbientes(ambientes)}
+                mode="outlined"
               ></TextInput>
               <TextInput
                 className="rounded-t-md w-[170px] mb-2"
                 label={"Cant dormitorios"}
                 value={dormitorios}
                 onChangeText={(dormitorios) => setDormitorios(dormitorios)}
+                mode="outlined"
               ></TextInput>
             </View>
             <View className="flex flex-row gap-2">
@@ -383,32 +434,36 @@ const NewPost = ({ navigation }) => {
                 label={"Cant baños"}
                 value={baños}
                 onChangeText={(baños) => setBaños(baños)}
+                mode="outlined"
               ></TextInput>
               <TextInput
                 className="rounded-t-md w-[170px] mb-2"
                 label={"Antiguedad"}
                 value={antiguedad}
                 onChangeText={(antiguedad) => setAntiguedad(antiguedad)}
+                mode="outlined"
               ></TextInput>
             </View>
             <View className="flex flex-row gap-2">
               <TextInput
-                className="rounded-t-md w-full mb-2"
+                className="rounded-t-md w-[350px] mb-2"
                 label={"Orientacion relativa"}
                 value={orientacionRelativa}
                 onChangeText={(orientacionRelativa) =>
                   setOrientacionRelativa(orientacionRelativa)
                 }
+                mode="outlined"
               ></TextInput>
             </View>
             <View className="flex flex-row gap-2">
               <TextInput
-                className="rounded-t-md w-full mb-2"
+                className="rounded-t-md w-[350px] mb-2"
                 label={"Orientacion absoluta"}
                 value={orientacionAbsoluta}
                 onChangeText={(orientacionAbsoluta) =>
                   setOrientacionAbsoluta(orientacionAbsoluta)
                 }
+                mode="outlined"
               ></TextInput>
             </View>
             <View className="flex flex-row gap-4 px-4">
@@ -458,23 +513,23 @@ const NewPost = ({ navigation }) => {
                 .reverse()}
             </ScrollView>
           )}
-          <View className="flex justify-center items-center">
-            <TouchableOpacity
-              className="bg-[#e8def8]  mb-2  mt-2 w-[250px] px-4 py-2 rounded-xl justify-center items-center"
+          <View style={{ display: "flex", gap: 24 }}>
+            <Button
+              mode="outlined"
               onPress={handleFileUpload}
+              icon={"image"}
+              disabled={isLoading}
             >
-              <Text className="text-[#6750a4] text-[17px] font-bold">
-                Subir Media
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="bg-[#6750a4]  mb-6 w-[250px] px-4 py-2 rounded-xl justify-center items-center"
+              Subir fotos
+            </Button>
+            <Button
+              mode="contained"
               onPress={handleAddProperty}
+              icon={"home"}
+              loading={isLoading}
             >
-              <Text className="text-[#e8def8] text-[17px] font-bold">
-                Agregar Propiedad
-              </Text>
-            </TouchableOpacity>
+              Agregar propiedad
+            </Button>
           </View>
         </View>
       </ScrollView>

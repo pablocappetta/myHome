@@ -79,6 +79,7 @@ export const ListingPost = ({ navigation, ...props }) => {
 
   useEffect(() => {
     const getListingRealtorData = async () => {
+      if (listing?.realtorId === undefined) return;
       const realtorName = await getNameFromId(listing.realtorId);
       setListingRealtorName(realtorName.name);
       setListingRealtorAvatar(realtorName.logo);

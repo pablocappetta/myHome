@@ -9,11 +9,11 @@ import React, { useState, useEffect } from "react";
 import ListingCard from "../../components/ListingCard/ListingCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { useUserContext } from "../../contexts/UserContext";
-import { Avatar, Text } from "react-native-paper";
+import { Avatar, IconButton, Text } from "react-native-paper";
 
 const HomeOwner = ({ navigation }) => {
   const { user, isUserLogged } = useUserContext();
-  const [highlightedListings, setHighlightedListing] = useState([]);
+  const [ownerListings, setOwnerListings] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +22,7 @@ const HomeOwner = ({ navigation }) => {
     fetch("http://3.144.94.74:8000/api/listings/realtor/" + user._id)
       .then((response) => response.json())
       .then((data) => {
-        setHighlightedListing(data);
+        setOwnerListings(data);
       })
       .catch((error) => console.error(error))
       .finally(() => setRefreshing(false));
@@ -32,7 +32,7 @@ const HomeOwner = ({ navigation }) => {
     fetch("http://3.144.94.74:8000/api/listings/realtor/" + user._id)
       .then((response) => response.json())
       .then((data) => {
-        setHighlightedListing(data);
+        setOwnerListings(data);
       })
       .catch((error) => {
         console.error(error);
@@ -80,8 +80,8 @@ const HomeOwner = ({ navigation }) => {
             </View>
           ) : (
             <View horizontal style={styles.listingCardsContainer}>
-              {highlightedListings.length > 0 &&
-                highlightedListings.map((item, index) => (
+              {ownerListings.length > 0 &&
+                ownerListings.map((item, index) => (
                   <TouchableOpacity
                     key={index + item._id}
                     onPress={() => navigation.navigate("Post", item)}
@@ -93,13 +93,22 @@ const HomeOwner = ({ navigation }) => {
           )}
         </View>
       </ScrollView>
-      <TouchableOpacity
-        TouchableOpacity
+      <IconButton
+        mode="contained"
         onPress={() => navigation.navigate("NewPost")}
-        className="absolute right-3 bottom-8 rounded-full bg-[#6750a4] h-16 w-16 flex items-center justify-center"
-      >
-        <Text className="text-[30px] text-white">+</Text>
-      </TouchableOpacity>
+        style={{
+          position: "absolute",
+          right: 16,
+          bottom: 16,
+          height: 56,
+          width: 56,
+          borderRadius: 28,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        icon="plus"
+      />
     </View>
   );
 };

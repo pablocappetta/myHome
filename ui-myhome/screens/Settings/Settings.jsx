@@ -58,14 +58,17 @@ const Settings = ({ navigation }) => {
           </View>
         ) : (
           <View style={styles.containerUserDetails}>
-            <Avatar.Image size={48} source={{ uri: user.profilePicture }} />
+            <Avatar.Image
+              size={48}
+              source={{ uri: user.logo || user.profilePicture }}
+            />
 
             <View style={{ display: "flex", flexDirection: "column" }}>
               <Text variant="titleLarge" numberOfLines={1}>
-                {user.name + " " + user.lastName}
+                {user.name}
               </Text>
               <Text variant="labelSmall" numberOfLines={1}>
-                {user.email}
+                {user.loginEmail || user.email}
               </Text>
             </View>
           </View>

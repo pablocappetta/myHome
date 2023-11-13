@@ -209,13 +209,12 @@ const Navigator = () => {
               tabBarBadge: notifications.length,
             }}
           />
-
           <Tab.Screen
-            name="tabPerfil"
-            component={UserProfileScreenRoutes}
+            name="tabMiCuenta"
+            component={MyAccountScreenRoutes}
             options={{
-              tabBarLabel: "Perfil",
-              tabBarIcon: "account",
+              tabBarLabel: "Mi Cuenta",
+              tabBarIcon: "account-circle-outline",
             }}
           />
         </Tab.Navigator>
