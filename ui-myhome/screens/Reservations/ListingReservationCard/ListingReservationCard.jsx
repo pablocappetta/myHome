@@ -5,7 +5,11 @@ import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
 
-const ListingReservationCard = ({ navigation, reservation, handleRemoveFavorite }) => {
+const ListingReservationCard = ({
+  navigation,
+  reservation,
+  handleRemoveFavorite,
+}) => {
   const styles = StyleSheet.create({
     reservationImage: {
       width: 170,
@@ -57,39 +61,39 @@ const ListingReservationCard = ({ navigation, reservation, handleRemoveFavorite 
       />
       <Card.Content style={styles.cardContentContainer}>
         <View>
-        <Text variant="titleMedium" style={{ marginTop: 6 }} numberOfLines={1}>
-          {reservation.type}
-        </Text>
-        <IconButton
-          icon="star"
-          size={20}
-          style={{ bottom: 35, left: 130 }}
-          onPress={() => 
-            navigation.navigate("Review")
-          }
-          iconColor="#6750A4"
-        />
+          <Text
+            variant="titleMedium"
+            style={{ marginTop: 6 }}
+            numberOfLines={1}
+          >
+            {reservation.type}
+          </Text>
+          <IconButton
+            icon="star"
+            size={20}
+            style={{ bottom: 35, left: 130 }}
+            onPress={() => navigation.navigate("Review")}
+            iconColor="#6750A4"
+          />
         </View>
         <View
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          alignlistings: "center",
-          marginTop: 12,
-          position: "absolute",
-          left: 17,
-          top: 30,
-        }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignlistings: "center",
+            marginTop: 12,
+            position: "absolute",
+            left: 17,
+            top: 30,
+          }}
         >
-        <Text 
-        variant="bodySmall"
-        numberOfLines={1}>
-          {reservation.location}
-        </Text>
-        <Text variant="bodySmall" numberOfLines={1}>
-          Vencimiento: {reservation.expirationDate}
-        </Text>
+          <Text variant="bodySmall" numberOfLines={1}>
+            {reservation.location}
+          </Text>
+          <Text variant="bodySmall" numberOfLines={1}>
+            Vencimiento: {reservation.expirationDate}
+          </Text>
         </View>
 
         <View style={styles.priceContainer}>
@@ -123,10 +127,10 @@ const ListingReservationCard = ({ navigation, reservation, handleRemoveFavorite 
           </View>
         </View>
         <Button
-        icon={"close"}
-        mode="contained"
-        style={{ bottom: -55, left: 45, width: 120 }}
-        onPress={() => handleRemoveFavorite(reservation)}
+          icon={"close"}
+          mode="contained-tonal"
+          style={{ bottom: -55, left: 64, width: 108 }}
+          onPress={() => handleRemoveFavorite(reservation)}
         >
           Cancelar
         </Button>
@@ -134,7 +138,5 @@ const ListingReservationCard = ({ navigation, reservation, handleRemoveFavorite 
     </Card>
   );
 };
-
-
 
 export default ListingReservationCard;

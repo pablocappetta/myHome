@@ -55,6 +55,7 @@ const Settings = ({ navigation }) => {
                 <Button
                   onPress={() => navigation.navigate("Register")}
                   width={138}
+                  icon={"account-plus"}
                 >
                   Registrarse
                 </Button>

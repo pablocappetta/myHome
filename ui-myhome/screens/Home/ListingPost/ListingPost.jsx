@@ -654,7 +654,7 @@ export const ListingPost = ({ navigation, ...props }) => {
               </List.Subheader>
 
               <View style={styles.containerMapView}>
-                <MapView style={styles.mapView} />
+                <Text>Placeholder for Map</Text>
               </View>
             </View>
           )}
@@ -685,11 +685,8 @@ export const ListingPost = ({ navigation, ...props }) => {
                 }}
               >
                 <Button
-                  mode="contained"
+                  mode="outlined"
                   onPress={() => navigation.navigate("SendQuestion")}
-                  icon={"comment-question-outline"}
-                  buttonColor="#FFE088"
-                  textColor="#271D02"
                 >
                   Contactar
                 </Button>
@@ -699,6 +696,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                     navigation.navigate("Booking", { screen: "Date" })
                   }
                   icon={"calendar-clock"}
+                  width={width / 2 - 16}
                 >
                   Reservar
                 </Button>

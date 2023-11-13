@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { Text, Dialog, Button } from "react-native-paper";
+import { Text, Dialog, Button, MD3Colors } from "react-native-paper";
 import { Appbar } from "react-native-paper";
 import { mockedHighlightedListings } from "../Home/mock/MockedHomeData";
 import ListingFavoriteCard from "./ListingFavoriteCard/ListingFavoriteCard";
@@ -72,14 +72,16 @@ const Favorites = ({ navigation }) => {
               setListingToRemove(null);
               setDialogVisible(false);
             }}
+            style={{ marginRight: 16 }}
           >
             Volver
           </Button>
           <Button
             onPress={handleRemoveFromFavoritesAction}
             mode="contained"
-            buttonColor={"#FF5A5F"}
-            textColor="#FFFFFF"
+            buttonColor={MD3Colors.error60}
+            textColor={MD3Colors.tertiary100}
+            icon={"heart-remove"}
           >
             Eliminar favorito
           </Button>
