@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import ListingCard from "../../components/ListingCard/ListingCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { useUserContext } from "../../contexts/UserContext";
-import { Avatar, IconButton, Text } from "react-native-paper";
+import { Avatar, Button, IconButton, Text } from "react-native-paper";
 
 const HomeOwner = ({ navigation }) => {
   const { user, isUserLogged } = useUserContext();
@@ -42,13 +42,7 @@ const HomeOwner = ({ navigation }) => {
 
   return (
     <View>
-      <ScrollView
-        vertical
-        className="mt-10 min-h-[680px]"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
+      <ScrollView vertical className="mt-10 min-h-[680px]">
         <TouchableOpacity
           style={styles.userHomeWelcomeHeader}
           onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
@@ -70,9 +64,28 @@ const HomeOwner = ({ navigation }) => {
             !
           </Text>
         </TouchableOpacity>
-        <Text className="font-bold text-[20px] pl-4 mt-6">
-          Mis publicaciones
-        </Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingHorizontal: 24,
+            marginTop: 32,
+            marginBottom: 0,
+          }}
+        >
+          <Text className="font-bold text-[20px]">Mis publicaciones</Text>
+          <Button
+            icon="refresh"
+            animated
+            selected
+            onPress={onRefresh}
+            loading={refreshing}
+          >
+            {refreshing ? "Actualizando" : "Actualizar"}
+          </Button>
+        </View>
         <View horizontal style={styles.listingCardsContainer}>
           {loading ? (
             <View style={styles.spinnerContainer}>
@@ -94,8 +107,8 @@ const HomeOwner = ({ navigation }) => {
         </View>
       </ScrollView>
       <IconButton
-        mode="contained"
         onPress={() => navigation.navigate("NewPost")}
+        mode="contained"
         style={{
           position: "absolute",
           right: 8,
@@ -103,9 +116,12 @@ const HomeOwner = ({ navigation }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          width: 72,
+          height: 72,
         }}
         icon="plus"
-        size={40}
+        size={32}
+        selected
       />
     </View>
   );

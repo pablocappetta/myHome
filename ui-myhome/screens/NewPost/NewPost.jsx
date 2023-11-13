@@ -130,8 +130,6 @@ const NewPost = ({ navigation }) => {
       },
     };
 
-    console.log(JSON.stringify(requestBody));
-
     try {
       const listingPost = await fetch("http://3.144.94.74:8000/api/listings", {
         method: "POST",
@@ -143,9 +141,11 @@ const NewPost = ({ navigation }) => {
 
       const awaitedResponse = await listingPost.json();
 
-      setListingId(awaitedResponse._id);
+      while (listingId === null) {
+        setListingId(awaitedResponse._id);
 
-      console.debug("Listing ID", listingId);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
 
       if (listingId) {
         const imageRequestBody = new FormData();

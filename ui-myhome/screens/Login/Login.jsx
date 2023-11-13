@@ -58,7 +58,7 @@ const Login = ({ navigation }) => {
           isRealtor: true,
           token: json.token,
         });
-        navigation.navigate("Mi Cuenta");
+        navigation.navigate("tabMiCuenta");
         navigation.navigate("tabHome");
       })
       .catch((error) => {
