@@ -14,7 +14,6 @@ import Notifications from "../Notifications/Notifications";
 import NewPost from "../NewPost/NewPost";
 import HomeOwner from "../Home/HomeOwner";
 import NotificationView from "../Notifications/NotificationView";
-import Signin from "../Login/Signin";
 import { notifications } from "../Notifications/mock/notificationsMock";
 import BookingDate from "../Booking/BookingDate/BookingDate";
 import BookingInfo from "../Booking/BookingInfo/BookingInfo";
@@ -170,6 +169,8 @@ const Navigator = () => {
   const { theme } = useTheme();
   const { getUserType } = useUserContext();
   const owner = getUserType() === "realtor";
+  const [isTransparent, setIsTransparent] = useState(false);
+
   if (owner) {
     return (
       <NavigationContainer theme={theme}>
@@ -209,6 +210,7 @@ const Navigator = () => {
       </NavigationContainer>
     );
   }
+
   if (!owner) {
     return (
       <NavigationContainer theme={theme}>
@@ -217,7 +219,17 @@ const Navigator = () => {
           theme={theme}
           activeColor={theme.colors.primary}
           labeled={true}
-          barStyle={Platform.OS === "ios" && { height: 96 }}
+          barStyle={
+            Platform.OS === "ios"
+              ? {
+                  height: 96,
+                  display: isTransparent ? "none" : "",
+                }
+              : { display: isTransparent ? "none" : "" }
+          }
+          screenListeners={(props) => {
+            setIsTransparent(props.route.state?.routes[1]?.name === "Login");
+          }}
         >
           <Tab.Screen
             name="tabBuscar"
