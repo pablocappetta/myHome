@@ -34,7 +34,7 @@ const Login = ({ navigation }) => {
   const { user, setUser, isUserLogged } = useUserContext();
 
   useEffect(() => {
-    if (isUserLogged) navigation.navigate("Home");
+    if (isUserLogged) navigation.navigate("tabHome");
   }, [isUserLogged]);
 
   const handleLogin = (values) => {
@@ -58,7 +58,8 @@ const Login = ({ navigation }) => {
           isRealtor: true,
           token: json.token,
         });
-        navigation.navigate("Home");
+        navigation.navigate("Mi Cuenta");
+        navigation.navigate("tabHome");
       })
       .catch((error) => {
         console.error(error);
