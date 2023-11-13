@@ -225,7 +225,21 @@ paths:
         "400":
           description: Invalid input data
     get:
-      summary: Get list of listings.
+      summary: Get all listings
+      tags:
+        - Listings
+      responses:
+        "200":
+          description: List of listings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+  /listings/place:
+    get:
+      summary: Get listings by state, city and neighborhood.
       tags:
         - Listings
       parameters:

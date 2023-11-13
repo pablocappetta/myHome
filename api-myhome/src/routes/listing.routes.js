@@ -20,7 +20,7 @@ router.post("/", ListingController.createListing); //POST REALTORS
 
 //Obtener todos los listing
 router.get(
-  "/",
+  "/place",
   [
     check("listingType").not().isEmpty(),
     check("state").not().isEmpty(),
@@ -29,6 +29,9 @@ router.get(
   ],
   ListingController.getListingsByPlace
 );
+
+//Obtener todos los listing
+router.get("/", ListingController.getListings);
 
 //Obtener listing por id
 router.get("/:id", ListingController.getListingById);
