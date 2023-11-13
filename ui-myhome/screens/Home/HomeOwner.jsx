@@ -50,9 +50,7 @@ const HomeOwner = ({ navigation }) => {
         vertical
         className="mt-10 min-h-[680px]"
         ref={ref}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={<RefreshControl onRefresh={onRefresh} />}
       >
         <TouchableOpacity
           style={styles.userHomeWelcomeHeader}
