@@ -21,6 +21,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useUserContext } from "../../../contexts/UserContext";
 import { REACT_APP_API_URL } from "@env";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -43,6 +44,7 @@ const validationSchema = yup.object().shape({
 
 const Register = ({ navigation }) => {
   const { setUser } = useUserContext();
+  const { theme } = useTheme();
 
   const handleRegister = (values) => {
     const requestBody = {
@@ -80,7 +82,7 @@ const Register = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header elevated={true}>
+      <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
       </Appbar.Header>
       <ScrollView vertical automaticallyAdjustKeyboardInsets={true}>
@@ -90,7 +92,11 @@ const Register = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.registerContainer}>
               <Image
-                source={require("../../../assets/images/logo.png")}
+                source={
+                  !theme.dark
+                    ? require("../../../assets/images/logo.png")
+                    : require("../../../assets/images/logo-light.png")
+                }
                 style={{
                   width: 120,
                   height: 120,
@@ -107,7 +113,7 @@ const Register = ({ navigation }) => {
                   color: "#FFFFFF",
                 }}
               >
-                Crear tu cuenta
+                ¡Creá tu cuenta!
               </Text>
               <Formik
                 initialValues={{ email: "", name: "", password: "" }}

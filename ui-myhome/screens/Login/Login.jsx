@@ -21,6 +21,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useUserContext } from "../../contexts/UserContext";
 import { REACT_APP_API_URL } from "@env";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -32,6 +33,7 @@ const validationSchema = yup.object().shape({
 
 const Login = ({ navigation }) => {
   const { setUser } = useUserContext();
+  const { theme } = useTheme();
 
   const handleLogin = (values) => {
     const requestBody = {
@@ -66,7 +68,7 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header elevated={true}>
+      <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
       </Appbar.Header>
       <ScrollView vertical automaticallyAdjustKeyboardInsets={true}>
@@ -76,7 +78,11 @@ const Login = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.loginContainer}>
               <Image
-                source={require("../../assets/images/logo.png")}
+                source={
+                  !theme.dark
+                    ? require("../../assets/images/logo.png")
+                    : require("../../assets/images/logo-light.png")
+                }
                 style={{
                   width: 120,
                   height: 120,

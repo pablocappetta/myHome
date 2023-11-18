@@ -32,7 +32,7 @@ const BookingInfo = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Appbar.Header elevated={true}>
+        <Appbar.Header>
           <Appbar.BackAction onPress={() => navigation.goBack()} />
           <Appbar.Content title={bookingTitle} />
         </Appbar.Header>

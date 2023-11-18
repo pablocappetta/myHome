@@ -204,7 +204,7 @@ const NewPost = ({ navigation }) => {
 
   return (
     <View className="h-full ">
-      <Appbar.Header elevated={true}>
+      <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
         <Appbar.Content title={"Añade una nueva propiedad"} />
       </Appbar.Header>

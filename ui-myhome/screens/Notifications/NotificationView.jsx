@@ -7,7 +7,7 @@ const NotificationView = ({ navigation, ...props }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Appbar.Header elevated={true}>
+      <Appbar.Header>
         <Appbar.BackAction
           onPress={() => navigation.navigate("Notificaciones")}
         />

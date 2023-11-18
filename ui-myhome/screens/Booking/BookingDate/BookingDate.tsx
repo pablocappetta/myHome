@@ -4,7 +4,14 @@
 
 import React, { useState, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, Button, Appbar, SegmentedButtons, Dialog, Portal } from "react-native-paper";
+import {
+  Text,
+  Button,
+  Appbar,
+  SegmentedButtons,
+  Dialog,
+  Portal,
+} from "react-native-paper";
 import { DatePickerInput } from "react-native-paper-dates";
 import { es, en, enGB, registerTranslation } from "react-native-paper-dates";
 
@@ -39,13 +46,13 @@ export const BookingDate = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header elevated={true}>
+      <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={bookingTitle} />
       </Appbar.Header>
       <View style={styles.containerBookingDate}>
         <Text variant="titleLarge" style={{ marginTop: 6 }}>
-          Elegí la fecha y hora de tu cita
+          Elegí la fecha y hora de tu visita
         </Text>
         <View style={styles.section}>
           <DatePickerInput
@@ -56,8 +63,13 @@ export const BookingDate = ({ navigation }) => {
             inputMode="start"
             mode="outlined"
           />
-          <View style={{ flexDirection: "column" }}>
-            <Text variant="titleLarge" style={{ marginTop: 6, marginBottom: 20 }}>Horario</Text>
+          <View style={{ flexDirection: "column", marginTop: 48 }}>
+            <Text
+              variant="titleLarge"
+              style={{ marginTop: 6, marginBottom: 20 }}
+            >
+              Horario
+            </Text>
             <SegmentedButtons
               value={selectedTime}
               onValueChange={onTimeChange}

@@ -30,9 +30,6 @@ const Settings = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header elevated={true}>
-        <Appbar.Content title="Mi Cuenta" />
-      </Appbar.Header>
       <ScrollView style={styles.settingsContainer} ref={ref}>
         {!isUserLogged ? (
           <View style={styles.topBannerContainer}>
@@ -79,34 +76,36 @@ const Settings = ({ navigation }) => {
             </View>
           </View>
         )}
-        <View style={styles.userActionsButtonContainer}>
-          <TouchableOpacity
-            onPress={() =>
-              isUserLogged
-                ? navigation.navigate("Perfil")
-                : navigation.navigate("Login")
-            }
-            style={styles.userActionsButton}
-          >
-            <Card>
-              <Card.Content style={styles.userActionsButtonCardContent}>
-                <IconButton icon={"account"} style={{ marginLeft: 0 }} />
-                <Text>Mi Perfil</Text>
-              </Card.Content>
-            </Card>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("MisReservas")}
-            style={styles.userActionsButton}
-          >
-            <Card>
-              <Card.Content style={styles.userActionsButtonCardContent}>
-                <IconButton icon={"book"} style={{ marginLeft: 0 }} />
-                <Text>Mis Reservas</Text>
-              </Card.Content>
-            </Card>
-          </TouchableOpacity>
-        </View>
+        {isUserLogged && (
+          <View style={styles.userActionsButtonContainer}>
+            <TouchableOpacity
+              onPress={() =>
+                isUserLogged
+                  ? navigation.navigate("Perfil")
+                  : navigation.navigate("Login")
+              }
+              style={styles.userActionsButton}
+            >
+              <Card>
+                <Card.Content style={styles.userActionsButtonCardContent}>
+                  <IconButton icon={"account"} style={{ marginLeft: 0 }} />
+                  <Text>Mi Perfil</Text>
+                </Card.Content>
+              </Card>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("MisReservas")}
+              style={styles.userActionsButton}
+            >
+              <Card>
+                <Card.Content style={styles.userActionsButtonCardContent}>
+                  <IconButton icon={"book"} style={{ marginLeft: 0 }} />
+                  <Text>Mis Reservas</Text>
+                </Card.Content>
+              </Card>
+            </TouchableOpacity>
+          </View>
+        )}
         <List.Section>
           <List.Subheader>Modo Oscuro</List.Subheader>
           <List.Item
@@ -155,12 +154,12 @@ const Settings = ({ navigation }) => {
         {isUserLogged && (
           <List.Section>
             <List.Subheader>Seguridad de la cuenta</List.Subheader>
-            <List.Item
+            {/* <List.Item
               title="Cambiar contraseña"
               left={() => <IconButton icon={"shield-account-outline"} />}
               right={() => <IconButton icon={"chevron-right"} />}
             />
-            <Divider />
+            <Divider /> */}
             <List.Item
               title="Cerrar sesión"
               left={() => <IconButton icon={"logout"} />}
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topBannerContainer: {
-    marginTop: 16,
+    marginTop: 48,
     width: "98%",
     alignSelf: "center",
   },
