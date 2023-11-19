@@ -4,7 +4,7 @@ const { BadRequestError } = require("./errorHandler");
 const checkFields = (req, res, next) => {
   const errorsOcurred = validationResult(req);
   if (!errorsOcurred.isEmpty()) {
-    throw new BadRequestError("Error en checkFields middleware");
+    next(new BadRequestError("Error en checkFields middleware"));
   } else {
     next();
   }

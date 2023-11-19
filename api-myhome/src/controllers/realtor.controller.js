@@ -12,83 +12,72 @@ class RealtorController {
     return instance;
   }
 
-  async getRealtors(req, res) {
+  async getRealtors(req, res, next) {
     try {
       const realtors = await RealtorService.getRealtors();
       return res.status(200).json(realtors);
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async getRealtorByLoginEmail(req, res) {
-    const { email } = req.params || req.body;
+  async getRealtorById(req, res, next) {
+    const { realtorId } = req.params || req.body;
     try {
-      const realtor = await RealtorService.getRealtorByLoginEmail(email);
+      const realtor = await RealtorService.getRealtorById(realtorId);
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async getRealtorById(req, res) {
-    const { id } = req.params;
-    try {
-      const realtor = await RealtorService.getRealtorById(id);
-      return res.status(200).json(realtor);
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }
-
-  async createRealtor(req, res) {
+  async createRealtor(req, res, next) {
     const { body } = req;
     try {
       const realtor = await RealtorService.createRealtor(body);
       return res.status(201).json(realtor);
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async deleteRealtor(req, res) {
+  async deleteRealtor(req, res, next) {
     const { id } = req.params;
     try {
       await RealtorService.deleteRealtor(id);
       return res.status(204).json();
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async updateRealtor(req, res) {
+  async updateRealtor(req, res, next) {
     const { body } = req;
     try {
       const realtor = await RealtorService.updateRealtor(body);
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async getRealtorByToken(req, res) {
+  async getRealtorByToken(req, res, next) {
     const { token } = req;
     try {
       const realtor = await RealtorService.getRealtorByToken(token);
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async login(req, res) {
+  async login(req, res, next) {
     try {
       const realtor = await RealtorService.login(
         req.body.email,
@@ -97,20 +86,10 @@ class RealtorController {
       const token = jwt.sign(realtor.toJSON(), process.env.PRIVATE_KEY, {
         expiresIn: "1d",
       });
-      const user = await RealtorService.getRealtorByLoginEmail(req.body.email);
-      const data = {
-        _id: user._id,
-        name: user.name,
-        loginEmail: user.loginEmail,
-        phone: user.phone,
-        logo: user?.logo,
-        reviews: user?.reviews,
-        creationDate: user.creationDate,
-      };
-      return res.status(200).json({ token: token, data: data });
+      return res.status(200).json({ token: token, data: realtor });
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 }
