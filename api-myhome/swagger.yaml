@@ -806,15 +806,16 @@ components:
           required: true
           $ref: "#/components/schemas/Address"
         geoLocation:
-          required: true
           type: object
+          required: true
           properties:
-            latitude:
+            coordinates:
               required: true
-              type: number
-            longitude:
-              required: true
-              type: number
+              type: array
+              items:
+                type: number
+              minItems: 2
+              maxItems: 2
         type:
           required: true
           type: string

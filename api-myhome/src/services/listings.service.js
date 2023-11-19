@@ -1,3 +1,4 @@
+const { InternalServerError } = require("../middlewares/errorHandler");
 const ListingModel = require("../models/Listing");
 
 class ListingService {
@@ -36,6 +37,35 @@ class ListingService {
     } catch (err) {
       console.error(err);
       throw new Error("Error en getListings Service");
+    }
+  }
+
+  async getListingsNear(latitude, longitude, maxMeterDistance) {
+    try {
+      const listings = await ListingModel.find({
+        "property.geoLocation": {
+          $near: {
+            $maxDistance: maxMeterDistance,
+            $geometry: {
+              type: "Point",
+              coordinates: [longitude, latitude],
+            },
+          },
+        },
+      });
+      return listings;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en getListingsNearby Service");
+    }
+  }
+
+  async getListingsByRealtorId(realtorId) {
+    try {
+      return await ListingModel.find({ realtorId });
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en getListingsByRealtorId Service");
     }
   }
 
@@ -82,15 +112,6 @@ class ListingService {
     } catch (err) {
       console.error(err);
       throw new Error("Error en addImagesToListing Service");
-    }
-  }
-
-  async getListingsByRealtorId(realtorId) {
-    try {
-      return await ListingModel.find({ realtorId });
-    } catch (err) {
-      console.error(err);
-      throw new Error("Error en getListingsByRealtorId Service");
     }
   }
 }
