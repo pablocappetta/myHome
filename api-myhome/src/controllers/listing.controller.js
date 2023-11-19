@@ -35,6 +35,22 @@ class ListingController {
     }
   }
 
+  async getListingsNear(req, res, next) {
+    console.log("entre al controller bro!!");
+    console.log(req.query);
+    try {
+      const listings = await ListingService.getListingsNear(
+        req.query.latitude,
+        req.query.longitude,
+        req.query.radius
+      );
+      return res.status(200).json(listings);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+
   async getListingById(req, res, next) {
     const { id } = req.params;
     try {

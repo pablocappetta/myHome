@@ -30,14 +30,26 @@ router.get(
   ListingController.getListingsByPlace
 );
 
+//Obtener listings cercanos
+router.get(
+  "/nearby",
+  [
+    check("latitude").not().isEmpty(),
+    check("longitude").not().isEmpty(),
+    check("radius").not().isEmpty(),
+    checkFields,
+  ],
+  ListingController.getListingsNear
+);
+
 //Obtener todos los listing
 router.get("/", ListingController.getListings);
 
-//Obtener listing por id
-router.get("/:id", ListingController.getListingById);
-
 //Obtener listing por realtor
 router.get("/realtor/:realtorId", ListingController.getListingsByRealtorId);
+
+//Obtener listing por id
+router.get("/:id", ListingController.getListingById);
 
 //Actualizar listing
 router.put("/", ListingController.updateListing);

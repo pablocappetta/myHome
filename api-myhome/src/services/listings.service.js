@@ -48,15 +48,15 @@ class ListingService {
     }
   }
 
-  async getListingsNear(latitude, longitude, maxMeterDistance) {
+  async getListingsNear(latitude, longitude, meterRadius) {
     try {
       const listings = await ListingModel.find({
         "property.geoLocation": {
           $near: {
-            $maxDistance: maxMeterDistance,
+            $maxDistance: meterRadius,
             $geometry: {
               type: "Point",
-              coordinates: [longitude, latitude],
+              coordinates: [latitude, longitude],
             },
           },
         },
@@ -74,26 +74,6 @@ class ListingService {
     } catch (err) {
       console.error(err);
       throw new Error("Error en getListingsByRealtorId Service");
-    }
-  }
-
-  async getListingsNear(latitude, longitude, maxMeterDistance) {
-    try {
-      const listings = await ListingModel.find({
-        "property.geoLocation": {
-          $near: {
-            $maxDistance: maxMeterDistance,
-            $geometry: {
-              type: "Point",
-              coordinates: [longitude, latitude],
-            },
-          },
-        },
-      });
-      return listings;
-    } catch (err) {
-      console.error(err);
-      throw new InternalServerError("Error en getListingsNearby Service");
     }
   }
 
