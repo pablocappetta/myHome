@@ -14,20 +14,10 @@ const router = Router();
 router.post("/jwt", checkJwt);
 
 //Crea un usuario
-router.post(
-  "/",
-  [
-    check("name").not().isEmpty(),
-    check("loginEmail").not().isEmpty(),
-    check("password").not().isEmpty(),
-    check("contactEmail").not().isEmpty(),
-    checkFields,
-  ],
-  RealtorController.createRealtor
-); //POST USUARIOS
+router.post("/", RealtorController.createRealtor); //POST USUARIOS
 
-//Obtiene un usuario por su loginEmail
-router.get("/:email", RealtorController.getRealtorByLoginEmail);
+//Obtiene un realtor por su realtorId
+router.get("/:realtorId", RealtorController.getRealtorById);
 
 //Loguea un usuario
 router.post(

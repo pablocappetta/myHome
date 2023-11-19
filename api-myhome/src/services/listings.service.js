@@ -1,4 +1,10 @@
+const {
+  InternalServerError,
+  BadRequestError,
+} = require("../middlewares/errorHandler");
 const ListingModel = require("../models/Listing");
+const mongoose = require("mongoose");
+const ValidationError = mongoose.Error.ValidationError;
 
 class ListingService {
   async createListing(listing) {
@@ -6,7 +12,10 @@ class ListingService {
       return await ListingModel.create(listing);
     } catch (err) {
       console.error(err);
-      throw new Error("Error en createListing Service");
+      if (err instanceof ValidationError) {
+        throw new BadRequestError("Error en validaciones de Mongoose.");
+      }
+      throw new InternalServerError("Error en createUser Service");
     }
   }
 
@@ -16,7 +25,7 @@ class ListingService {
       return listings;
     } catch (err) {
       console.error(err);
-      throw new Error("Error en getListings Service");
+      throw new InternalServerError("Error en getListings Service");
     }
   }
 
@@ -35,7 +44,45 @@ class ListingService {
       return listings;
     } catch (err) {
       console.error(err);
-      throw new Error("Error en getListings Service");
+      throw new InternalServerError("Error en getListings Service");
+    }
+  }
+
+  async getListingsNear(latitude, longitude, meterRadius) {
+    try {
+      const listings = await ListingModel.find({
+        "property.geoLocation": {
+          $near: {
+            $maxDistance: meterRadius,
+            $geometry: {
+              type: "Point",
+              coordinates: [latitude, longitude],
+            },
+          },
+        },
+      });
+      return listings;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en getListingsNearby Service");
+    }
+  }
+
+  async getListingsByRealtorId(realtorId) {
+    try {
+      return await ListingModel.find({ realtorId });
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en getListingsByRealtorId Service");
+    }
+  }
+
+  async getListingsByRealtorId(realtorId) {
+    try {
+      return await ListingModel.find({ realtorId });
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en getListingsByRealtorId Service");
     }
   }
 
@@ -44,7 +91,7 @@ class ListingService {
       return await ListingModel.findOne({ _id: id });
     } catch (err) {
       console.error(err);
-      throw new Error("Error en getListingById Service");
+      throw new InternalServerError("Error en getListingById Service");
     }
   }
 
@@ -59,7 +106,10 @@ class ListingService {
       );
     } catch (err) {
       console.error(err);
-      throw new Error("Error en updateListing Service");
+      if (err instanceof ValidationError) {
+        throw new BadRequestError("Error en validaciones de Mongoose.");
+      }
+      throw new InternalServerError("Error en createUser Service");
     }
   }
 
@@ -68,7 +118,7 @@ class ListingService {
       return await ListingModel.deleteOne({ _id: listing._id });
     } catch (err) {
       console.error(err);
-      throw new Error("Error en deleteListing Service");
+      throw new InternalServerError("Error en deleteListing Service");
     }
   }
 
@@ -82,15 +132,6 @@ class ListingService {
     } catch (err) {
       console.error(err);
       throw new Error("Error en addImagesToListing Service");
-    }
-  }
-
-  async getListingsByRealtorId(realtorId) {
-    try {
-      return await ListingModel.find({ realtorId });
-    } catch (err) {
-      console.error(err);
-      throw new Error("Error en getListingsByRealtorId Service");
     }
   }
 }
