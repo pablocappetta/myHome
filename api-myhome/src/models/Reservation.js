@@ -1,8 +1,12 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const reservationSchema = new mongoose.Schema(
+const ReservationSchema = new mongoose.Schema(
   {
+    reservationId: {
+      type: ObjectId,
+      required: true,
+    },
     listingId: {
       type: ObjectId,
       ref: "Listing",
@@ -13,9 +17,20 @@ const reservationSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    reservationDate: {
+    realtorId: {
+      type: ObjectId,
+      ref: "Realtor",
+      required: true,
+    },
+    reservationStartDate: {
       type: Date,
       default: Date.now,
+      required: true,
+    },
+    reservationEndDate: {
+      type: Date,
+      default: Date.now,
+      required: true,
     },
     status: {
       type: String,
@@ -23,15 +38,10 @@ const reservationSchema = new mongoose.Schema(
       default: "Pendiente",
       required: true,
     },
-    wasReviewed: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
   },
   { versionKey: false }
 );
 
-const Reservation = mongoose.model("Reservation", reservationSchema);
+const Reservation = mongoose.model("Reservation", ReservationSchema);
 
 module.exports = Reservation;

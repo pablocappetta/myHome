@@ -1,7 +1,6 @@
 let instance = null;
 require("dotenv").config();
 const RealtorService = require("../services/realtor.service");
-const AuthService = require("../services/auth.service");
 const jwt = require("jsonwebtoken");
 
 class RealtorController {
