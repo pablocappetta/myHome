@@ -13,17 +13,17 @@ class UserController {
     return instance;
   }
 
-  async getUsers(req, res) {
+  async getUsers(req, res, next) {
     try {
       const users = await UserService.getUsers();
       return res.status(200).json(users);
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async getUserById(req, res) {
+  async getUserById(req, res, next) {
     try {
       const id = req.params.id;
       let user = await UserService.getUserById(id);
@@ -33,21 +33,21 @@ class UserController {
       return res.status(200).json(user);
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async createUser(req, res) {
+  async createUser(req, res, next) {
     try {
       const newUser = await UserService.createUser(req.body);
       return res.status(201).json(newUser);
     } catch (err) {
       console.error(err);
-      throw err;
+      next(err);
     }
   }
 
-  async login(req, res) {
+  async login(req, res, next) {
     //TODO: implementar login con google
   }
 }

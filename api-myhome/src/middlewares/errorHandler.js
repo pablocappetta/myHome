@@ -21,6 +21,13 @@ class UnauthorizedError extends CustomError {
   }
 }
 
+class ConflictError extends CustomError {
+  constructor(log) {
+    console.error(log);
+    super(409, "Conflict");
+  }
+}
+
 class ForbiddenError extends CustomError {
   constructor(log) {
     console.error(log);

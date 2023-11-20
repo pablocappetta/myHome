@@ -31,7 +31,7 @@ const UserProfile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header elevated={true}>
+      <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Perfil" />
       </Appbar.Header>

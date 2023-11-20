@@ -208,7 +208,7 @@ const NewPost = ({ navigation }) => {
 
   return (
     <View className="h-full ">
-      <Appbar.Header elevated={true}>
+      <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.navigate("Home")} />
         <Appbar.Content title={"Añade una nueva propiedad"} />
       </Appbar.Header>
@@ -559,6 +559,7 @@ const NewPost = ({ navigation }) => {
               onPress={handleAddProperty}
               icon={"home"}
               loading={isLoading}
+              disabled={isLoading}
             >
               Agregar propiedad
             </Button>

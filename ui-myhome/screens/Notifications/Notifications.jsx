@@ -11,7 +11,7 @@ const Notifications = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Appbar.Header elevated={true}>
+      <Appbar.Header>
         <Appbar.Content title={"Notificaciones"} />
       </Appbar.Header>
       <ScrollView vertical>

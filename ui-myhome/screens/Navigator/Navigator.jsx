@@ -163,6 +163,9 @@ const MyAccountScreenRoutes = () => {
       <Stack.Screen name="Privacidad" component={PrivacyPolicy} />
       <Stack.Screen name="MisReservas" component={Reservations} />
       <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
+      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
     </Stack.Navigator>
   );
 };
@@ -230,7 +233,10 @@ const Navigator = () => {
               : { display: isTransparent ? "none" : "" }
           }
           screenListeners={(props) => {
-            setIsTransparent(props.route.state?.routes[1]?.name === "Login");
+            setIsTransparent(
+              props.route.state?.routes[1]?.name === "Login" ||
+                props.route.state?.routes[1]?.name === "Register"
+            );
           }}
         >
           <Tab.Screen

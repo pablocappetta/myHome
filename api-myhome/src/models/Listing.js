@@ -18,14 +18,16 @@ const ListingSchema = new Schema(
         apartment: String,
       },
       geoLocation: {
-        latitude: {
-          type: Number,
-          // required: true, //TODO: Descomentar
-        },
-        longitude: {
-          type: Number,
-          // required: true, //TODO: Descomentar
-        },
+        type: { type: String, enum: ["Point"], default: "Point" },
+        coordinates: [Number],
+        // latitude: {
+        //   type: Number,
+        //   // required: true, //TODO: Descomentar
+        // },
+        // longitude: {
+        //   type: Number,
+        //   // required: true, //TODO: Descomentar
+        // },
       },
       type: {
         type: String,
@@ -79,7 +81,7 @@ const ListingSchema = new Schema(
     creationDate: { type: Date, default: Date.now },
   },
   { versionKey: false }
-);
+).index({ "property.geoLocation": "2dsphere" });
 
 const Listings = mongoose.model("Listing", ListingSchema);
 
