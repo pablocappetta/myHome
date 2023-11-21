@@ -5,7 +5,6 @@ import {
   ScrollView,
   StyleSheet,
   SafeAreaView,
-  Touchable,
   RefreshControl,
 } from "react-native";
 import {
@@ -115,7 +114,9 @@ const Home = ({ navigation }) => {
         <ScrollView
           vertical
           ref={ref}
-          refreshControl={<RefreshControl onRefresh={onRefresh} />}
+          refreshControl={
+            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+          }
         >
           <TouchableOpacity
             style={styles.userHomeWelcomeHeader}
