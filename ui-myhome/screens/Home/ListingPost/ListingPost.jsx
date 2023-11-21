@@ -24,8 +24,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
 import commaNumber from "comma-number";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Dropdown } from "react-native-element-dropdown";
+
 import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 import { useUserContext } from "../../../contexts/UserContext";
@@ -211,7 +210,9 @@ export const ListingPost = ({ navigation, ...props }) => {
     <View style={styles.container}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={listing.location} />
+        <Appbar.Content
+          title={listing?.location || listing?.property?.address?.neighborhood}
+        />
       </Appbar.Header>
 
       <ScrollView vertical style={styles.listingContainer}>
@@ -279,13 +280,9 @@ export const ListingPost = ({ navigation, ...props }) => {
                 rowTextStyle={{ color: "#6750a4" }}
                 defaultValueByIndex={0}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  // text represented after item is selected
-                  // if data array is an array of objects then return selectedItem.property to render after item is selected
                   return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
-                  // text represented for each item in dropdown
-                  // if data array is an array of objects then return item.property to represent item in dropdown
                   return item;
                 }}
               />
@@ -324,7 +321,7 @@ export const ListingPost = ({ navigation, ...props }) => {
               {edit ? (
                 <TextInput
                   value={listing?.property?.type || listing?.type}
-                  className="rounded-t-md w-[170px] "
+                  className="rounded-t-md w-[180px] "
                   label={"Tipo propiedad"}
                   onChange={(property) => handleProperty(property)}
                   mode="outlined"
@@ -332,7 +329,14 @@ export const ListingPost = ({ navigation, ...props }) => {
               ) : (
                 <Text
                   variant="titleLarge"
-                  style={{ color: theme.colors.primary, fontWeight: 800 }}
+                  style={{
+                    color: theme.colors.primary,
+                    fontWeight: 800,
+                    overflow: "hidden",
+                    width: 180,
+                  }}
+                  numberOfLines={3}
+                  ellipsizeMode="tail"
                 >
                   {listing?.title || listing?.type}
                 </Text>
