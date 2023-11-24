@@ -71,21 +71,22 @@ class RealtorService {
     }
   }
 
-  async updateRealtor(realtor) {
+  async updateRealtorById(realtorId, updatedRealtor) {
     try {
       return await RealtorModel.findOneAndUpdate(
-        { _id: realtor._id },
-        realtor,
+        { _id: realtorId },
+        updatedRealtor,
         { new: true }
       );
-    } catch {
+    } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
         throw new BadRequestError("Error en validaciones de Mongoose.");
       }
-      throw new InternalServerError("Error en createUser Service");
+      throw new InternalServerError("Error en updateRealtorById Service");
     }
   }
+  
 
   async login(loginEmail, password) {
     try {
@@ -121,7 +122,27 @@ class RealtorService {
   }
 
   async addReview(realtorId, review) {
-    // TODO:
+    try {
+      const realtor = await RealtorModel.findById(realtorId);
+      if (!realtor) {
+        throw new Error("Realtor not found");
+      }
+  
+      const newReview = {
+        date: new Date(),
+        rating: review.rating,
+        comment: review.comment,
+        userId: review.userId,
+      };
+  0
+      realtor.reviews.push(newReview);
+      await realtor.save();
+  
+      return realtor;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error in addReview Service");
+    }
   }
 
   async passwordReset(realtorId) {

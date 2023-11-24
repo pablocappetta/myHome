@@ -52,7 +52,35 @@ router.get("/realtor/:realtorId", ListingController.getListingsByRealtorId);
 router.get("/:id", ListingController.getListingById);
 
 //Actualizar listing
-router.put("/", ListingController.updateListing);
+router.put(
+  "/:id",
+  [
+    check("title").not().isEmpty(),
+    checkFields,
+  ],
+  async (req, res, next) => {
+    const { body } = req;
+    const { id } = req.params;
+
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const updatedListing = await ListingService.updateListing(id, body);
+
+      if (!updatedListing) {
+        return res.status(404).json({ message: "No se encontró esa propiedad." });
+      }
+
+      return res.status(200).json(updatedListing);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+);
 
 //Agregar imagenes a un listing
 router.post(
@@ -60,5 +88,24 @@ router.post(
   upload.array("images", 10),
   ListingController.addImages
 );
+
+
+// Borrar un listing
+router.delete("/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const deletedListing = await ListingService.deleteListing(id);
+
+    if (!deletedListing) {
+      return res.status(404).json({ message: "No se encontró esa propiedad." });
+    }
+
+    return res.status(204).json();
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
 
 module.exports = router;

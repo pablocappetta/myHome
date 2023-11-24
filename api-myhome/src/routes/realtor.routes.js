@@ -19,6 +19,18 @@ router.post("/", RealtorController.createRealtor); //POST USUARIOS
 //Obtiene un realtor por su realtorId
 router.get("/:realtorId", RealtorController.getRealtorById);
 
+// Agrega review a realtor
+router.post(
+  "/:realtorId/reviews",
+  [
+    check("rating").isNumeric(),
+    check("comment").isString(),
+    check("userId").isMongoId(),
+    checkFields,
+  ],
+  RealtorController.addReview
+);
+
 //Loguea un usuario
 router.post(
   "/login",
@@ -115,6 +127,43 @@ router.post("/password-reset/:token", async (req, res) => {
     });
   }
 });
+
+// Update a un realtor
+router.put(
+  "/:realtorId",
+  [
+    check("name").not().isEmpty(),
+    check("loginEmail").isEmail(),
+    check("contactEmail").isEmail(),
+    check("phone").not().isEmpty(),
+    checkFields,
+  ],
+  async (req, res, next) => {
+    const { body } = req;
+    const { realtorId } = req.params;
+
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const updatedRealtor = await RealtorService.updateRealtorById(
+        realtorId,
+        body
+      );
+
+      if (!updatedRealtor) {
+        return res.status(404).json({ message: "No se encontró esa inmobiliaria." });
+      }
+
+      return res.status(200).json(updatedRealtor);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+);
 
 //Obtiene detalles del realtor por id
 router.get("/id/:id", RealtorController.getRealtorById);
