@@ -88,7 +88,46 @@ export const ListingPost = ({ navigation, ...props }) => {
   }, [listing?.realtorId]);
 
   const handleLikePress = () => {
-    setLike(!like);
+    const userId = user?.id; // Assuming you have the user ID available
+    const postId = id; // Assuming you have the post ID available
+
+    if (like) {
+      // Remove favorite
+      fetch(`/api/favorites/${userId}/${postId}`, { method: 'DELETE' })
+        .then(response => {
+          if (response.ok) {
+            setLike(false);
+          } else {
+            // Handle error
+            console.error('Failed to remove favorite');
+          }
+        })
+        .catch(error => {
+          // Handle error
+          console.error('Failed to remove favorite', error);
+        });
+    } else {
+      // Add favorite
+      fetch(`/api/favorites`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, postId }),
+      })
+        .then(response => {
+          if (response.ok) {
+            setLike(true);
+          } else {
+            // Handle error
+            console.error('Failed to add favorite');
+          }
+        })
+        .catch(error => {
+          // Handle error
+          console.error('Failed to add favorite', error);
+        });
+    }
   };
 
   const width = Dimensions.get("window").width;

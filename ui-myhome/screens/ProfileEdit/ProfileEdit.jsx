@@ -22,7 +22,35 @@ const ProfileEdit = () => {
 
     const handleSaveClick = () => {
         setIsEditing(false);
-        // Save the updated user information to the server
+
+        // Prepare the updated user data
+        const updatedUser = {
+            id: user.id,
+            name,
+            contactEmail: email,
+            phone,
+            address,
+            country,
+            profilePicture
+        };
+
+        // Make the API call to save the user edits
+        fetch("http://3.144.94.74:8000/api/" + "realtors/me", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedUser)
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server
+                console.log('User edits saved:', data);
+            })
+            .catch(error => {
+                // Handle any errors that occur during the API call
+                console.error('Error saving user edits:', error);
+            });
     };
 
     const handleCancelClick = () => {

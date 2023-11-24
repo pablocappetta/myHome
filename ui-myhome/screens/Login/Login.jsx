@@ -66,6 +66,19 @@ const Login = ({ navigation }) => {
       });
   };
 
+  const handleGoogleLogin = () => {
+    const userMock = {
+      name: "Juan Perez",
+      email: "",
+      picture: "https://picsum.photos/200",
+      isRealtor: false,
+    };
+    setUser(userMock);
+    navigation.navigate("Home");
+    navigation.navigate("tabBuscar");
+
+  }
+
   return (
     <View style={styles.container}>
       <Appbar.Header>
@@ -112,9 +125,8 @@ const Login = ({ navigation }) => {
                   />
                 )}
                 mode="contained"
-                onPress={() => console.log("Google login pressed")}
+                onPress={() => handleGoogleLogin()}
                 style={styles.button}
-                disabled
               >
                 Continuar con Google
               </Button>
