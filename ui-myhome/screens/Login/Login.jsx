@@ -22,6 +22,22 @@ import * as yup from "yup";
 import { useUserContext } from "../../contexts/UserContext";
 import { REACT_APP_API_URL } from "@env";
 import { useTheme } from "../../contexts/ThemeContext";
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+    webClientId:"1071870411265-o00cc4jm8vm5s4gaajjo95t54leu9809.apps.googleusercontent.com",
+    iosClientId:"1071870411265-rdk3c5jc1l8jmhhkr7h03u7opbqe40vn.apps.googleusercontent.com",
+    offlineAccess: true,
+    hostedDomain: '',
+    forceCodeForRefreshToken: true,
+    accountName: '',
+
+});
+
+
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -66,17 +82,22 @@ const Login = ({ navigation }) => {
       });
   };
 
-  const handleGoogleLogin = () => {
-    const userMock = {
-      name: "Juan Perez",
-      email: "",
-      picture: "https://picsum.photos/200",
-      isRealtor: false,
-    };
-    setUser(userMock);
-    navigation.navigate("Home");
-    navigation.navigate("tabBuscar");
-
+  const handleGoogleLogin =async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      setState({ userInfo });
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
   }
 
   return (
@@ -125,7 +146,7 @@ const Login = ({ navigation }) => {
                   />
                 )}
                 mode="contained"
-                onPress={() => handleGoogleLogin()}
+                onPress={() => promptAsync()}
                 style={styles.button}
               >
                 Continuar con Google

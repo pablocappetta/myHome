@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "78227269948",
+    "project_id": "myhome-adi",
+    "storage_bucket": "myhome-adi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78227269948:android:8f3dcd5260686c857b9639",
+        "android_client_info": {
+          "package_name": "com.serg2404.myhome"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCo15uKDEn6WMTm4Bl4Sl_hZyqlsAirDcM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78227269948-0l4nvc8d7h4vuobipvjtvj0nl29qd23p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "78227269948-mk5jjqg671rssjhev8bvikpkbdpntb8a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.myhome"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
