@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, TouchableOpacity, ToastAndroid } from "react-native";
 import {
   Appbar,
   Avatar,
@@ -10,6 +10,7 @@ import {
   Text,
 } from "react-native-paper";
 import { useUserContext } from "../../contexts/UserContext";
+import * as ImagePicker from "expo-image-picker";
 
 const UserProfile = ({ navigation }) => {
   const { user, setIsUserLogged, wipeUserData } = useUserContext();
@@ -24,6 +25,50 @@ const UserProfile = ({ navigation }) => {
     navigation.navigate("tabMiCuenta");
     navigation.navigate("Home");
   };
+
+  // Manejo de imagen
+  const [image, setImage] = React.useState([]);
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+  }, []);
+
+  const handleFileUpload = async () => {
+    console.debug("imagen");
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets);
+      changeUserImage(result.assets);
+    }
+  };
+
+  function changeUserImage(imageURI) {
+    ToastAndroid.show("Foto de perfil actualizada", ToastAndroid.LONG);
+
+    // fetch("http://3.144.94.74:8000/api/" + "realtors", {
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+
+    //   }),
+    // });
+  }
 
   return (
     <View style={styles.container}>
@@ -41,16 +86,24 @@ const UserProfile = ({ navigation }) => {
             <TouchableOpacity onPress={openMenu}>
               <Avatar.Image
                 size={180}
-                source={{ uri: user?.logo || user?.profilePicture }}
+                source={{
+                  uri: user?.logo || user?.profilePicture || image[0]?.uri, // TODO: Sacar image[0]?.uri cuando se complete el flujo
+                }}
                 style={styles.avatar}
               />
             </TouchableOpacity>
           }
         >
-          <Menu.Item onPress={() => {}} title="Modificar" leadingIcon="image" />
+          <Menu.Item
+            onPress={handleFileUpload}
+            title="Modificar"
+            leadingIcon="image"
+          />
           <Divider />
           <Menu.Item
-            onPress={() => {}}
+            onPress={() => {
+              setImage("");
+            }}
             title="Eliminar"
             leadingIcon={"delete"}
           />
@@ -68,7 +121,7 @@ const UserProfile = ({ navigation }) => {
         </View>
 
         <View style={styles.actions}>
-          {!user.isRealtor && (
+          {!user.isRealtor ? (
             <Button
               icon="heart"
               mode="contained-tonal"
@@ -76,6 +129,14 @@ const UserProfile = ({ navigation }) => {
               onPress={() => {}}
             >
               Ver Favoritos
+            </Button>
+          ) : (
+            <Button
+              mode="outlined"
+              style={styles.actionButton}
+              onPress={() => navigation.navigate("EditProf")}
+            >
+              Editar mi perfil
             </Button>
           )}
           <Button

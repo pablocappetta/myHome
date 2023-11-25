@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   RefreshControl,
+  FlatList,
 } from "react-native";
 import {
   Avatar,
@@ -108,175 +109,187 @@ const Home = ({ navigation }) => {
       .finally(() => setLoading(false));
   }, []);
 
+  const DATA = [
+    {
+      id: "1",
+      title: "home",
+    },
+  ];
+
   return (
     <SafeAreaView>
       {!user.isRealtor && (
-        <ScrollView
-          vertical
+        <FlatList
           ref={ref}
           refreshControl={
             <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
           }
-        >
-          <TouchableOpacity
-            style={styles.userHomeWelcomeHeader}
-            onPress={() =>
-              navigation.navigate(isUserLogged ? "Perfil" : "Login")
-            }
-          >
-            {isUserLogged ? (
-              <Avatar.Image
-                size={36}
-                source={{ uri: user?.logo || user?.profilePicture }}
-              />
-            ) : (
-              <Avatar.Icon size={36} icon="account" />
-            )}
-            <Text variant="titleLarge">
-              ¡Hola,{" "}
-              <Text
-                className="font-bold"
-                style={styles.userNameGreeting}
-                numberOfLines={1}
+          data={DATA}
+          renderItem={({ item }) => (
+            <View>
+              <TouchableOpacity
+                style={styles.userHomeWelcomeHeader}
+                onPress={() =>
+                  navigation.navigate(isUserLogged ? "Perfil" : "Login")
+                }
               >
-                {isUserLogged ? user.name : "invitado"}
-              </Text>
-              !
-            </Text>
-          </TouchableOpacity>
-          <View>
-            <SegmentedButtons
-              buttons={segmentedButtons}
-              value={filterSelection}
-              onValueChange={handleButtonFilterChange}
-              style={styles.segmentedButtons}
-            />
-          </View>
-
-          <View style={styles.searchBarContainer}>
-            <Searchbar
-              placeholder="Buscar..."
-              onChangeText={handleSearchStringChange}
-              onSubmitEditing={handleSearchSubmitChange}
-              onClearIconPress={handleSearchClearIconPress}
-              value={searchQuery}
-            />
-          </View>
-
-          {highlightedListings.length > 0 && !isQueryActive && (
-            <View>
-              <View style={styles.listingHeader}>
-                <Text
-                  variant="titleLarge"
-                  style={{
-                    paddingHorizontal: 16,
-                  }}
-                >
-                  Destacados
-                </Text>
-                <TouchableOpacity>
+                {isUserLogged ? (
+                  <Avatar.Image
+                    size={36}
+                    source={{ uri: user?.logo || user?.profilePicture }}
+                  />
+                ) : (
+                  <Avatar.Icon size={36} icon="account" />
+                )}
+                <Text variant="titleLarge">
+                  ¡Hola,{" "}
                   <Text
-                    variant="labelLarge"
-                    style={{
-                      paddingHorizontal: 16,
-                    }}
+                    className="font-bold"
+                    style={styles.userNameGreeting}
+                    numberOfLines={1}
                   >
-                    Ver más
+                    {isUserLogged ? user.name : "invitado"}
                   </Text>
-                </TouchableOpacity>
+                  !
+                </Text>
+              </TouchableOpacity>
+              <View>
+                <SegmentedButtons
+                  buttons={segmentedButtons}
+                  value={filterSelection}
+                  onValueChange={handleButtonFilterChange}
+                  style={styles.segmentedButtons}
+                />
               </View>
-              <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
-                <View style={styles.listingCardsContainer}>
-                  {highlightedListings.map((item, index) => (
-                    <TouchableOpacity
-                      key={Math.random()}
-                      onPress={() => navigation.navigate("Post", item)}
+
+              <View style={styles.searchBarContainer}>
+                <Searchbar
+                  placeholder="Buscar..."
+                  onChangeText={handleSearchStringChange}
+                  onSubmitEditing={handleSearchSubmitChange}
+                  onClearIconPress={handleSearchClearIconPress}
+                  value={searchQuery}
+                />
+              </View>
+
+              {highlightedListings.length > 0 && !isQueryActive && (
+                <View>
+                  <View style={styles.listingHeader}>
+                    <Text
+                      variant="titleLarge"
+                      style={{
+                        paddingHorizontal: 16,
+                      }}
                     >
-                      <ListingCard listing={item} type={"highlighted"} />
+                      Destacados
+                    </Text>
+                    <TouchableOpacity>
+                      <Text
+                        variant="labelLarge"
+                        style={{
+                          paddingHorizontal: 16,
+                        }}
+                      >
+                        Ver más
+                      </Text>
                     </TouchableOpacity>
-                  ))}
+                  </View>
+                  <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
+                    <View style={styles.listingCardsContainer}>
+                      {highlightedListings.map((item, index) => (
+                        <TouchableOpacity
+                          key={Math.random()}
+                          onPress={() => navigation.navigate("Post", item)}
+                        >
+                          <ListingCard listing={item} type={"highlighted"} />
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </ScrollView>
                 </View>
-              </ScrollView>
-            </View>
-          )}
+              )}
 
-          {recentListings.length > 0 && !isQueryActive && (
-            <View>
-              <View style={styles.listingHeader}>
-                <Text
-                  variant="titleLarge"
-                  style={{
-                    paddingHorizontal: 16,
-                  }}
-                >
-                  Últimas publicaciones
-                </Text>
-                <TouchableOpacity>
-                  <Button
-                    icon="refresh"
-                    animated
-                    selected
-                    onPress={onRefresh}
-                    loading={refreshing}
-                  >
-                    {refreshing ? "Actualizando" : "Actualizar"}
-                  </Button>
-                </TouchableOpacity>
-              </View>
-              <View horizontal style={styles.listingCardsContainer}>
-                {recentListings.map((item, index) => (
-                  <TouchableOpacity
-                    key={Math.random()}
-                    onPress={() => navigation.navigate("Post", item)}
-                  >
-                    <ListingCard listing={item} type={"recent"} />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          )}
+              {recentListings.length > 0 && !isQueryActive && (
+                <View>
+                  <View style={styles.listingHeader}>
+                    <Text
+                      variant="titleLarge"
+                      style={{
+                        paddingHorizontal: 16,
+                      }}
+                    >
+                      Últimas publicaciones
+                    </Text>
+                    <TouchableOpacity>
+                      <Button
+                        icon="refresh"
+                        animated
+                        selected
+                        onPress={onRefresh}
+                        loading={refreshing}
+                      >
+                        {refreshing ? "Actualizando" : "Actualizar"}
+                      </Button>
+                    </TouchableOpacity>
+                  </View>
+                  <View horizontal style={styles.listingCardsContainer}>
+                    {recentListings.map((item, index) => (
+                      <TouchableOpacity
+                        key={Math.random()}
+                        onPress={() => navigation.navigate("Post", item)}
+                      >
+                        <ListingCard listing={item} type={"recent"} />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              )}
 
-          {searchQuery.length > 0 && isQueryActive && (
-            <View>
-              <View style={styles.listingHeader}>
-                <Text
-                  variant="titleLarge"
-                  style={{
-                    paddingHorizontal: 16,
-                  }}
-                >
-                  Resultados de la búsqueda
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    variant="labelLarge"
-                    style={{
-                      paddingHorizontal: 16,
-                    }}
-                  >
-                    Ver más
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View horizontal style={styles.listingCardsContainer}>
-                {highlightedListings.map((item, index) => (
-                  <TouchableOpacity
-                    key={Math.random()}
-                    onPress={() => navigation.navigate("Post", item)}
-                  >
-                    <ListingCard listing={item} type={"recent"} />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          )}
+              {searchQuery.length > 0 && isQueryActive && (
+                <View>
+                  <View style={styles.listingHeader}>
+                    <Text
+                      variant="titleLarge"
+                      style={{
+                        paddingHorizontal: 16,
+                      }}
+                    >
+                      Resultados de la búsqueda
+                    </Text>
+                    <TouchableOpacity>
+                      <Text
+                        variant="labelLarge"
+                        style={{
+                          paddingHorizontal: 16,
+                        }}
+                      >
+                        Ver más
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View horizontal style={styles.listingCardsContainer}>
+                    {highlightedListings.map((item, index) => (
+                      <TouchableOpacity
+                        key={Math.random()}
+                        onPress={() => navigation.navigate("Post", item)}
+                      >
+                        <ListingCard listing={item} type={"recent"} />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              )}
 
-          {!highlightedListings.length > 0 && !recentListings.length > 0 && (
-            <View style={styles.noListingResultsContainer}>
-              <Text variant="labelLarge">No hay publicaciones</Text>
+              {!highlightedListings.length > 0 &&
+                !recentListings.length > 0 && (
+                  <View style={styles.noListingResultsContainer}>
+                    <Text variant="labelLarge">No hay publicaciones</Text>
+                  </View>
+                )}
             </View>
           )}
-        </ScrollView>
+          keyExtractor={(item) => item.id}
+        />
       )}
     </SafeAreaView>
   );

@@ -19,7 +19,7 @@ const NewPost = ({ navigation }) => {
   const [valor, setValor] = React.useState("");
   const [moneda, setMoneda] = React.useState("");
   const [tipoOperacion, setTipoOperacion] = React.useState("");
-  const [expensas, setExpensas] = React.useState("");
+  const [expensas, setExpensas] = React.useState("Sin expensas");
   const [tipoPropiedad, setTipoPropiedad] = React.useState("");
 
   const [provincia, setProvincia] = React.useState("");
@@ -424,7 +424,57 @@ const NewPost = ({ navigation }) => {
                 mode="outlined"
               ></TextInput>
             </View>
-            <View className="flex flex-row gap-2">
+
+            <View className="flex flex-row w-[100%] gap-2 mt-2 mb-4 px-2 items-center">
+              <Text className="text-[16px] w-[50%]">Orientacion relativa</Text>
+              <SelectDropdown
+                buttonStyle={{
+                  backgroundColor: "#e7e0ec",
+                  borderRadius: 10,
+                  width: "50%",
+                  height: 60,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                data={["Frente", "Contrafrente", "Lateral"]}
+                defaultValue={"Seleccionar"}
+                onSelect={(selectedItem, index) => {
+                  setOrientacionRelativa(selectedItem);
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  return selectedItem;
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item;
+                }}
+              />
+            </View>
+            <View className="flex flex-row w-[100%] gap-2 mt-2 mb-4 px-2 items-center">
+              <Text className="text-[16px] w-[50%]">Orientacion absoluta</Text>
+              <SelectDropdown
+                buttonStyle={{
+                  backgroundColor: "#e7e0ec",
+                  borderRadius: 10,
+                  width: "50%",
+                  height: 60,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                data={["N", "NE", "E", "SE", "E", "S", "SO", "O", "NO"]}
+                defaultValue={"Seleccionar"}
+                onSelect={(selectedItem, index) => {
+                  setOrientacionAbsoluta(selectedItem);
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  return selectedItem;
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item;
+                }}
+              />
+            </View>
+
+            {/* <View className="flex flex-row gap-2">
               <TextInput
                 className="rounded-t-md w-[350px] mb-2"
                 label={"Orientacion relativa"}
@@ -445,7 +495,7 @@ const NewPost = ({ navigation }) => {
                 }
                 mode="outlined"
               ></TextInput>
-            </View>
+            </View> */}
             <View className="flex flex-row gap-4 px-4">
               <View className="flex flex-row items-center w-[45%] justify-between">
                 <Text className="pb-[5px] text-[16px]">Cochera</Text>

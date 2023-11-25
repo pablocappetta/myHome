@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import ListingCard from "../../components/ListingCard/ListingCard";
@@ -44,80 +45,94 @@ const HomeOwner = ({ navigation }) => {
       .finally(() => setLoading(false));
   }, []);
 
+  const DATA = [
+    {
+      id: "1",
+      title: "home",
+    },
+  ];
+
   return (
     <View>
-      <ScrollView
-        vertical
-        className="mt-10 min-h-[680px]"
+      <FlatList
         ref={ref}
-        refreshControl={<RefreshControl onRefresh={onRefresh} />}
-      >
-        <TouchableOpacity
-          style={styles.userHomeWelcomeHeader}
-          onPress={() => navigation.navigate(isUserLogged ? "Perfil" : "Login")}
-        >
-          {isUserLogged ? (
-            <Avatar.Image
-              size={48}
-              source={{ uri: user?.profilePicture || user?.logo }}
-            />
-          ) : (
-            <Avatar.Icon size={36} icon="account" />
-          )}
-          <Text variant="titleLarge">
-            ¡Hola,{" "}
-            <Text
-              className="font-bold"
-              style={styles.userNameGreeting}
-              numberOfLines={1}
+        refreshControl={
+          <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+        }
+        data={DATA}
+        renderItem={({ item }) => (
+          <View className="mt-10 min-h-[680px]">
+            <TouchableOpacity
+              style={styles.userHomeWelcomeHeader}
+              onPress={() =>
+                navigation.navigate(isUserLogged ? "Perfil" : "Login")
+              }
             >
-              {isUserLogged ? user.name : "invitado"}
-            </Text>
-            !
-          </Text>
-        </TouchableOpacity>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingHorizontal: 24,
-            marginTop: 32,
-            marginBottom: 0,
-          }}
-        >
-          <Text className="font-bold text-[20px]">Mis publicaciones</Text>
-          <Button
-            icon="refresh"
-            animated
-            selected
-            onPress={onRefresh}
-            loading={refreshing}
-          >
-            {refreshing ? "Actualizando" : "Actualizar"}
-          </Button>
-        </View>
-        <View horizontal style={styles.listingCardsContainer}>
-          {loading ? (
-            <View style={styles.spinnerContainer}>
-              <ActivityIndicator size="large" color="#6750a4" />
+              {isUserLogged ? (
+                <Avatar.Image
+                  size={48}
+                  source={{ uri: user?.profilePicture || user?.logo }}
+                />
+              ) : (
+                <Avatar.Icon size={36} icon="account" />
+              )}
+              <Text variant="titleLarge">
+                ¡Hola,{" "}
+                <Text
+                  className="font-bold"
+                  style={styles.userNameGreeting}
+                  numberOfLines={1}
+                >
+                  {isUserLogged ? user.name : "invitado"}
+                </Text>
+                !
+              </Text>
+            </TouchableOpacity>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 24,
+                marginTop: 32,
+                marginBottom: 0,
+              }}
+            >
+              <Text className="font-bold text-[20px]">Mis publicaciones</Text>
+              <Button
+                icon="refresh"
+                animated
+                selected
+                onPress={onRefresh}
+                loading={refreshing}
+              >
+                {refreshing ? "Actualizando" : "Actualizar"}
+              </Button>
             </View>
-          ) : (
             <View horizontal style={styles.listingCardsContainer}>
-              {ownerListings.length > 0 &&
-                ownerListings.map((item, index) => (
-                  <TouchableOpacity
-                    key={index + item._id}
-                    onPress={() => navigation.navigate("Post", item)}
-                  >
-                    <ListingCard listing={item} type={"recent"} />
-                  </TouchableOpacity>
-                ))}
+              {loading ? (
+                <View style={styles.spinnerContainer}>
+                  <ActivityIndicator size="large" color="#6750a4" />
+                </View>
+              ) : (
+                <View horizontal style={styles.listingCardsContainer}>
+                  {ownerListings.length > 0 &&
+                    ownerListings.map((item, index) => (
+                      <TouchableOpacity
+                        key={index + item._id}
+                        onPress={() => navigation.navigate("Post", item)}
+                      >
+                        <ListingCard listing={item} type={"recent"} />
+                      </TouchableOpacity>
+                    ))}
+                </View>
+              )}
             </View>
-          )}
-        </View>
-      </ScrollView>
+          </View>
+        )}
+        keyExtractor={(item) => item.id}
+      />
       <IconButton
         onPress={() => navigation.navigate("NewPost")}
         mode="contained"

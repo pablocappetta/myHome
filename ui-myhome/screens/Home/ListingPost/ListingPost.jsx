@@ -19,7 +19,7 @@ import {
   Text,
   TextInput,
 } from "react-native-paper";
-import MapView from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import Carousel from "react-native-reanimated-carousel";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
@@ -28,6 +28,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 import { useUserContext } from "../../../contexts/UserContext";
 import { isStringALink, upperCaseFirst } from "../../../helpers/helpers";
+import Geocoder from "react-native-geocoding";
 
 const getNameFromId = async (id) => {
   const response = await fetch(
@@ -203,6 +204,56 @@ export const ListingPost = ({ navigation, ...props }) => {
 
   const onToggleBalcon = () => {
     setBalcon(!balcon);
+  };
+
+  // Map View
+  const [region, setRegion] = useState({
+    latitude: -34.6036844,
+    longitude: -58.3815591,
+    latitudeDelta: 0.1,
+    longitudeDelta: 0.1,
+  });
+
+  Geocoder.init("AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg");
+
+  const apiKey = "AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg";
+
+  const [address, setAddress] = useState("Buenos Aires");
+
+  useEffect(() => {
+    Geocoder.from(address, apiKey).then((json) => {
+      var location = json.results[0].geometry.location;
+      console.log(address, location);
+      setRegion({
+        latitude: location.lat,
+        longitude: location.lng,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+      });
+    });
+    setAddress(
+      `${listing?.property?.address?.street}, ${listing?.property?.address?.number}, ${listing?.property?.address?.city}, ${listing?.property?.address?.state}`
+    );
+  }, [address]);
+
+  const mapa = () => {
+    return (
+      <MapView
+        style={styles.mapView}
+        provider={PROVIDER_GOOGLE}
+        region={region}
+      >
+        <Marker
+          coordinate={{
+            latitude: region.latitude,
+            longitude: region.longitude,
+          }}
+          title={"Ubicacion"}
+          description={"Ubicacion"}
+          draggable={false}
+        />
+      </MapView>
+    );
   };
 
   return (
@@ -656,9 +707,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 Vista satelital
               </List.Subheader>
 
-              <View style={styles.containerMapView}>
-                <Text>Placeholder for Map</Text>
-              </View>
+              <View style={styles.containerMapView}>{mapa()}</View>
             </View>
           )}
 
@@ -822,6 +871,10 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 16,
     marginHorizontal: 20,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
   },
 });
 

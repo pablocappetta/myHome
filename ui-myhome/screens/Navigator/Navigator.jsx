@@ -30,6 +30,7 @@ import Register from "../Login/Register/Register";
 import { useUserContext } from "../../contexts/UserContext";
 import ForgotPassword from "../Login/ForgotPassword/ForgotPassword";
 import PasswordRecovery from "../Login/PasswordRecovery/PasswordRecovery";
+import EditProfile from "../UserProfile/EditProfile";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -44,7 +45,7 @@ const HomeScreenRoutes = () => {
       }}
     >
       <Stack.Screen name="Home" component={HomeOwner} />
-      <Stack.Screen name="Perfil" component={UserProfile} />
+      {/* <Stack.Screen name="Perfil" component={UserProfile} /> */}
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Post" component={ListingPost} />
@@ -90,7 +91,7 @@ const SearchScreenRoutes = () => {
       }}
     >
       <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Perfil" component={UserProfile} />
+      {/* <Stack.Screen name="Perfil" component={UserProfile} /> */}
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
       <Stack.Screen name="Login" component={Login} />
@@ -164,6 +165,7 @@ const MyAccountScreenRoutes = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
+      <Stack.Screen name="EditProf" component={EditProfile} />
     </Stack.Navigator>
   );
 };

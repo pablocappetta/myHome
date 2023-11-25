@@ -22,7 +22,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.serg2404.myhome"
+      "package": "com.serg2404.myhome",
+            "config": {
+        "googleMapsApiKey": "AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg"
+      }
     },
     "production": {
       "PORT":3000,
@@ -33,7 +36,10 @@
         "package": "com.serg2404.myhome"
       },
       "ios": {
-        "bundleIdentifier": "com.serg2404.myhome"
+        "bundleIdentifier": "com.serg2404.myhome",
+              "config": {
+        "googleMapsApiKey": "AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg"
+      }
       }
     },
     "preview": {
@@ -47,11 +53,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "3ddd3104-c95b-4773-8273-a7b1a4c3d598"
-      }
     },
     "plugins": [
       [
