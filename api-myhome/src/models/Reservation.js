@@ -3,10 +3,6 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const ReservationSchema = new mongoose.Schema(
   {
-    reservationId: {
-      type: ObjectId,
-      required: true,
-    },
     listingId: {
       type: ObjectId,
       ref: "Listing",
