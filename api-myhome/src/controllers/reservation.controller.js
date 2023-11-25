@@ -62,7 +62,7 @@ class ReservationController {
 
   async updateReservation(req, res, next) {
     const { reservationId } = req.params;
-    const reservation = req.body.reservation;
+    const reservation = req.body;
     try {
       const updatedReservation = await ReservationService.updateReservation(
         reservationId,

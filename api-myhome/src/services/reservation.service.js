@@ -1,7 +1,9 @@
 const {
   BadRequestError,
+  ConflictError,
   InternalServerError,
-} = require("../helpers/errors.helper");
+  UnauthorizedError,
+} = require("../middlewares/errorHandler");
 const ReservationModel = require("../models/Reservation");
 const mongoose = require("mongoose");
 const ValidationError = mongoose.Error.ValidationError;
@@ -50,8 +52,7 @@ class ReservationService {
     }
   }
 
-  async updateReservation(reservationId) {
-    const reservation = req.body.reservation;
+  async updateReservation(reservationId, reservation) {
     try {
       return await ReservationModel.findOneAndUpdate(
         { _id: reservationId },
@@ -79,4 +80,4 @@ class ReservationService {
   }
 }
 
-module.exports = ReservationService;
+module.exports = new ReservationService();

@@ -19,6 +19,18 @@ router.post("/", RealtorController.createRealtor); //POST USUARIOS
 //Obtiene un realtor por su realtorId
 router.get("/:realtorId", RealtorController.getRealtorById);
 
+// Agrega review a realtor
+router.post(
+  "/:realtorId/reviews",
+  [
+    check("rating").isNumeric(),
+    check("comment").isString(),
+    check("userId").isMongoId(),
+    checkFields,
+  ],
+  RealtorController.addReview
+);
+
 //Loguea un usuario
 router.post(
   "/login",
@@ -115,6 +127,19 @@ router.post("/password-reset/:token", async (req, res) => {
     });
   }
 });
+
+//Actualiza un realtor
+router.put(
+  "/:realtorId",
+  [
+    checkJwt,
+    check("realtorId", "El id del realtor es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  RealtorController.updateRealtor
+);
 
 //Obtiene detalles del realtor por id
 router.get("/id/:id", RealtorController.getRealtorById);

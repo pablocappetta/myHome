@@ -19,7 +19,7 @@ router.post(
     check("status", "El estado de la reserva es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().createReservation
+  ReservationController.createReservation
 );
 
 //Obtiene las reservas de un usuario
@@ -30,7 +30,7 @@ router.get(
     check("userId", "El id del usuario es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().getReservationsByUserId
+  ReservationController.getReservationsByUserId
 );
 
 //Obtiene las reservas de un agente
@@ -41,7 +41,7 @@ router.get(
     check("realtorId", "El id del agente es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().getReservationsByRealtorId
+  ReservationController.getReservationsByRealtorId
 );
 
 //Obtiene las reservas de una propiedad
@@ -52,7 +52,7 @@ router.get(
     check("listingId", "El id de la propiedad es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().getReservationsByListingId
+  ReservationController.getReservationsByListingId
 );
 
 //Actualiza una reserva
@@ -65,7 +65,7 @@ router.put(
       .isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().updateReservation
+  ReservationController.updateReservation
 );
 
 //Borra una reserva
@@ -78,7 +78,7 @@ router.delete(
       .isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().deleteReservation
+  ReservationController.deleteReservation
 );
 
 module.exports = router;

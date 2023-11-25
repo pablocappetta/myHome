@@ -95,10 +95,10 @@ class ListingService {
     }
   }
 
-  async updateListing(listing) {
+  async updateListing(id, listing) {
     try {
       return await ListingModel.findOneAndUpdate(
-        { _id: listing._id },
+        { _id: id },
         listing,
         {
           new: true,
@@ -112,6 +112,7 @@ class ListingService {
       throw new InternalServerError("Error en createUser Service");
     }
   }
+
 
   async deleteListing(listing) {
     try {
