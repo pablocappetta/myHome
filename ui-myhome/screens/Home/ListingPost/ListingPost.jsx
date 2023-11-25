@@ -214,9 +214,9 @@ export const ListingPost = ({ navigation, ...props }) => {
     longitudeDelta: 0.1,
   });
 
-  Geocoder.init("AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg");
+  const apiKey = process.env.GOOGLE_APIKEY;
 
-  const apiKey = "AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg";
+  Geocoder.init(apiKey);
 
   const [address, setAddress] = useState("Buenos Aires");
 
