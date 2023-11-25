@@ -71,7 +71,7 @@ class RealtorService {
     }
   }
 
-  async updateRealtorById(realtorId, updatedRealtor) {
+  async updateRealtor(realtorId, updatedRealtor) {
     try {
       return await RealtorModel.findOneAndUpdate(
         { _id: realtorId },

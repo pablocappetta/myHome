@@ -55,16 +55,20 @@ class RealtorController {
   }
 
   async updateRealtor(req, res, next) {
-    const { body } = req;
+    const { realtorId } = req.params;
+    const realtor = req.body;
     try {
-      const realtor = await RealtorService.updateRealtor(body);
-      return res.status(200).json(realtor);
+      const updatedRealtor = await RealtorService.updateRealtor(
+        realtorId,
+        realtor
+      );
+      return res.status(200).json(updatedRealtor);
     } catch (err) {
       console.error(err);
       next(err);
     }
   }
-
+  
   async getRealtorByToken(req, res, next) {
     const { token } = req;
     try {

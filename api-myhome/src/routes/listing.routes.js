@@ -51,35 +51,17 @@ router.get("/realtor/:realtorId", ListingController.getListingsByRealtorId);
 //Obtener listing por id
 router.get("/:id", ListingController.getListingById);
 
-//Actualizar listing
+//Actualiza un listing
 router.put(
   "/:id",
   [
-    check("title").not().isEmpty(),
+    checkJwt,
+    check("id", "El id de la publicación es obligatorio")
+      .not()
+      .isEmpty(),
     checkFields,
   ],
-  async (req, res, next) => {
-    const { body } = req;
-    const { id } = req.params;
-
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-
-      const updatedListing = await ListingService.updateListing(id, body);
-
-      if (!updatedListing) {
-        return res.status(404).json({ message: "No se encontró esa propiedad." });
-      }
-
-      return res.status(200).json(updatedListing);
-    } catch (err) {
-      console.error(err);
-      next(err);
-    }
-  }
+  ListingController.updateListing
 );
 
 //Agregar imagenes a un listing
