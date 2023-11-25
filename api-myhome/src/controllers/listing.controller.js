@@ -73,9 +73,13 @@ class ListingController {
   }
 
   async updateListing(req, res, next) {
-    const { body } = req;
+    const { id } = req.params;
+
     try {
-      const listing = await ListingService.updateListing(body);
+      const listing = await ListingService.updateListing(
+        id,
+        req.body
+      );
       return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
