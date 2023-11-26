@@ -16,9 +16,6 @@ router.post("/jwt", checkJwt);
 //Crea un usuario
 router.post("/", RealtorController.createRealtor); //POST USUARIOS
 
-//Obtiene un realtor por su realtorId
-router.get("/:realtorId", RealtorController.getRealtorById);
-
 // Agrega review a realtor
 router.post(
   "/:realtorId/reviews",
@@ -130,9 +127,8 @@ router.post("/password-reset/:token", async (req, res) => {
 
 //Actualiza un realtor
 router.put(
-  "/:realtorId",
+  "/id/:realtorId",
   [
-    checkJwt,
     check("realtorId", "El id del realtor es obligatorio")
       .not()
       .isEmpty(),

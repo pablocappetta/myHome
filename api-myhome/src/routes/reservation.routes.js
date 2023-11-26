@@ -59,7 +59,6 @@ router.get(
 router.put(
   "/:reservationId",
   [
-    checkJwt,
     check("reservationId", "El id de la reserva es obligatorio")
       .not()
       .isEmpty(),

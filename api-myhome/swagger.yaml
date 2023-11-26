@@ -121,6 +121,33 @@ paths:
                 $ref: "#/components/schemas/Realtor"
         "404":
           description: Realtor not found
+    put:
+      summary: Update realtor details by id
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Realtor"
+      responses:
+        "200":
+          description: Realtor details updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Realtor"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized access
   /realtors/{realtorId}/message: #Los mensajes no se ven desde la app. Se manda un mail.
     post:
       summary: Send a message to a realtor
