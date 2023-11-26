@@ -127,6 +127,7 @@ class RealtorService {
       if (!realtor) {
         throw new Error("Realtor not found");
       }
+      console.log(review)
   
       const newReview = {
         date: new Date(),

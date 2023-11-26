@@ -98,7 +98,7 @@ class RealtorController {
 
   async addReview(req, res, next) {
     const { realtorId } = req.params;
-    const { review } = req.body;
+    const  review  = req.body;
   
     try {
       const updatedRealtor = await RealtorService.addReview(realtorId, review);
