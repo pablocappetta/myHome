@@ -37,4 +37,14 @@ router.post(
   UserController.login
 );
 
+// Route to get all favorites for a user
+router.get('/users/:userId/favorites', UserController.getUserFavorites);
+
+// Route to add a favorite for a user
+router.post('/users/:userId/favorites/:listingId', UserController.addFavorite);
+
+// Route to remove a favorite for a user
+router.delete('/users/:userId/favorites/:listingId', UserController.removeFavorite);
+
+
 module.exports = router;
