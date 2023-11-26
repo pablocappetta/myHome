@@ -3,5 +3,6 @@ export const upperCaseFirst = (str) => {
 };
 
 export const isStringALink = (str) => {
+  if (!str) return false;
   return str?.includes("http");
 };

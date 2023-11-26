@@ -51,8 +51,18 @@ router.get("/realtor/:realtorId", ListingController.getListingsByRealtorId);
 //Obtener listing por id
 router.get("/:id", ListingController.getListingById);
 
-//Actualizar listing
-router.put("/", ListingController.updateListing);
+//Actualiza un listing
+router.put(
+  "/:id",
+  [
+    checkJwt,
+    check("id", "El id de la publicación es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  ListingController.updateListing
+);
 
 //Agregar imagenes a un listing
 router.post(
@@ -60,5 +70,24 @@ router.post(
   upload.array("images", 10),
   ListingController.addImages
 );
+
+
+// Borrar un listing
+router.delete("/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const deletedListing = await ListingService.deleteListing(id);
+
+    if (!deletedListing) {
+      return res.status(404).json({ message: "No se encontró esa propiedad." });
+    }
+
+    return res.status(204).json();
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
 
 module.exports = router;

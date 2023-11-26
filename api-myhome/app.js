@@ -42,6 +42,9 @@ app.use("/api/listings", require("./src/routes/listing.routes"));
 //Usuarios endpoint
 app.use("/api/users", require("./src/routes/user.routes"));
 
+//Reservas endpoint
+app.use("/api/reservations", require("./src/routes/reservation.routes"));
+
 //Swagger endpoint
 app.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
