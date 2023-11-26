@@ -29,50 +29,6 @@ paths:
                 $ref: "#/components/schemas/Realtor"
         "400":
           description: Invalid input data
-  /realtors/me:
-    get:
-      summary: Get current realtor's profile
-      tags:
-        - Realtors
-      responses:
-        "200":
-          description: Realtor profile retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Realtor"
-        "401":
-          description: Unauthorized access
-    put:
-      summary: Update current realtor's profile
-      tags:
-        - Realtors
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Realtor"
-      responses:
-        "200":
-          description: Realtor profile updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Realtor"
-        "400":
-          description: Invalid input data
-        "401":
-          description: Unauthorized access
-    delete:
-      summary: Delete current realtor's profile
-      tags:
-        - Realtors
-      responses:
-        "204":
-          description: Realtor profile deleted successfully
-        "401":
-          description: Unauthorized access
   /realtors/login:
     post:
       summary: Log in as a realtor
