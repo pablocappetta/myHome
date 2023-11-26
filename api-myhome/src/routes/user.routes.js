@@ -38,13 +38,13 @@ router.post(
 );
 
 // Devuelve favoritos del usuario
-router.get('/users/:userId/favorites', UserController.getUserFavorites);
+router.get("/:id/favorites", UserController.getUserFavorites);
 
 // Añade favorito
-router.post('/users/:userId/favorites/:listingId', UserController.addFavorite);
+router.post("/:id/favorites/:listingId", UserController.addFavorite);
 
 // Borra favorito
-router.delete('/users/:userId/favorites/:listingId', UserController.removeFavorite);
+router.delete("/:id/favorites/:listingId", UserController.removeFavorite);
 
 
 module.exports = router;

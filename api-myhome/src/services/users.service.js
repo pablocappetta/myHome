@@ -61,22 +61,28 @@ class RealtorUserService {
 
   async getUserFavorites(userId) {
     try {
-      return await UserModel.find({userId});
+      const user = await UserModel.findOne({ userId }).populate('favoriteListings');
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return user.favoriteListings;
     } catch (err) {
-      console.error(err)
-      throw new Error("Error en getUserFavorites Service");
+      console.error(err);
+      throw new Error("Error in getUserFavorites Service");
     }
   }
+  
+  
 
   async addFavorite(userId, listingId) {
     try {
-      const user = await Users.findById(userId);
+      const user = await UserModel.findById(userId);
 
       if (!user.favoriteListings.includes(listingId)) {
         user.favoriteListings.push(listingId);
 
         // Use findOneAndUpdate to ensure the returned document reflects the changes
-        const updatedUser = await Users.findOneAndUpdate(
+        const updatedUser = await UserModel.findOneAndUpdate(
           { _id: userId },
           { $set: { favoriteListings: user.favoriteListings } },
           { new: true }
@@ -99,13 +105,13 @@ class RealtorUserService {
 
   static async removeFavorite(userId, listingId) {
     try {
-      const user = await Users.findById(userId);
+      const user = await UserModel.findById(userId);
 
       const index = user.favoriteListings.indexOf(listingId);
       if (index !== -1) {
         user.favoriteListings.splice(index, 1);
 
-        const updatedUser = await Users.findOneAndUpdate(
+        const updatedUser = await UserModel.findOneAndUpdate(
           { _id: userId },
           { $set: { favoriteListings: user.favoriteListings } },
           { new: true }
