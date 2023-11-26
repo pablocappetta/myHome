@@ -98,10 +98,9 @@ class RealtorController {
 
   async addReview(req, res, next) {
     const { realtorId } = req.params;
-    const { rating, comment, userId } = req.body;
+    const { review } = req.body;
   
     try {
-      const review = { rating, comment, userId };
       const updatedRealtor = await RealtorService.addReview(realtorId, review);
       return res.status(200).json(updatedRealtor);
     } catch (err) {
