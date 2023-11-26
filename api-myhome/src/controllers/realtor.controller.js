@@ -22,7 +22,7 @@ class RealtorController {
   }
 
   async getRealtorById(req, res, next) {
-    const { realtorId } = req.params || req.body;
+    const { realtorId } = req.params;
     try {
       const realtor = await RealtorService.getRealtorById(realtorId);
       return res.status(200).json(realtor);
@@ -68,7 +68,7 @@ class RealtorController {
       next(err);
     }
   }
-  
+
   async getRealtorByToken(req, res, next) {
     const { token } = req;
     try {
@@ -98,8 +98,8 @@ class RealtorController {
 
   async addReview(req, res, next) {
     const { realtorId } = req.params;
-    const  review  = req.body;
-  
+    const review = req.body;
+
     try {
       const updatedRealtor = await RealtorService.addReview(realtorId, review);
       return res.status(200).json(updatedRealtor);
@@ -108,7 +108,6 @@ class RealtorController {
       next(err);
     }
   }
-
 }
 
 module.exports = RealtorController.getInstance();

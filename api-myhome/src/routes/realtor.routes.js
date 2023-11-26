@@ -117,16 +117,14 @@ router.post("/password-reset/:token", async (req, res) => {
 router.put(
   "/:realtorId",
   [
-    check("realtorId", "El id del realtor es obligatorio")
-      .not()
-      .isEmpty(),
+    check("realtorId", "El id del realtor es obligatorio").not().isEmpty(),
     checkFields,
   ],
   RealtorController.updateRealtor
 );
 
 //Obtiene detalles del realtor por id
-router.get("/:id", RealtorController.getRealtorById);
+router.get("/:realtorId", RealtorController.getRealtorById);
 
 // Agrega review a realtor (post reserva)
 router.post(
