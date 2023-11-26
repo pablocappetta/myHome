@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 const ReservationController = require("../controllers/reservation.controller");
+const RealtorController = require("../controllers/realtor.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
 
@@ -77,6 +78,18 @@ router.delete(
     checkFields,
   ],
   ReservationController.deleteReservation
+);
+
+// Agrega review a realtor (post reserva)
+router.post(
+  "/:reservationId/reviews",
+  [
+    check("rating").isNumeric(),
+    check("comment").isString(),
+    check("userId").isMongoId(),
+    checkFields,
+  ],
+  RealtorController.addReview
 );
 
 module.exports = router;

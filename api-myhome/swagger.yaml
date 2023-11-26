@@ -521,14 +521,14 @@ paths:
           description: Payment made successfully
         "400":
           description: Invalid input data
-  /realtors/{realtorId}/review:
+  /reservations/{reservationId}/review:
     post:
       summary: Add a review for a realtor
       tags:
-        - Listings
+        - Reservations
       parameters:
         - in: path
-          name: realtorId
+          name: reservationId
           required: true
           schema:
             type: integer

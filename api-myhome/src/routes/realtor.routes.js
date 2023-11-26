@@ -16,18 +16,6 @@ router.post("/jwt", checkJwt);
 //Crea un usuario
 router.post("/", RealtorController.createRealtor); //POST USUARIOS
 
-// Agrega review a realtor
-router.post(
-  "/:realtorId/reviews",
-  [
-    check("rating").isNumeric(),
-    check("comment").isString(),
-    check("userId").isMongoId(),
-    checkFields,
-  ],
-  RealtorController.addReview
-);
-
 //Loguea un usuario
 router.post(
   "/login",
