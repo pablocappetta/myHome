@@ -86,7 +86,6 @@ class RealtorService {
       throw new InternalServerError("Error en updateRealtorById Service");
     }
   }
-  
 
   async login(loginEmail, password) {
     try {
@@ -108,15 +107,6 @@ class RealtorService {
     }
   }
 
-  async getRealtorById(id) {
-    try {
-      return await RealtorModel.findOne({ _id: id });
-    } catch (err) {
-      console.error(err);
-      throw new Error("Error en getRealtorById Service");
-    }
-  }
-
   async sendMessage(realtorId, message) {
     // TODO:
   }
@@ -127,18 +117,18 @@ class RealtorService {
       if (!realtor) {
         throw new Error("Realtor not found");
       }
-      console.log(review)
-  
+
       const newReview = {
         date: new Date(),
         rating: review.rating,
         comment: review.comment,
         userId: review.userId,
       };
-  0
+
       realtor.reviews.push(newReview);
+
       await realtor.save();
-  
+
       return realtor;
     } catch (err) {
       console.error(err);
