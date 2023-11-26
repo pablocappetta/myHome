@@ -96,5 +96,6 @@
     "updates": {
       "url": "https://u.expo.dev/3ddd3104-c95b-4773-8273-a7b1a4c3d598"
     }
-  }
+  },
+  "scheme": "my-home"
 }

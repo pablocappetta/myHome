@@ -12,7 +12,16 @@
           "package_name": "com.serg2404.myhome"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "78227269948-hoo6255a6a4e8uq3i8luo648kgpraiq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.serg2404.myhome",
+            "certificate_hash": "8e1d12fd757bab2346f03f1ea9cd3b3806164e6d"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCo15uKDEn6WMTm4Bl4Sl_hZyqlsAirDcM"

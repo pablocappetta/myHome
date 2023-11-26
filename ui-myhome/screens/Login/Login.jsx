@@ -22,20 +22,9 @@ import * as yup from "yup";
 import { useUserContext } from "../../contexts/UserContext";
 import { REACT_APP_API_URL } from "@env";
 import { useTheme } from "../../contexts/ThemeContext";
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-
-GoogleSignin.configure({
-    webClientId:"1071870411265-o00cc4jm8vm5s4gaajjo95t54leu9809.apps.googleusercontent.com",
-    iosClientId:"1071870411265-rdk3c5jc1l8jmhhkr7h03u7opbqe40vn.apps.googleusercontent.com",
-    offlineAccess: true,
-    hostedDomain: '',
-    forceCodeForRefreshToken: true,
-    accountName: '',
-
-});
+import { getAuth, GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import { useFirebase } from "../../contexts/FirebaseContext";
+import * as Google from "expo-auth-session/providers/google";
 
 
 
@@ -48,6 +37,43 @@ const validationSchema = yup.object().shape({
 });
 
 const Login = ({ navigation }) => {
+  const fireBaseApp = useFirebase();
+  const provider = new GoogleAuthProvider(fireBaseApp);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: "78227269948-mk5jjqg671rssjhev8bvikpkbdpntb8a.apps.googleusercontent.com",
+    androidClientId: "78227269948-hoo6255a6a4e8uq3i8luo648kgpraiq4.apps.googleusercontent.com",
+  });
+
+  const auth = getAuth(fireBaseApp);
+
+  React.useEffect( () => {
+    if (response?.type === "success") { 
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token)
+      signInWithCredential(auth, credential).then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user)
+      }).catch((error) => {
+        console.log(error)
+      }
+      )
+    }
+  }, [response]);
+
+  React.useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user)
+      } else {
+        console.log("no user")
+      }
+    });
+    return () => unsub();
+  }, [])
+  
+
+
+
   const { setUser } = useUserContext();
   const { theme } = useTheme();
 
@@ -82,21 +108,21 @@ const Login = ({ navigation }) => {
       });
   };
 
-  const handleGoogleLogin =async () => {
+  const handleGoogleLogin = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      setState({ userInfo });
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
+      const response = await singIn(auth, provider)
+      const { user } = response
+      const token = await user.getIdToken()
+      const idTokenResult = await user.getIdTokenResult()
+      if (hasuraClaim) {
+        setUser({
+          ...user,
+          token,
+          isRealtor: false,
+        });
       }
+    } catch (error) { 
+      console.log(error)
     }
   }
 
