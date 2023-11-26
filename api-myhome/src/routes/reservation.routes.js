@@ -76,16 +76,4 @@ router.delete(
   ReservationController.deleteReservation
 );
 
-// Agrega review a realtor (post reserva)
-router.post(
-  "/:reservationId/reviews",
-  [
-    check("rating").isNumeric(),
-    check("comment").isString(),
-    check("userId").isMongoId(),
-    checkFields,
-  ],
-  RealtorController.addReview
-);
-
 module.exports = router;
