@@ -104,6 +104,23 @@ paths:
           description: Invalid input data
         "401":
           description: Unauthorized access
+    delete:
+        summary: Delete realtor by id
+        tags:
+          - Realtors
+        parameters:
+          - in: path
+            name: realtorId
+            required: true
+            schema:
+              type: string
+        responses:
+          "204":
+            description: Realtor deleted successfully
+          "404":
+            description: Realtor not found
+          "401":
+            description: Unauthorized access
   /realtors/{realtorId}/message: #Los mensajes no se ven desde la app. Se manda un mail.
     post:
       summary: Send a message to a realtor
@@ -379,54 +396,7 @@ paths:
         "201":
           description: Visit scheduled successfully
         "400":
-          description: Invalid input data or time slot not available
-  /listings/{listingId}/reservation:
-    post:
-      summary: Reserve a listing for rent
-      tags:
-        - Listings
-      parameters:
-        - in: path
-          name: listingId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Reservation"
-      responses:
-        "201":
-          description: Listing reserved successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Reservation"
-        "400":
-          description: Invalid input data or already reserved
-        "405":
-          description: Listing not available for reservation. It is not for rent.
-    get:
-      summary: Get reservation details for a listing
-      tags:
-        - Listings
-      parameters:
-        - in: path
-          name: listingId
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Reservation details retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Reservation"
-        "404":
-          description: Listing not found
+          description: Invalid input data or time slot not available  
   /listings/{listingId}/images:
     post:
       summary: Upload images for a listing
@@ -479,6 +449,41 @@ paths:
                   $ref: "#/components/schemas/Listing"
         "404":
           description: Realtor not found
+  /reservations/:
+    post:
+      summary: Reserve
+      tags:
+        - Reservations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reservation"
+      responses:
+        "201":
+          description: Listing reserved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "400":
+          description: Invalid input data or already reserved
+        "405":
+          description: Listing not available for reservation.
+    get:
+      summary: Get reservation details
+      tags:
+        - Reservations
+      responses:
+        "200":
+          description: Reservation details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "404":
+          description: Listing not found
   /reservations/{reservationId}/payment:
     post:
       summary: Make a payment for a reservation
