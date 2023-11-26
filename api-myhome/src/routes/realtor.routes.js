@@ -123,6 +123,16 @@ router.put(
   RealtorController.updateRealtor
 );
 
+// Borra un realtor, listings y reservas
+router.delete(
+  "/:realtorId",
+  [
+    check("realtorId", "El id del realtor es obligatorio").not().isEmpty(),
+    checkFields,
+  ],
+  RealtorController.deleteRealtor
+);
+
 //Obtiene detalles del realtor por id
 router.get("/:realtorId", RealtorController.getRealtorById);
 
