@@ -16,21 +16,6 @@ router.post("/jwt", checkJwt);
 //Crea un usuario
 router.post("/", RealtorController.createRealtor); //POST USUARIOS
 
-//Obtiene un realtor por su realtorId
-router.get("/:realtorId", RealtorController.getRealtorById);
-
-// Agrega review a realtor
-router.post(
-  "/:realtorId/reviews",
-  [
-    check("rating").isNumeric(),
-    check("comment").isString(),
-    check("userId").isMongoId(),
-    checkFields,
-  ],
-  RealtorController.addReview
-);
-
 //Loguea un usuario
 router.post(
   "/login",
@@ -132,7 +117,6 @@ router.post("/password-reset/:token", async (req, res) => {
 router.put(
   "/:realtorId",
   [
-    checkJwt,
     check("realtorId", "El id del realtor es obligatorio")
       .not()
       .isEmpty(),
@@ -142,6 +126,6 @@ router.put(
 );
 
 //Obtiene detalles del realtor por id
-router.get("/id/:id", RealtorController.getRealtorById);
+router.get("/:id", RealtorController.getRealtorById);
 
 module.exports = router;

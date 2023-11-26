@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 const ReservationController = require("../controllers/reservation.controller");
+const RealtorController = require("../controllers/realtor.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
 
@@ -10,7 +11,6 @@ const router = Router();
 router.post(
   "/",
   [
-    checkJwt,
     check("listingId", "El id de la propiedad es obligatorio").not().isEmpty(),
     check("realtorId", "El id del agente es obligatorio").not().isEmpty(),
     check("userId", "El id del usuario es obligatorio").not().isEmpty(),
@@ -26,7 +26,6 @@ router.post(
 router.get(
   "/user/:userId",
   [
-    checkJwt,
     check("userId", "El id del usuario es obligatorio").not().isEmpty(),
     checkFields,
   ],
@@ -37,7 +36,6 @@ router.get(
 router.get(
   "/realtor/:realtorId",
   [
-    checkJwt,
     check("realtorId", "El id del agente es obligatorio").not().isEmpty(),
     checkFields,
   ],
@@ -48,7 +46,6 @@ router.get(
 router.get(
   "/listing/:listingId",
   [
-    checkJwt,
     check("listingId", "El id de la propiedad es obligatorio").not().isEmpty(),
     checkFields,
   ],
@@ -59,7 +56,6 @@ router.get(
 router.put(
   "/:reservationId",
   [
-    checkJwt,
     check("reservationId", "El id de la reserva es obligatorio")
       .not()
       .isEmpty(),
@@ -72,13 +68,24 @@ router.put(
 router.delete(
   "/:reservationId",
   [
-    checkJwt,
     check("reservationId", "El id de la reserva es obligatorio")
       .not()
       .isEmpty(),
     checkFields,
   ],
   ReservationController.deleteReservation
+);
+
+// Agrega review a realtor (post reserva)
+router.post(
+  "/:reservationId/reviews",
+  [
+    check("rating").isNumeric(),
+    check("comment").isString(),
+    check("userId").isMongoId(),
+    checkFields,
+  ],
+  RealtorController.addReview
 );
 
 module.exports = router;

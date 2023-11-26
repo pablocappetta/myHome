@@ -55,7 +55,6 @@ router.get("/:id", ListingController.getListingById);
 router.put(
   "/:id",
   [
-    checkJwt,
     check("id", "El id de la publicación es obligatorio")
       .not()
       .isEmpty(),
