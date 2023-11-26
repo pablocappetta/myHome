@@ -634,11 +634,18 @@ paths:
           description: User profile deleted successfully
         "401":
           description: Unauthorized access
-  /users/me/favorites:
+  /users/{userId}/favorites:
     get:
       summary: Get list of favorite listings
       tags:
         - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: List of favorite listings retrieved successfully
@@ -648,12 +655,18 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Listing"
-  /users/me/favorites/{listingId}:
+  /users/{userId}/favorites/{listingId}:
     post:
       summary: Add listing to favorites
       tags:
         - Users
       parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            format: int64
         - in: path
           name: listingId
           required: true
