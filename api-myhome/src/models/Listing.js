@@ -19,15 +19,7 @@ const ListingSchema = new Schema(
       },
       geoLocation: {
         type: { type: String, enum: ["Point"], default: "Point" },
-        coordinates: [Number],
-        // latitude: {
-        //   type: Number,
-        //   // required: true, //TODO: Descomentar
-        // },
-        // longitude: {
-        //   type: Number,
-        //   // required: true, //TODO: Descomentar
-        // },
+        coordinates: { type: [Number], default: [0, 0] }, //TODO: sacar default value y hacer required
       },
       type: {
         type: String,

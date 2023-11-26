@@ -97,13 +97,9 @@ class ListingService {
 
   async updateListing(id, listing) {
     try {
-      return await ListingModel.findOneAndUpdate(
-        { _id: id },
-        listing,
-        {
-          new: true,
-        }
-      );
+      return await ListingModel.findOneAndUpdate({ _id: id }, listing, {
+        new: true,
+      });
     } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
@@ -112,7 +108,6 @@ class ListingService {
       throw new InternalServerError("Error en createUser Service");
     }
   }
-
 
   async deleteListing(listing) {
     try {

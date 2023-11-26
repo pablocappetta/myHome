@@ -24,6 +24,7 @@ class RealtorService {
   async getRealtorById(id) {
     try {
       const realtor = await RealtorModel.findOne({ _id: id });
+      realtor.password = undefined;
       return realtor;
     } catch {
       console.error(err);
@@ -86,7 +87,6 @@ class RealtorService {
       throw new InternalServerError("Error en updateRealtorById Service");
     }
   }
-  
 
   async login(loginEmail, password) {
     try {
@@ -127,18 +127,18 @@ class RealtorService {
       if (!realtor) {
         throw new Error("Realtor not found");
       }
-      console.log(review)
-  
+      console.log(review);
+
       const newReview = {
         date: new Date(),
         rating: review.rating,
         comment: review.comment,
         userId: review.userId,
       };
-  0
+
       realtor.reviews.push(newReview);
       await realtor.save();
-  
+
       return realtor;
     } catch (err) {
       console.error(err);
