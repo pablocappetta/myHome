@@ -45,7 +45,8 @@ class RealtorController {
     }
   }
 
-  async deleteRealtor(id) {
+  async deleteRealtor(req, res, next) {
+    const { id } = req.params;
     try {
       // Eliminar listados del agente
       await ListingModel.deleteMany({ realtorId: id });
