@@ -57,7 +57,7 @@ paths:
                 $ref: "#/components/schemas/Realtor"
         "401":
           description: Unauthorized
-  /realtors/id/{realtorId}:
+  /realtors/{realtorId}:
     get:
       summary: Get realtor details by id
       tags:

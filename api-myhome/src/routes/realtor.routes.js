@@ -127,7 +127,7 @@ router.post("/password-reset/:token", async (req, res) => {
 
 //Actualiza un realtor
 router.put(
-  "/id/:realtorId",
+  "/:realtorId",
   [
     check("realtorId", "El id del realtor es obligatorio")
       .not()
@@ -138,6 +138,6 @@ router.put(
 );
 
 //Obtiene detalles del realtor por id
-router.get("/id/:id", RealtorController.getRealtorById);
+router.get("/:id", RealtorController.getRealtorById);
 
 module.exports = router;
