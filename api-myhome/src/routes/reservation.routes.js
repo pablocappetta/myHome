@@ -11,7 +11,6 @@ const router = Router();
 router.post(
   "/",
   [
-    checkJwt,
     check("listingId", "El id de la propiedad es obligatorio").not().isEmpty(),
     check("realtorId", "El id del agente es obligatorio").not().isEmpty(),
     check("userId", "El id del usuario es obligatorio").not().isEmpty(),
@@ -27,7 +26,6 @@ router.post(
 router.get(
   "/user/:userId",
   [
-    checkJwt,
     check("userId", "El id del usuario es obligatorio").not().isEmpty(),
     checkFields,
   ],
@@ -38,7 +36,6 @@ router.get(
 router.get(
   "/realtor/:realtorId",
   [
-    checkJwt,
     check("realtorId", "El id del agente es obligatorio").not().isEmpty(),
     checkFields,
   ],
@@ -49,7 +46,6 @@ router.get(
 router.get(
   "/listing/:listingId",
   [
-    checkJwt,
     check("listingId", "El id de la propiedad es obligatorio").not().isEmpty(),
     checkFields,
   ],
