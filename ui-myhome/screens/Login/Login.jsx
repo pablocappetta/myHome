@@ -22,7 +22,7 @@ import * as yup from "yup";
 import { useUserContext } from "../../contexts/UserContext";
 import { REACT_APP_API_URL } from "@env";
 import { useTheme } from "../../contexts/ThemeContext";
-import { getAuth, GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from "firebase/auth";
 import { useFirebase } from "../../contexts/FirebaseContext";
 import * as Google from "expo-auth-session/providers/google";
 
