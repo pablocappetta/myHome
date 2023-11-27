@@ -4,6 +4,7 @@ import { Text, Dialog, Button, MD3Colors, Icon } from "react-native-paper";
 import { Appbar } from "react-native-paper";
 import { useScrollToTop } from "@react-navigation/native";
 import { useUserContext } from "../../contexts/UserContext";
+import ListingFavoriteCard from "./ListingFavoriteCard/ListingFavoriteCard";
 
 const Favorites = ({ navigation }) => {
   const ref = useRef(null);
@@ -25,7 +26,7 @@ const Favorites = ({ navigation }) => {
       const response = await fetch(
         `http://3.144.94.74:8000/api/users/${user._id}/favorites`
       );
-      if (!response.ok) return;
+      if (response.length === 0) return;
       const data = await response.json();
       setListings(data);
     } catch (error) {
@@ -34,13 +35,31 @@ const Favorites = ({ navigation }) => {
   };
 
   const handleRemoveFromFavoritesAction = () => {
-    //filter listing to remove from listings
-    const newListings = listings.filter(
-      (listing) => listing.id !== listingToRemove.id
-    );
-    setListingToRemove(null);
-    setListings(newListings);
-    setDialogVisible(false);
+     // Remove favorite
+     fetch(`http://3.144.94.74:8000/api/users/${user._id}/favorites/${listing._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+      .then((response) => {
+        if (response.ok) {
+          const newListings = listings.filter(
+            (listing) => listing._id !== listingToRemove._id
+          );
+          setListingToRemove(null);
+          setListings(newListings);
+          setDialogVisible(false);
+        } else {
+          // Handle error
+          console.error("Failed to remove favorite");
+        }
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Failed to remove favorite", error);
+      });
+
   };
 
   const handleRefreshFavorites = async () => {
@@ -72,7 +91,7 @@ const Favorites = ({ navigation }) => {
           {listings.length > 0 ? (
             listings.map((listing) => (
               <TouchableOpacity
-                key={listing.id}
+                key={listing._id}
                 onPress={() => navigation.navigate("Post", listing)}
               >
                 <ListingFavoriteCard

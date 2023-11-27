@@ -20,7 +20,7 @@ const Reservations = ({ navigation }) => {
     const fetchReservations = async () => {
       try {
         const reservations = await getReservations();
-        if (!reservations.ok) return;
+        if (reservations.length === 0) return;
         setListings(reservations);
       } catch (error) {
         console.error("Error fetching reservations:", error);
@@ -41,7 +41,7 @@ const Reservations = ({ navigation }) => {
   const handleRefresh = async () => {
     try {
       const reservations = await getReservations();
-      if (!reservations.ok) return;
+      if(reservations.length === 0) return;
       setListings(reservations);
     } catch (error) {
       console.error("Error refreshing reservations:", error);
