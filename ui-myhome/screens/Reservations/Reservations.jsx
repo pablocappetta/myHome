@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { Text, Dialog, Button, MD3Colors } from "react-native-paper";
+import { Text, Dialog, Button, MD3Colors, Icon } from "react-native-paper";
 import { Appbar } from "react-native-paper";
 import ListingReservationCard from "./ListingReservationCard/ListingReservationCard";
 import { useScrollToTop } from "@react-navigation/native";
@@ -20,6 +20,7 @@ const Reservations = ({ navigation }) => {
     const fetchReservations = async () => {
       try {
         const reservations = await getReservations();
+        if (!reservations.ok) return;
         setListings(reservations);
       } catch (error) {
         console.error("Error fetching reservations:", error);
@@ -31,7 +32,7 @@ const Reservations = ({ navigation }) => {
 
   const getReservations = async () => {
     const response = await fetch(
-      "http://3.144.94.74:8000/api/" + "reservations/user/" + user._id,
+      "http://3.144.94.74:8000/api/" + "reservations/user/" + user._id
     );
     const data = await response.json();
     return data;
@@ -40,6 +41,7 @@ const Reservations = ({ navigation }) => {
   const handleRefresh = async () => {
     try {
       const reservations = await getReservations();
+      if (!reservations.ok) return;
       setListings(reservations);
     } catch (error) {
       console.error("Error refreshing reservations:", error);
@@ -92,17 +94,24 @@ const Reservations = ({ navigation }) => {
       </Appbar.Header>
       <ScrollView vertical ref={ref}>
         <View style={styles.containerCardsReservationListing}>
-          {listings.map((listing) => (
-            <TouchableOpacity
-              key={listing.id}
-              onPress={() => navigation.navigate("Post", listing)}
-            >
-              <ListingReservationCard
-                reservation={listing}
-                handleRemoveFavorite={handleRemoveReservation}
-              />
-            </TouchableOpacity>
-          ))}
+          {listings.length > 0 ? (
+            listings.map((listing) => (
+              <TouchableOpacity
+                key={listing.id}
+                onPress={() => navigation.navigate("Post", listing)}
+              >
+                <ListingReservationCard
+                  reservation={listing}
+                  handleRemoveFavorite={handleRemoveReservation}
+                />
+              </TouchableOpacity>
+            ))
+          ) : (
+            <View style={styles.containerNoReservations}>
+              <Icon source="calendar-remove" size={72} />
+              <Text variant="titleLarge">No tenés ninguna reserva...aún</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
       <Dialog
@@ -151,6 +160,12 @@ const styles = StyleSheet.create({
     gap: 24,
     paddingVertical: 16,
     paddingHorizontal: 16,
+  },
+  containerNoReservations: {
+    display: "flex",
+    margin: 24,
+    alignItems: "center",
+    gap: 24,
   },
 });
 
