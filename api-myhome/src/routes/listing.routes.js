@@ -70,23 +70,28 @@ router.post(
   ListingController.addImages
 );
 
+//Actualiza un listing
+router.put(
+  "/:id",
+  [
+    check("id", "El id de la publicación es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  ListingController.updateListing
+);
 
 // Borrar un listing
-router.delete("/:id", async (req, res, next) => {
-  const { id } = req.params;
-
-  try {
-    const deletedListing = await ListingController.deleteListing(id);
-
-    if (!deletedListing) {
-      return res.status(404).json({ message: "No se encontró esa propiedad." });
-    }
-
-    return res.status(204).json();
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
+router.delete(
+  "/:id",
+  [
+    check("id", "El id de la publicación es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  ListingController.deleteListing
+)
 
 module.exports = router;
