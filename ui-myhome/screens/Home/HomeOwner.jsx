@@ -121,12 +121,7 @@ const HomeOwner = ({ navigation }) => {
                     ownerListings.map((item, index) => (
                       <TouchableOpacity
                         key={index + item._id}
-                        onPress={() =>
-                          navigation.navigate("Post", {
-                            item: item,
-                            refresh: onRefresh(),
-                          })
-                        }
+                        onPress={() => navigation.navigate("Post", item)}
                       >
                         <ListingCard listing={item} type={"recent"} />
                       </TouchableOpacity>

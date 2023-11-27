@@ -72,8 +72,7 @@ export const ListingPost = ({ navigation, ...props }) => {
   const { theme } = useTheme();
   const [like, setLike] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
-  const { item, refresh } = props.route.params;
-  const listing = item;
+  const listing = props.route.params;
   const [listingRealtorName, setListingRealtorName] = useState(null);
   const [listingRealtorAvatar, setListingRealtorAvatar] = useState(null);
 
