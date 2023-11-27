@@ -9,6 +9,8 @@ const RealtorModel = require("../models/Realtor");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const ValidationError = mongoose.Error.ValidationError;
+const ReservationService = require("../services/reservation.service");
+const ListingService = require("../services/listings.service");
 
 class RealtorService {
   async getRealtors() {
@@ -26,7 +28,7 @@ class RealtorService {
       const realtor = await RealtorModel.findOne({ _id: id });
       realtor.password = undefined;
       return realtor;
-    } catch {
+    } catch (err) {
       console.error(err);
       throw new InternalServerError("Error en getRealtorById Service");
     }
@@ -63,14 +65,32 @@ class RealtorService {
     }
   }
 
-  async deleteRealtor(id) {
+
+  async deleteRealtor(realtorId) {
+  
     try {
-      await RealtorModel.deleteOne({ _id: id });
+      // Use ListingService to delete listings
+      const listings = await ListingService.getListingsByRealtorId(realtorId);
+      for (const listing of listings) {
+        await ListingService.deleteListing(listing._id);
+      }
+  
+      // Use ReservationService to delete reservations and corresponding listings
+      const reservations = await ReservationService.getReservationsByRealtorId(realtorId);
+      for (const reservation of reservations) {
+        await ReservationService.deleteReservation(reservation._id);
+        await ListingService.deleteListing(reservation.listingId);
+      }
+  
+      // Use RealtorService to delete the realtor
+      await RealtorModel.deleteOne({ _id: realtorId });
+  
     } catch (err) {
       console.error(err);
       throw new Error("Error en deleteRealtor Service");
     }
   }
+  
 
   async updateRealtor(realtorId, updatedRealtor) {
     try {

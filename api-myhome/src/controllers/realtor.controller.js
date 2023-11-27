@@ -43,16 +43,25 @@ class RealtorController {
     }
   }
 
+
   async deleteRealtor(req, res, next) {
-    const { id } = req.params;
+    const { realtorId } = req.params;
+  
     try {
-      await RealtorService.deleteRealtor(id);
-      return res.status(204).json();
+      const existingRealtor = await RealtorService.getRealtorById(realtorId);
+  
+      if (!existingRealtor) {
+        return res.status(404).json({ error: 'La inmobiliaria no existe' });
+      }
+  
+      await RealtorService.deleteRealtor(realtorId);
+      return res.status(200).json();
     } catch (err) {
       console.error(err);
       next(err);
     }
   }
+  
 
   async updateRealtor(req, res, next) {
     const { realtorId } = req.params;
