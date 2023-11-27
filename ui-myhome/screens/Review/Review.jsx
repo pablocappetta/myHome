@@ -10,11 +10,14 @@ import {
   Text,
 } from "react-native-paper";
 import { AirbnbRating } from "react-native-ratings";
+import { useUserContext } from "../../contexts/UserContext";
 
-const Review = ({ navigation }) => {
+const Review = ({ navigation, route }) => {
   const [review, setReview] = useState("");
   const [comment, setComment] = useState("");
   const [visible, setVisible] = useState(false);
+
+  const { user } = useUserContext();
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -23,12 +26,12 @@ const Review = ({ navigation }) => {
 
   const handleSendReview = async () => {
     try {
-      // Call dummy API
+      const {realtorId} = route.params.params;
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts",
+        "http://3.144.94.74:8000/api/"  + "realtors/" + realtorId + "/reviews",
         {
           method: "POST",
-          body: JSON.stringify({ review, comment }),
+          body: JSON.stringify({ rating: review, comment, userId: user._id, date: new Date().toISOString().split('T')[0] }),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
@@ -45,7 +48,7 @@ const Review = ({ navigation }) => {
   };
 
   const handleRatingChange = (rating) => {
-    console.log(rating);
+    setReview(rating);
   };
 
   const title = "Reseña";

@@ -15,32 +15,47 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos"
+      },
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.serg2404.myhome"
+      "package": "com.serg2404.myhome",
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
+      "runtimeVersion": "1.0.0"
     },
     "production": {
-      "PORT":3000,
-      "NODE_ENV":"production",
-      "DEBUG":true,
-      "REACT_APP_API_URL":"http://3.144.94.74:8000/api/",
+      "PORT": 3000,
+      "NODE_ENV": "production",
+      "DEBUG": true,
+      "REACT_APP_API_URL": "http://3.144.94.74:8000/api/",
       "android": {
         "package": "com.serg2404.myhome"
       },
       "ios": {
-        "bundleIdentifier": "com.serg2404.myhome"
+        "bundleIdentifier": "com.serg2404.myhome",
+        "googleServicesFile": "./GoogleService-Info.plist"
       }
     },
     "preview": {
-      "PORT":3000,
-      "NODE_ENV":"development",
-      "DEBUG":true,
-      "REACT_APP_API_URL":"http://3.144.94.74:8000/api/",
+      "PORT": 3000,
+      "NODE_ENV": "development",
+      "DEBUG": true,
+      "REACT_APP_API_URL": "http://3.144.94.74:8000/api/",
       "android": {
         "package": "com.serg2404.myhome"
       }
@@ -58,15 +73,29 @@
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 31,
-            "buildToolsVersion": "31.0.0",
-            "targetSdkVersion": 31
+            "compileSdkVersion": 33,
+            "buildToolsVersion": "33.0.0",
+            "targetSdkVersion": 33
           },
           "ios": {
             "deploymentTarget": "14.5"
           }
         }
-    ]
-    ]
-  }
+      ],
+      [
+        "@react-native-google-signin/google-signin"
+      ],
+      [
+        "expo-image-picker"
+      ],
+      [
+        "expo-media-library"
+      ]
+    ],
+    "owner": "myhome2023",
+    "updates": {
+      "url": "https://u.expo.dev/3ddd3104-c95b-4773-8273-a7b1a4c3d598"
+    }
+  },
+  "scheme": "my-home"
 }

@@ -30,6 +30,7 @@ import Register from "../Login/Register/Register";
 import { useUserContext } from "../../contexts/UserContext";
 import ForgotPassword from "../Login/ForgotPassword/ForgotPassword";
 import PasswordRecovery from "../Login/PasswordRecovery/PasswordRecovery";
+import ProfileEdit from "../ProfileEdit/ProfileEdit";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -161,6 +162,7 @@ const MyAccountScreenRoutes = () => {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Privacidad" component={PrivacyPolicy} />
       <Stack.Screen name="MisReservas" component={Reservations} />
+      <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />

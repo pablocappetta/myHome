@@ -5,11 +5,38 @@ import { RadioButton } from "react-native-paper";
 
 const bookingTitle = "Reservar propiedad";
 
-export const BookingPayment = ({ navigation }) => {
-  const [checked, setChecked] = React.useState("first");
+interface BookingPaymentProps {
+  realtorId: string;
+  listingId: string;
+  name: string;
+  phone: string;
+  email: string;
+}
 
-  const handleOptionChange = (value) => {
+export const BookingPayment: React.FC<any> = ({
+  navigation,
+  route
+}) => {
+  const { realtorId, listingId, name, phone, email } = route?.params;
+  
+  const [checked, setChecked] = React.useState("first");
+  const [paymentMethod, setPaymentMethod] = React.useState("");
+
+  const handleOptionChange = (value: string) => {
     setChecked(value);
+    setPaymentMethod(value);
+  };
+
+  const handleContinue = () => {
+    const bookingInfo = {
+      realtorId,
+      listingId,
+      name,
+      phone,
+      email,
+      paymentMethod,
+    };
+    navigation.navigate("Booking", { screen: "Summary", params: {bookingInfo} });
   };
 
   return (
@@ -67,9 +94,7 @@ export const BookingPayment = ({ navigation }) => {
 
         <View style={styles.bottomButton}>
           <Button
-            onPress={() =>
-              navigation.navigate("Booking", { screen: "Summary" })
-            }
+            onPress={handleContinue}
             accessibilityLabel="Continuar a la siguiente pantalla para confirmar la reserva"
             mode="contained"
           >

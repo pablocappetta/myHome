@@ -1,18 +1,34 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Text, Dialog, Button, MD3Colors } from "react-native-paper";
 import { Appbar } from "react-native-paper";
-import { mockedHighlightedListings } from "../Home/mock/MockedHomeData";
-import ListingFavoriteCard from "./ListingFavoriteCard/ListingFavoriteCard";
 import { useScrollToTop } from "@react-navigation/native";
+import { useUserContext } from "../../contexts/UserContext";
 
 const Favorites = ({ navigation }) => {
   const ref = useRef(null);
 
   const [listingToRemove, setListingToRemove] = useState(null);
-  const [listings, setListings] = useState(mockedHighlightedListings);
+  const [listings, setListings] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const { user } = useUserContext();
 
   useScrollToTop(ref);
+
+  useEffect(() => {
+    // Fetch favorites from API
+    fetchFavorites();
+  }, []);
+
+  const fetchFavorites = async () => {
+    try {
+      const response = await fetch(`http://3.144.94.74:8000/api/users/${user._id}/favorites`);
+      const data = await response.json();
+      setListings(data);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
+  };
 
   const handleRemoveFromFavoritesAction = () => {
     //filter listing to remove from listings
@@ -22,6 +38,12 @@ const Favorites = ({ navigation }) => {
     setListingToRemove(null);
     setListings(newListings);
     setDialogVisible(false);
+  };
+
+  const handleRefreshFavorites = async () => {
+    setRefreshing(true);
+    await fetchFavorites();
+    setRefreshing(false);
   };
 
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -36,6 +58,11 @@ const Favorites = ({ navigation }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Favoritos" />
+        <Appbar.Action
+          icon="refresh"
+          onPress={handleRefreshFavorites}
+          disabled={refreshing}
+        />
       </Appbar.Header>
       <ScrollView vertical ref={ref}>
         <View style={styles.containerCardsFavoriteListing}>

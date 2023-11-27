@@ -28,18 +28,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 import { useUserContext } from "../../../contexts/UserContext";
 import { isStringALink, upperCaseFirst } from "../../../helpers/helpers";
-
-const getNameFromId = async (id) => {
-  const response = await fetch(
-    `http://3.144.94.74:8000/api/realtors/id/${id}`,
-    {
-      method: "GET",
-    }
-  );
-  const data = await response.json();
-  return data;
-};
-
 //Es un work in progress. Tengo un quilombo de estilos y cosas por todos lados. No me juzguen :P
 
 export const ListingPost = ({ navigation, ...props }) => {
@@ -75,8 +63,27 @@ export const ListingPost = ({ navigation, ...props }) => {
   const [listingRealtorName, setListingRealtorName] = useState(null);
   const [listingRealtorAvatar, setListingRealtorAvatar] = useState(null);
 
+  
+const getNameFromId = async (id) => {
+  try {
+    const response = await fetch(
+      `http://3.144.94.74:8000/api/realtors/${id}`,
+      {
+        method: "GET",
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to get name from ID", error);
+    throw error;
+  }
+};
+
+
   useEffect(() => {
     const getListingRealtorData = async () => {
+      console.log(listing?.realtorId);
       if (listing?.realtorId === undefined) return;
       const realtorName = await getNameFromId(listing.realtorId);
       setListingRealtorName(realtorName.name);
@@ -86,7 +93,51 @@ export const ListingPost = ({ navigation, ...props }) => {
   }, [listing?.realtorId]);
 
   const handleLikePress = () => {
-    setLike(!like);
+    const userId = user?._id; // Assuming you have the user ID available
+    const postId = listing.realtorId; // Assuming you have the post ID available
+
+    if (like) {
+      // Remove favorite
+      fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, { method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, postId }),
+    })
+        .then(response => {
+          if (response.ok) {
+            setLike(false);
+          } else {
+            // Handle error
+            console.error('Failed to remove favorite');
+          }
+        })
+        .catch(error => {
+          // Handle error
+          console.error('Failed to remove favorite', error);
+        });
+    } else {
+      // Add favorite
+      fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, postId }),
+      })
+        .then(response => {
+          if (response.ok) {
+            setLike(true);
+          } else {
+            // Handle error
+            console.error('Failed to add favorite');
+          }
+        })
+        .catch(error => {
+          // Handle error
+          console.error('Failed to add favorite', error);
+        });
+    }
   };
 
   const width = Dimensions.get("window").width;
@@ -695,8 +746,9 @@ export const ListingPost = ({ navigation, ...props }) => {
                 </Button>
                 <Button
                   mode="contained"
-                  onPress={() =>
-                    navigation.navigate("Booking", { screen: "Date" })
+                  onPress={() =>{
+                    navigation.navigate("Booking", { screen: "Info", params: {realtorId: listing.realtorId, listingId: listing._id }})
+                  }
                   }
                   icon={"calendar-clock"}
                   width={width / 2 - 16}
