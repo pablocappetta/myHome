@@ -73,9 +73,13 @@ class ListingController {
   }
 
   async updateListing(req, res, next) {
-    const { body } = req;
+    const { id } = req.params;
+
     try {
-      const listing = await ListingService.updateListing(body);
+      const listing = await ListingService.updateListing(
+        id,
+        req.body
+      );
       return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
@@ -85,7 +89,14 @@ class ListingController {
 
   async deleteListing(req, res, next) {
     const { id } = req.params;
+  
     try {
+      const existingListing = await ListingService.getListingById(id);
+  
+      if (!existingListing) {
+        return res.status(404).json({ error: 'La publicación no existe' });
+      }
+  
       await ListingService.deleteListing(id);
       return res.status(204).json();
     } catch (err) {
@@ -93,6 +104,7 @@ class ListingController {
       next(err);
     }
   }
+  
 
   async addImages(req, res, next) {
     const { id } = req.params;

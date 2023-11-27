@@ -37,4 +37,14 @@ router.post(
   UserController.login
 );
 
+// Devuelve favoritos del usuario
+router.get("/:id/favorites", UserController.getUserFavorites);
+
+// Añade favorito
+router.post("/:id/favorites/:listingId", UserController.addFavorite);
+
+// Borra favorito
+router.delete("/:id/favorites/:listingId", UserController.removeFavorite);
+
+
 module.exports = router;

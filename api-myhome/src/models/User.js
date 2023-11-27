@@ -14,6 +14,7 @@ const UserSchema = new Schema(
     avatar: String,
     phone: String,
     creationDate: { type: Date, default: Date.now },
+    favoriteListings: [{ type: Schema.Types.ObjectId, ref: 'Listing' }],
     __v: { type: Number, select: false, create: false },
   },
   { versionKey: false }

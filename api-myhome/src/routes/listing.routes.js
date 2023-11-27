@@ -51,8 +51,17 @@ router.get("/realtor/:realtorId", ListingController.getListingsByRealtorId);
 //Obtener listing por id
 router.get("/:id", ListingController.getListingById);
 
-//Actualizar listing
-router.put("/", ListingController.updateListing);
+//Actualiza un listing
+router.put(
+  "/:id",
+  [
+    check("id", "El id de la publicación es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  ListingController.updateListing
+);
 
 //Agregar imagenes a un listing
 router.post(
@@ -60,5 +69,29 @@ router.post(
   upload.array("images", 10),
   ListingController.addImages
 );
+
+//Actualiza un listing
+router.put(
+  "/:id",
+  [
+    check("id", "El id de la publicación es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  ListingController.updateListing
+);
+
+// Borrar un listing
+router.delete(
+  "/:id",
+  [
+    check("id", "El id de la publicación es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  ListingController.deleteListing
+)
 
 module.exports = router;

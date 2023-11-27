@@ -49,6 +49,10 @@ const NewPost = ({ navigation }) => {
   const [images, setImages] = React.useState([]);
   const [listingId, setListingId] = React.useState(null);
 
+  const orientacionRelativaOptions = ['Frente', 'Contrafrente', 'Lateral'];
+  const orientacionAbsolutaOptions = ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'];
+
+
   useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
@@ -93,10 +97,9 @@ const NewPost = ({ navigation }) => {
           floor: "",
           apartment: "",
         },
-        geoLocation: {
-          latitude: 0,
-          longitude: 0,
-        },
+        // geoLocation: {
+        //   coordinates: [0, 0]
+        // },
         type:
           tipoPropiedad.charAt(0).toUpperCase() +
           tipoPropiedad.slice(1).toLowerCase(),
@@ -424,43 +427,56 @@ const NewPost = ({ navigation }) => {
                 mode="outlined"
               ></TextInput>
             </View>
+            <View className="flex flex-row gap-2">
+              <View className="flex flex-row gap-2"
+              style={{marginBottom: 10}}
+              >
+                <SelectDropdown
+                  buttonStyle={{
+                    backgroundColor: "#e7e0ec",
+                    borderRadius: 4,
+                    width: 390,
+                    height: 50,
+                    marginTop: 6,
+                    alignItems: "center",
+                  }}
+                  buttonTextStyle={{
+                    fontSize: 16,
+                    color: "#000000",
+                    textAlign: "left",
+                  }}
 
-            <View className="flex flex-row w-[100%] gap-2 mt-2 mb-4 px-2 items-center">
-              <Text className="text-[16px] w-[50%]">Orientacion relativa</Text>
-              <SelectDropdown
-                buttonStyle={{
-                  backgroundColor: "#e7e0ec",
-                  borderRadius: 10,
-                  width: "50%",
-                  height: 60,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                data={["Frente", "Contrafrente", "Lateral"]}
-                defaultValue={"Seleccionar"}
-                onSelect={(selectedItem, index) => {
-                  setOrientacionRelativa(selectedItem);
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem;
-                }}
-                rowTextForSelection={(item, index) => {
-                  return item;
-                }}
-              />
+                  data={orientacionRelativaOptions}
+                  defaultValue={"Seleccionar"}
+                  onSelect={(selectedItem, index) => {
+                    setOrientacionRelativa(selectedItem);
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                />
+              </View>
             </View>
-            <View className="flex flex-row w-[100%] gap-2 mt-2 mb-4 px-2 items-center">
-              <Text className="text-[16px] w-[50%]">Orientacion absoluta</Text>
+            <View className="flex flex-row gap-2">
               <SelectDropdown
                 buttonStyle={{
                   backgroundColor: "#e7e0ec",
-                  borderRadius: 10,
-                  width: "50%",
-                  height: 60,
-                  justifyContent: "center",
+                  borderRadius: 4,
+                  width: 390,
+                  height: 50,
+                  marginTop: 0,
                   alignItems: "center",
                 }}
-                data={["N", "NE", "E", "SE", "E", "S", "SO", "O", "NO"]}
+                buttonTextStyle={{
+                  fontSize: 16,
+                  color: "#000000",
+                  textAlign: "left",
+                }}
+                
+                data={orientacionAbsolutaOptions}
                 defaultValue={"Seleccionar"}
                 onSelect={(selectedItem, index) => {
                   setOrientacionAbsoluta(selectedItem);

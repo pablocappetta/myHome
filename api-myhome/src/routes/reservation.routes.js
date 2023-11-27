@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 const ReservationController = require("../controllers/reservation.controller");
+const RealtorController = require("../controllers/realtor.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
 
@@ -10,7 +11,6 @@ const router = Router();
 router.post(
   "/",
   [
-    checkJwt,
     check("listingId", "El id de la propiedad es obligatorio").not().isEmpty(),
     check("realtorId", "El id del agente es obligatorio").not().isEmpty(),
     check("userId", "El id del usuario es obligatorio").not().isEmpty(),
@@ -19,66 +19,61 @@ router.post(
     check("status", "El estado de la reserva es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().createReservation
+  ReservationController.createReservation
 );
 
 //Obtiene las reservas de un usuario
 router.get(
   "/user/:userId",
   [
-    checkJwt,
     check("userId", "El id del usuario es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().getReservationsByUserId
+  ReservationController.getReservationsByUserId
 );
 
 //Obtiene las reservas de un agente
 router.get(
   "/realtor/:realtorId",
   [
-    checkJwt,
     check("realtorId", "El id del agente es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().getReservationsByRealtorId
+  ReservationController.getReservationsByRealtorId
 );
 
 //Obtiene las reservas de una propiedad
 router.get(
   "/listing/:listingId",
   [
-    checkJwt,
     check("listingId", "El id de la propiedad es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().getReservationsByListingId
+  ReservationController.getReservationsByListingId
 );
 
 //Actualiza una reserva
 router.put(
   "/:reservationId",
   [
-    checkJwt,
     check("reservationId", "El id de la reserva es obligatorio")
       .not()
       .isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().updateReservation
+  ReservationController.updateReservation
 );
 
 //Borra una reserva
 router.delete(
   "/:reservationId",
   [
-    checkJwt,
     check("reservationId", "El id de la reserva es obligatorio")
       .not()
       .isEmpty(),
     checkFields,
   ],
-  ReservationController.getInstance().deleteReservation
+  ReservationController.deleteReservation
 );
 
 module.exports = router;

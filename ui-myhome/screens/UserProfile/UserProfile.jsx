@@ -188,7 +188,16 @@ const UserProfile = ({ navigation }) => {
           >
             Mis Propiedades
           </Button>
+          <Button
+          icon="account-edit"
+          mode="outlined"
+          style={styles.actionButton}
+          onPress={handleEditProfile}
+        >
+          Editar Perfil
+        </Button>
         </View>
+
 
         <Button
           mode="outlined"

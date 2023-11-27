@@ -9,6 +9,8 @@ const RealtorModel = require("../models/Realtor");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const ValidationError = mongoose.Error.ValidationError;
+const ReservationService = require("../services/reservation.service");
+const ListingService = require("../services/listings.service");
 
 class RealtorService {
   async getRealtors() {
@@ -24,8 +26,9 @@ class RealtorService {
   async getRealtorById(id) {
     try {
       const realtor = await RealtorModel.findOne({ _id: id });
+      realtor.password = undefined;
       return realtor;
-    } catch {
+    } catch (err) {
       console.error(err);
       throw new InternalServerError("Error en getRealtorById Service");
     }
@@ -62,28 +65,46 @@ class RealtorService {
     }
   }
 
-  async deleteRealtor(id) {
+
+  async deleteRealtor(realtorId) {
+  
     try {
-      await RealtorModel.deleteOne({ _id: id });
+      // Use ListingService to delete listings
+      const listings = await ListingService.getListingsByRealtorId(realtorId);
+      for (const listing of listings) {
+        await ListingService.deleteListing(listing._id);
+      }
+  
+      // Use ReservationService to delete reservations and corresponding listings
+      const reservations = await ReservationService.getReservationsByRealtorId(realtorId);
+      for (const reservation of reservations) {
+        await ReservationService.deleteReservation(reservation._id);
+        await ListingService.deleteListing(reservation.listingId);
+      }
+  
+      // Use RealtorService to delete the realtor
+      await RealtorModel.deleteOne({ _id: realtorId });
+  
     } catch (err) {
       console.error(err);
       throw new Error("Error en deleteRealtor Service");
     }
   }
+  
 
-  async updateRealtor(realtor) {
+  async updateRealtor(realtorId, updatedRealtor) {
     try {
       return await RealtorModel.findOneAndUpdate(
-        { _id: realtor._id },
-        realtor,
+        { _id: realtorId },
+        updatedRealtor,
         { new: true }
       );
-    } catch {
+    } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
         throw new BadRequestError("Error en validaciones de Mongoose.");
       }
-      throw new InternalServerError("Error en createUser Service");
+      throw new InternalServerError("Error en updateRealtorById Service");
     }
   }
 
@@ -107,21 +128,33 @@ class RealtorService {
     }
   }
 
-  async getRealtorById(id) {
-    try {
-      return await RealtorModel.findOne({ _id: id });
-    } catch (err) {
-      console.error(err);
-      throw new Error("Error en getRealtorById Service");
-    }
-  }
-
   async sendMessage(realtorId, message) {
     // TODO:
   }
 
   async addReview(realtorId, review) {
-    // TODO:
+    try {
+      const realtor = await RealtorModel.findById(realtorId);
+      if (!realtor) {
+        throw new Error("Realtor not found");
+      }
+
+      const newReview = {
+        date: new Date(),
+        rating: review.rating,
+        comment: review.comment,
+        userId: review.userId,
+      };
+
+      realtor.reviews.push(newReview);
+
+      await realtor.save();
+
+      return realtor;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error in addReview Service");
+    }
   }
 
   async passwordReset(realtorId) {

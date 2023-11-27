@@ -95,15 +95,11 @@ class ListingService {
     }
   }
 
-  async updateListing(listing) {
+  async updateListing(id, listing) {
     try {
-      return await ListingModel.findOneAndUpdate(
-        { _id: listing._id },
-        listing,
-        {
-          new: true,
-        }
-      );
+      return await ListingModel.findOneAndUpdate({ _id: id }, listing, {
+        new: true,
+      });
     } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
@@ -113,9 +109,9 @@ class ListingService {
     }
   }
 
-  async deleteListing(listing) {
+  async deleteListing(id) {
     try {
-      return await ListingModel.deleteOne({ _id: listing._id });
+      return await ListingModel.deleteOne({ _id: id });
     } catch (err) {
       console.error(err);
       throw new InternalServerError("Error en deleteListing Service");

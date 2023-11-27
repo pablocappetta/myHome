@@ -1,6 +1,7 @@
 let instance = null;
 require("dotenv").config();
 const ReservationService = require("../services/reservation.service");
+const ListingService = require("../services/listings.service");
 
 class ReservationController {
   static getInstance() {
@@ -13,10 +14,16 @@ class ReservationController {
   async getReservationsByUserId(req, res, next) {
     const { userId } = req.params;
     try {
-      const reservations = await ReservationService.getReservationsByUserId(
-        userId
-      );
-      return res.status(200).json(reservations);
+      const reservations = await ReservationService.getReservationsByUserId(userId);
+  
+      // Obtener detalles de propiedades para cada reserva de manera sincrónica
+      const reservationsWithDetails = [];
+      for (const reservation of reservations) {
+        const listingDetails = await ListingService.getListingById(reservation.listingId);
+        reservationsWithDetails.push({ ...reservation._doc, listingDetails });
+      }
+  
+      return res.status(200).json(reservationsWithDetails);
     } catch (err) {
       console.error(err);
       next(err);
@@ -29,7 +36,13 @@ class ReservationController {
       const reservations = await ReservationService.getReservationsByRealtorId(
         realtorId
       );
-      return res.status(200).json(reservations);
+      const reservationsWithDetails = [];
+      for (const reservation of reservations) {
+        const listingDetails = await ListingService.getListingById(reservation.listingId);
+        reservationsWithDetails.push({ ...reservation._doc, listingDetails });
+      }
+  
+      return res.status(200).json(reservationsWithDetails);
     } catch (err) {
       console.error(err);
       next(err);
@@ -62,7 +75,7 @@ class ReservationController {
 
   async updateReservation(req, res, next) {
     const { reservationId } = req.params;
-    const reservation = req.body.reservation;
+    const reservation = req.body;
     try {
       const updatedReservation = await ReservationService.updateReservation(
         reservationId,

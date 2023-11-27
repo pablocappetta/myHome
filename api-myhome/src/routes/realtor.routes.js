@@ -16,9 +16,6 @@ router.post("/jwt", checkJwt);
 //Crea un usuario
 router.post("/", RealtorController.createRealtor); //POST USUARIOS
 
-//Obtiene un realtor por su realtorId
-router.get("/:realtorId", RealtorController.getRealtorById);
-
 //Loguea un usuario
 router.post(
   "/login",
@@ -116,7 +113,39 @@ router.post("/password-reset/:token", async (req, res) => {
   }
 });
 
+//Actualiza un realtor
+router.put(
+  "/:realtorId",
+  [
+    check("realtorId", "El id del realtor es obligatorio").not().isEmpty(),
+    checkFields,
+  ],
+  RealtorController.updateRealtor
+);
+
+// Borra un realtor, listings y reservas
+router.delete(
+  "/:realtorId",
+  [
+    check("realtorId", "El id del realtor es obligatorio").not().isEmpty(),
+    checkFields,
+  ],
+  RealtorController.deleteRealtor
+);
+
 //Obtiene detalles del realtor por id
-router.get("/id/:id", RealtorController.getRealtorById);
+router.get("/:realtorId", RealtorController.getRealtorById);
+
+// Agrega review a realtor (post reserva)
+router.post(
+  "/:realtorId/reviews",
+  [
+    check("rating").not().isEmpty(),
+    check("comment").not().isEmpty(),
+    check("userId").not().isEmpty(),
+    checkFields,
+  ],
+  RealtorController.addReview
+);
 
 module.exports = router;

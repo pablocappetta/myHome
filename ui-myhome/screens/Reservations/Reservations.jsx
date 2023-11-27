@@ -1,27 +1,79 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Text, Dialog, Button, MD3Colors } from "react-native-paper";
 import { Appbar } from "react-native-paper";
 import ListingReservationCard from "./ListingReservationCard/ListingReservationCard";
 import { useScrollToTop } from "@react-navigation/native";
-import { mockedReservations } from "./mock/MockedReservationsData";
+import { useUserContext } from "../../contexts/UserContext";
 
 const Reservations = ({ navigation }) => {
   const ref = useRef(null);
 
   const [listingToRemove, setListingToRemove] = useState(null);
-  const [listings, setListings] = useState(mockedReservations);
+  const [listings, setListings] = useState([]);
+
+  const { user } = useUserContext();
 
   useScrollToTop(ref);
 
-  const handleRemoveFromReservationAction = () => {
-    //filter listing to remove from listings
-    const newListings = listings.filter(
-      (listing) => listing.id !== listingToRemove.id
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const reservations = await getReservations();
+        setListings(reservations);
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      }
+    };
+
+    fetchReservations();
+  }, []);
+
+  const getReservations = async () => {
+    const response = await fetch(
+      "http://3.144.94.74:8000/api/" + "reservations/user/" + user._id,
     );
-    setListingToRemove(null);
-    setListings(newListings);
-    setDialogVisible(false);
+    const data = await response.json();
+    return data;
+  };
+
+  const handleRefresh = async () => {
+    try {
+      const reservations = await getReservations();
+      setListings(reservations);
+    } catch (error) {
+      console.error("Error refreshing reservations:", error);
+    }
+  };
+
+  const handleRemoveFromReservationAction = async () => {
+    try {
+      // Call API to remove the listing
+      await removeListing(listingToRemove._id);
+
+      // Filter listing to remove from listings
+      const newListings = listings.filter(
+        (listing) => listing._id !== listingToRemove._id
+      );
+
+      setListingToRemove(null);
+      setListings(newListings);
+      setDialogVisible(false);
+    } catch (error) {
+      console.error("Error removing listing:", error);
+    }
+  };
+
+  const removeListing = async (listingId) => {
+    const response = await fetch(
+      "http://3.144.94.74:8000/api/reservations/" + listingId,
+      {
+        method: "DELETE",
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to remove listing");
+    }
   };
 
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -36,6 +88,7 @@ const Reservations = ({ navigation }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Reservas" />
+        <Appbar.Action icon="refresh" onPress={handleRefresh} />
       </Appbar.Header>
       <ScrollView vertical ref={ref}>
         <View style={styles.containerCardsReservationListing}>

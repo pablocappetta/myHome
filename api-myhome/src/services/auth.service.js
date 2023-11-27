@@ -1,6 +1,6 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const RealtorModel = require("../models/Realtor");
+const RealtorModel = require("../models/Realtor");  
 
 class AuthService {
   async hasValidCredentials(loginEmail, password) {

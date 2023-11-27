@@ -24,6 +24,27 @@ const Settings = ({ navigation }) => {
     navigation.navigate("tabHome");
   };
 
+
+  const handleDeleteAccount = () => {
+    // Call API to delete account
+    const userId = user.id;
+    // Replace `API_ENDPOINT` with the actual endpoint for deleting an account
+    fetch(`API_ENDPOINT/deleteAccount?userId=${userId}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle success response
+        wipeUserData();
+        navigation.navigate("tabHome");
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error deleting account:", error);
+      });
+  };
+
+  
   const ref = useRef(null);
 
   useScrollToTop(ref);
@@ -164,6 +185,11 @@ const Settings = ({ navigation }) => {
               title="Cerrar sesión"
               left={() => <IconButton icon={"logout"} />}
               onPress={handleLogout}
+            />
+            <List.Item
+              title="Eliminar cuenta"
+              left={() => <IconButton icon={"delete"} />}
+              onPress={handleDeleteAccount}
             />
           </List.Section>
         )}

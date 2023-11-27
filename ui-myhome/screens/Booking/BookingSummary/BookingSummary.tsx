@@ -9,9 +9,18 @@ import {
   ActivityIndicator,
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { useUserContext } from "../../../contexts/UserContext";
 
 interface BookingSummaryProps {
   navigation: any;
+  bookingInfo: {
+    realtorId: string;
+    listingId: string;
+    name: string;
+    phone: string;
+    email: string;
+    paymentMethod: string;
+  };
   propertyProps: {
     property: {
       propertyName: string;
@@ -20,10 +29,6 @@ interface BookingSummaryProps {
       propertyCurrency: string;
       frequency: string;
       propertyImage: string;
-    };
-    paymentInfo: {
-      cardType: string;
-      last4Digits: number;
     };
     priceInfo: {
       total: number;
@@ -35,6 +40,7 @@ interface BookingSummaryProps {
 
 export const BookingSummary = ({
   navigation,
+  route,
   propertyProps = {
     property: {
       propertyName: "Default Property Name",
@@ -44,29 +50,52 @@ export const BookingSummary = ({
       frequency: "per night",
       propertyImage: "https://via.placeholder.com/200x200.png?text=No+Image",
     },
-    paymentInfo: {
-      cardType: "Default Card Type",
-      last4Digits: 1234,
-    },
     priceInfo: {
       total: 0,
       tax: 0,
       subtotal: 0,
     },
   },
-}: BookingSummaryProps) => {
+}: any) => {
+  const { bookingInfo } = route?.params;
   const [isConfirming, setIsConfirming] = useState(false);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
+  const [reservationId, setReservationId] = useState("");
   const bookingTitle = "Resumen de la reserva";
+  const { user } = useUserContext();
+
 
   const handleConfirmReservation = async () => {
-    // Simulate a 2 second delay and show a spinner while confirming the reservation before showing the dialog
     setIsConfirming(true); // Show spinner while confirming the reservation
+
     try {
-      await setTimeout(() => {
-        setIsConfirming(false);
-      }, 2000);
-      setIsDialogVisible(true);
+      const reservationData = {
+        listingId: bookingInfo.listingId,
+        realtorId: bookingInfo.realtorId,
+        userId: user?._id,
+        date: new Date().toLocaleDateString("es-AR"),
+        time: Math.floor(Date.now() / 1000),
+        status: "Pendiente",
+        phone: bookingInfo.phone,
+      };
+
+      const response = await fetch("http://3.144.94.74:8000/api/reservations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify(reservationData),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        const reservationId = responseData._id; // Add this line to extract the reservation ID
+        setIsDialogVisible(true);
+        setReservationId(reservationId);
+      } else {
+        console.error("Failed to confirm reservation");
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -81,7 +110,7 @@ export const BookingSummary = ({
 
   const navigateToReview = () => {
     dismissDialog();
-    navigation.navigate("Review");
+    navigation.navigate("Review", { params: {realtorId: bookingInfo.realtorId} });
   };
 
   const dismissDialog = () => {
@@ -140,8 +169,7 @@ export const BookingSummary = ({
               Método de pago
             </Text>
             <Text variant="bodyMedium" style={{ marginTop: 6 }}>
-              {propertyProps.paymentInfo.cardType} **** **** ****{" "}
-              {propertyProps.paymentInfo.last4Digits}
+              {bookingInfo?.paymentMethod}
             </Text>
             <Button
               onPress={() => navigation.navigate("Review")}

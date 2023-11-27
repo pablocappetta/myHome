@@ -22,7 +22,7 @@ class RealtorController {
   }
 
   async getRealtorById(req, res, next) {
-    const { realtorId } = req.params || req.body;
+    const { realtorId } = req.params;
     try {
       const realtor = await RealtorService.getRealtorById(realtorId);
       return res.status(200).json(realtor);
@@ -43,22 +43,35 @@ class RealtorController {
     }
   }
 
+
   async deleteRealtor(req, res, next) {
-    const { id } = req.params;
+    const { realtorId } = req.params;
+  
     try {
-      await RealtorService.deleteRealtor(id);
-      return res.status(204).json();
+      const existingRealtor = await RealtorService.getRealtorById(realtorId);
+  
+      if (!existingRealtor) {
+        return res.status(404).json({ error: 'La inmobiliaria no existe' });
+      }
+  
+      await RealtorService.deleteRealtor(realtorId);
+      return res.status(200).json();
     } catch (err) {
       console.error(err);
       next(err);
     }
   }
+  
 
   async updateRealtor(req, res, next) {
-    const { body } = req;
+    const { realtorId } = req.params;
+    const realtor = req.body;
     try {
-      const realtor = await RealtorService.updateRealtor(body);
-      return res.status(200).json(realtor);
+      const updatedRealtor = await RealtorService.updateRealtor(
+        realtorId,
+        realtor
+      );
+      return res.status(200).json(updatedRealtor);
     } catch (err) {
       console.error(err);
       next(err);
@@ -86,6 +99,19 @@ class RealtorController {
         expiresIn: "1d",
       });
       return res.status(200).json({ token: token, data: realtor });
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+
+  async addReview(req, res, next) {
+    const { realtorId } = req.params;
+    const review = req.body;
+
+    try {
+      const updatedRealtor = await RealtorService.addReview(realtorId, review);
+      return res.status(200).json(updatedRealtor);
     } catch (err) {
       console.error(err);
       next(err);
