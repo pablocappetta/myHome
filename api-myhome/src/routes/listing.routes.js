@@ -76,7 +76,7 @@ router.delete("/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const deletedListing = await ListingService.deleteListing(id);
+    const deletedListing = await ListingController.deleteListing(id);
 
     if (!deletedListing) {
       return res.status(404).json({ message: "No se encontró esa propiedad." });

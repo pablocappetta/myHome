@@ -72,8 +72,6 @@ class RealtorUserService {
     }
   }
   
-  
-
   async addFavorite(userId, listingId) {
     try {
       const user = await UserModel.findById(userId);
@@ -103,9 +101,11 @@ class RealtorUserService {
     }
   }
 
-  static async removeFavorite(userId, listingId) {
+  async removeFavorite(userId, listingId) {
     try {
       const user = await UserModel.findById(userId);
+      console.log(userId)
+      console.log(user)
 
       const index = user.favoriteListings.indexOf(listingId);
       if (index !== -1) {

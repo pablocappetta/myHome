@@ -53,10 +53,10 @@ class UserController {
   }
 
   async getUserFavorites(req, res, next) {
-    const { userId } = req.params;
+    const { id } = req.params;
   
     try {
-      const favorites = await UserService.getUserFavorites(userId);
+      const favorites = await UserService.getUserFavorites(id);
   
       // Fetch listing details for each favorite
       const favoritesWithDetails = [];
@@ -73,10 +73,10 @@ class UserController {
   }
   
   async addFavorite(req, res, next) {
-    const { userId, listingId } = req.body;
+    const { id, listingId } = req.params;
 
     try {
-      const result = await UserService.addFavorite(userId, listingId);
+      const result = await UserService.addFavorite(id, listingId);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -85,10 +85,10 @@ class UserController {
   }
 
   async removeFavorite(req, res, next) {
-    const { userId, listingId } = req.body;
+    const { id, listingId } = req.params;
 
     try {
-      const result = await UserService.removeFavorite(userId, listingId);
+      const result = await UserService.removeFavorite(id, listingId);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
