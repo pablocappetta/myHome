@@ -97,7 +97,7 @@ class UserController {
 
   async addFavorite(req, res, next) {
     try {
-      console.log("llego al controller");
+      
       const { id, listingId } = req.params;
       await UserService.addFavorite(id, listingId);
       res.status(200).json();
