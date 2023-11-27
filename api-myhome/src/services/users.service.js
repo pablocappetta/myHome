@@ -86,7 +86,8 @@ class UserService {
 
   async addFavorite(userId, listingId) {
     try {
-      console.log("llego al serviec");
+     
+
       const user = await UserModel.findById(userId);
 
       if (!user.favoriteListings.includes(listingId)) {
