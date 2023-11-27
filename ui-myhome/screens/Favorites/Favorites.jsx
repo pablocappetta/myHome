@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { Text, Dialog, Button, MD3Colors } from "react-native-paper";
+import { Text, Dialog, Button, MD3Colors, Icon } from "react-native-paper";
 import { Appbar } from "react-native-paper";
 import { useScrollToTop } from "@react-navigation/native";
 import { useUserContext } from "../../contexts/UserContext";
@@ -22,7 +22,10 @@ const Favorites = ({ navigation }) => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await fetch(`http://3.144.94.74:8000/api/users/${user._id}/favorites`);
+      const response = await fetch(
+        `http://3.144.94.74:8000/api/users/${user._id}/favorites`
+      );
+      if (!response.ok) return;
       const data = await response.json();
       setListings(data);
     } catch (error) {
@@ -66,17 +69,24 @@ const Favorites = ({ navigation }) => {
       </Appbar.Header>
       <ScrollView vertical ref={ref}>
         <View style={styles.containerCardsFavoriteListing}>
-          {listings.map((listing) => (
-            <TouchableOpacity
-              key={listing.id}
-              onPress={() => navigation.navigate("Post", listing)}
-            >
-              <ListingFavoriteCard
-                listing={listing}
-                handleRemoveFavorite={handleRemoveFavorite}
-              />
-            </TouchableOpacity>
-          ))}
+          {listings.length > 0 ? (
+            listings.map((listing) => (
+              <TouchableOpacity
+                key={listing.id}
+                onPress={() => navigation.navigate("Post", listing)}
+              >
+                <ListingFavoriteCard
+                  listing={listing}
+                  handleRemoveFavorite={handleRemoveFavorite}
+                />
+              </TouchableOpacity>
+            ))
+          ) : (
+            <View style={styles.containerNoFavorites}>
+              <Icon source="heart-off" size={72} />
+              <Text variant="titleLarge">No tenés ningún favorito...aún</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
       <Dialog
@@ -128,6 +138,12 @@ const styles = StyleSheet.create({
     gap: 24,
     paddingVertical: 16,
     paddingHorizontal: 16,
+  },
+  containerNoFavorites: {
+    display: "flex",
+    margin: 24,
+    alignItems: "center",
+    gap: 24,
   },
 });
 
