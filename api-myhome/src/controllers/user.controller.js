@@ -48,36 +48,58 @@ class UserController {
     }
   }
 
-  async login(req, res, next) {
-    //TODO: implementar login con google
+  async googleLogin(req, res, next) {
+    try {
+      const googleData = req.body;
+      const user = {
+        name: googleData.displayName,
+        email: googleData.email,
+        avatar: googleData.photoURL,
+        phone: googleData.providerData.phoneNumber,
+      };
+
+      const existingUser = await UserService.getUserByEmail(user.email);
+      if (!existingUser) {
+        const newUser = await UserService.createUser(user);
+        const token = await AuthService.generateToken(newUser._id, "user");
+        return res.status(201).json({ token, user: newUser });
+      }
+      const token = await AuthService.generateToken(existingUser._id, "user");
+      return res.status(200).json({ token, user: existingUser });
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
   }
 
   async getUserFavorites(req, res, next) {
-    const { id } = req.params;
-  
     try {
+      const { id } = req.params;
       const favorites = await UserService.getUserFavorites(id);
-  
+
       // Fetch listing details for each favorite
-      const favoritesWithDetails = [];
+      const favoritesDetails = [];
       for (const listingId of favorites) {
-        const listingDetails = await ListingService.getListingById(listingId);
-        favoritesWithDetails.push({ listingId, listingDetails });
+        const listing = await ListingService.getListingById(listingId);
+        if (!listing) {
+          await UserService.removeFavorite(id, listingId);
+        } else {
+          favoritesDetails.push(await ListingService.getListingById(listingId));
+        }
       }
-  
-      res.status(200).json(favoritesWithDetails);
+      res.status(200).json(favoritesDetails);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
-  
-  async addFavorite(req, res, next) {
-    const { id, listingId } = req.params;
 
+  async addFavorite(req, res, next) {
     try {
-      const result = await UserService.addFavorite(id, listingId);
-      res.status(200).json(result);
+      console.log("llego al controller");
+      const { id, listingId } = req.params;
+      await UserService.addFavorite(id, listingId);
+      res.status(200).json();
     } catch (error) {
       console.error(error);
       next(error);
@@ -85,11 +107,10 @@ class UserController {
   }
 
   async removeFavorite(req, res, next) {
-    const { id, listingId } = req.params;
-
     try {
-      const result = await UserService.removeFavorite(id, listingId);
-      res.status(200).json(result);
+      const { id, listingId } = req.params;
+      await UserService.removeFavorite(id, listingId);
+      res.status(200).json();
     } catch (error) {
       console.error(error);
       next(error);

@@ -12,30 +12,11 @@ router.post("/jwt", checkJwt);
 //Devuelve todos los usuarios
 router.get("/", UserController.getUsers); //GET USUARIOS
 
-//Crea un usuario
-router.post(
-  "/",
-  [
-    check("email").not().isEmpty(),
-    check("password").not().isEmpty(),
-    checkFields,
-  ],
-  UserController.createUser
-); //POST USUARIOS
+//Loguea usuario. Si no lo existe lo crea y loguea
+router.post("/login", UserController.googleLogin);
 
 //Devuelve un usuario por id
 router.get("/:id", UserController.getUserById); //GET USUARIOS BY ID
-
-//Loguea un usuario
-router.post(
-  "/login",
-  [
-    check("email").not().isEmpty(),
-    check("password").not().isEmpty(),
-    checkFields,
-  ],
-  UserController.login
-);
 
 // Devuelve favoritos del usuario
 router.get("/:id/favorites", UserController.getUserFavorites);
@@ -45,6 +26,5 @@ router.post("/:id/favorites/:listingId", UserController.addFavorite);
 
 // Borra favorito
 router.delete("/:id/favorites/:listingId", UserController.removeFavorite);
-
 
 module.exports = router;

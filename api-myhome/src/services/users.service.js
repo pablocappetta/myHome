@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
 const ValidationError = mongoose.Error.ValidationError;
 const UserModel = require("../models/User");
-const { InternalServerError } = require("../middlewares/errorHandler");
+const {
+  InternalServerError,
+  BadRequestError,
+} = require("../middlewares/errorHandler");
 
-class RealtorUserService {
+class UserService {
   async getUsers() {
     try {
       const users = await UserModel.find();
@@ -61,42 +64,34 @@ class RealtorUserService {
 
   async getUserFavorites(userId) {
     try {
-      const user = await UserModel.findOne({ userId }).populate('favoriteListings');
+      const user = await UserModel.findOne({ _id: userId });
       if (!user) {
-        throw new Error("User not found");
+        throw new BadRequestError("User not found");
       }
       return user.favoriteListings;
     } catch (err) {
       console.error(err);
-      throw new Error("Error in getUserFavorites Service");
+      throw new InternalServerError("Error in getUserFavorites Service");
     }
   }
-  
+
   async addFavorite(userId, listingId) {
     try {
+      console.log("llego al serviec");
       const user = await UserModel.findById(userId);
 
       if (!user.favoriteListings.includes(listingId)) {
+        console.log("llego al if");
         user.favoriteListings.push(listingId);
-
-        // Use findOneAndUpdate to ensure the returned document reflects the changes
-        const updatedUser = await UserModel.findOneAndUpdate(
-          { _id: userId },
-          { $set: { favoriteListings: user.favoriteListings } },
-          { new: true }
-        );
-
-        return { success: true, message: 'Propiedad añadida a favoritos', user: updatedUser };
-      } else {
-        return { success: false, message: 'La propiedad ya estaba en favoritos' };
+        user.save();
       }
     } catch (error) {
       console.error(error);
       // Handle specific error types
-      if (error.name === 'ValidationError') {
-        throw new BadRequestError('Mongoose validation error.');
+      if (error.name === "ValidationError") {
+        throw new BadRequestError("Mongoose validation error.");
       } else {
-        throw new InternalServerError('Error in addFavorite service');
+        throw new InternalServerError("Error in addFavorite service");
       }
     }
   }
@@ -108,26 +103,17 @@ class RealtorUserService {
       const index = user.favoriteListings.indexOf(listingId);
       if (index !== -1) {
         user.favoriteListings.splice(index, 1);
-
-        const updatedUser = await UserModel.findOneAndUpdate(
-          { _id: userId },
-          { $set: { favoriteListings: user.favoriteListings } },
-          { new: true }
-        );
-
-        return { success: true, message: 'Propiedad borrada de favoritos', user: updatedUser };
-      } else {
-        return { success: false, message: 'La propiedad no estaba en favoritos' };
+        user.save();
       }
     } catch (error) {
       console.error(error);
-      if (error.name === 'ValidationError') {
-        throw new BadRequestError('Mongoose validation error.');
+      if (error.name === "ValidationError") {
+        throw new BadRequestError("Mongoose validation error.");
       } else {
-        throw new InternalServerError('Error in removeFavorite service');
+        throw new InternalServerError("Error in removeFavorite service");
       }
     }
   }
 }
 
-module.exports = new RealtorUserService();
+module.exports = new UserService();

@@ -1,7 +1,7 @@
 let instance = null;
 require("dotenv").config();
 const RealtorService = require("../services/realtor.service");
-const jwt = require("jsonwebtoken");
+const AuthService = require("../services/auth.service");
 
 class RealtorController {
   static getInstance() {
@@ -86,10 +86,8 @@ class RealtorController {
         req.body.email,
         req.body.password
       );
-      const token = jwt.sign(realtor.toJSON(), process.env.PRIVATE_KEY, {
-        expiresIn: "1d",
-      });
-      return res.status(200).json({ token: token, data: realtor });
+      const token = await AuthService.generateToken(realtor._id, "realtor");
+      return res.status(200).json({ token: token, realtor: realtor });
     } catch (err) {
       console.error(err);
       next(err);
