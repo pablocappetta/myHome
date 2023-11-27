@@ -35,7 +35,7 @@ const ProfileEdit = () => {
         };
 
         // Make the API call to save the user edits
-        fetch("http://3.144.94.74:8000/api/" + "realtors/me", {
+        fetch("http://3.144.94.74:8000/api/" + "realtors/" + user._id , {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

@@ -97,10 +97,9 @@ const NewPost = ({ navigation }) => {
           floor: "",
           apartment: "",
         },
-        geoLocation: {
-          latitude: 0,
-          longitude: 0,
-        },
+        // geoLocation: {
+        //   coordinates: [0, 0]
+        // },
         type:
           tipoPropiedad.charAt(0).toUpperCase() +
           tipoPropiedad.slice(1).toLowerCase(),

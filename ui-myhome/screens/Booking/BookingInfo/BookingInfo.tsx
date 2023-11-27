@@ -28,7 +28,30 @@ const validationSchema = yup.object().shape({
   telefono: yup.string().required("El teléfono es obligatorio"),
 });
 
-const BookingInfo = ({ navigation }) => {
+interface BookingInfoProps {
+  navigation: any;
+route: any;
+}
+
+const BookingInfo: React.FC<BookingInfoProps> = ({
+  navigation,
+  route
+}) => {
+  const { realtorId, listingId } = route?.params;
+  const handleNavigateToPayment = (values) => {
+    const { nombre, email, telefono } = values;
+    navigation.navigate("Booking", {
+      screen: "Payment",
+      params: {
+        realtorId: realtorId,
+        listingId: listingId,
+        name: nombre,
+        phone: telefono,
+        email: email,
+      },
+    });
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -52,9 +75,7 @@ const BookingInfo = ({ navigation }) => {
                 <Formik
                   initialValues={{ nombre: "", email: "", telefono: "" }}
                   validationSchema={validationSchema}
-                  onSubmit={() =>
-                    navigation.navigate("Booking", { screen: "Payment" })
-                  }
+                  onSubmit={handleNavigateToPayment}
                 >
                   {({
                     handleChange,

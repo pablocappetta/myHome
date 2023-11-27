@@ -51,8 +51,22 @@ const Login = ({ navigation }) => {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token)
       signInWithCredential(auth, credential).then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user)
+        const user = {
+          "name": "Sergio",
+          "lastName": "User",
+          "email": "serg2404@gmail.com",
+          "avatar": "",
+          "phone": "1122334455",
+          "_id": "6562b4c4b2258b1ba9bf5b86",
+          "creationDate": "2023-11-26T03:00:20.933Z"
+        }
+        setUser({
+          ...user,
+          isRealtor: false,
+          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTQ5NTMzNmI2NWQ4ODYzYmU5NjQ1OGMiLCJuYW1lIjoiU2VyZ2lvIEdhcnJvbmkiLCJsb2dpbkVtYWlsIjoic2VyZzI0MDRAZ21haWwuY29tIiwiY29udGFjdEVtYWlsIjoic2VyZzI0MDRAZ21haWwuY29tIiwicGhvbmUiOiIxMTIyMzM0NCIsInJldmlld3MiOltdLCJjcmVhdGlvbkRhdGUiOiIyMDIzLTExLTA2VDIwOjU3OjI2LjIyOVoiLCJpYXQiOjE3MDEwMTU4NDQsImV4cCI6MTcwMTEwMjI0NH0.G0Sl8LWfGCxu8--9uv80fHAqkgCw0eeTxbALrCSnma0',
+        })
+        navigation.navigate("MiCuenta");
+        navigation.navigate("tabBuscar");
       }).catch((error) => {
         console.log(error)
       }
@@ -103,28 +117,9 @@ const Login = ({ navigation }) => {
         console.error(error);
       })
       .finally(() => {
-        navigation.navigate("MiCuenta");
-        navigation.navigate("tabHome");
+        navigation.navigate("tabBuscar");
       });
   };
-
-  const handleGoogleLogin = async () => {
-    try {
-      const response = await singIn(auth, provider)
-      const { user } = response
-      const token = await user.getIdToken()
-      const idTokenResult = await user.getIdTokenResult()
-      if (hasuraClaim) {
-        setUser({
-          ...user,
-          token,
-          isRealtor: false,
-        });
-      }
-    } catch (error) { 
-      console.log(error)
-    }
-  }
 
   return (
     <View style={styles.container}>

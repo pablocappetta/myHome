@@ -26,7 +26,7 @@ const ListingReservationCard = ({
       flexDirection: "column",
       justifyContent: "flex-start",
       alignlistings: "center",
-      marginTop: 12,
+      marginTop: 18,
       position: "absolute",
       left: 17,
       top: 72,
@@ -46,12 +46,12 @@ const ListingReservationCard = ({
   return (
     <Card>
       <View style={styles.reservationTypeChip}>
-        <ListingTypeChip listingType={reservation.listingType}>
-          {reservation.listingType}
+        <ListingTypeChip listingType={reservation.listingDetails.type}>
+          {reservation.listingDetails.type.toUpperCase()}
         </ListingTypeChip>
       </View>
       <Card.Cover
-        source={{ uri: reservation.image }}
+        source={{ uri: reservation.listingDetails.property.photos[0] }}
         style={styles.reservationImage}
         defaultSource={
           theme.dark
@@ -66,7 +66,7 @@ const ListingReservationCard = ({
             style={{ marginTop: 6 }}
             numberOfLines={1}
           >
-            {reservation.type}
+            {reservation.listingDetails.type}
           </Text>
           <IconButton
             icon="star"
@@ -82,17 +82,20 @@ const ListingReservationCard = ({
             flexDirection: "column",
             justifyContent: "space-between",
             alignlistings: "center",
-            marginTop: 12,
+            marginTop: 5,
             position: "absolute",
             left: 17,
             top: 30,
           }}
         >
           <Text variant="bodySmall" numberOfLines={1}>
-            {reservation.location}
+            {reservation.listingDetails.property.address.city}
           </Text>
           <Text variant="bodySmall" numberOfLines={1}>
-            Vencimiento: {reservation.expirationDate}
+            Vencimiento:
+          </Text>
+          <Text variant="bodySmall" numberOfLines={1}>
+            {new Date(reservation.reservationEndDate).toLocaleDateString('es-AR')}
           </Text>
         </View>
 
@@ -105,24 +108,10 @@ const ListingReservationCard = ({
             }}
           >
             <Text variant="bodySmall" style={{ fontWeight: 600 }}>
-              Monto: {reservation.currency}
+              Reserva: {reservation.listingDetails.price.currency}
             </Text>
             <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-              ${commaNumber(reservation.price)}
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 4,
-            }}
-          >
-            <Text variant="bodySmall" style={{ fontWeight: 600 }}>
-              Reserva: {reservation.currency}
-            </Text>
-            <Text variant="bodySmall" style={{ fontWeight: 800 }}>
-              ${commaNumber(reservation.reservationAmount)}
+              ${commaNumber(reservation.listingDetails.price.amount / 2)}
             </Text>
           </View>
         </View>
