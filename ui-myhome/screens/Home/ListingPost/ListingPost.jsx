@@ -400,25 +400,25 @@ const getNameFromId = async (id) => {
     );
   }, [address]);
 
-  const mapa = () => {
-    return (
-      <MapView
-        style={styles.mapView}
-        provider={PROVIDER_GOOGLE}
-        region={region}
-      >
-        <Marker
-          coordinate={{
-            latitude: region.latitude,
-            longitude: region.longitude,
-          }}
-          title={"Ubicacion"}
-          description={"Ubicacion"}
-          draggable={false}
-        />
-      </MapView>
-    );
-  };
+  // const mapa = () => {
+  //   return (
+  //     <MapView
+  //       style={styles.mapView}
+  //       provider={PROVIDER_GOOGLE}
+  //       region={region}
+  //     >
+  //       <Marker
+  //         coordinate={{
+  //           latitude: region.latitude,
+  //           longitude: region.longitude,
+  //         }}
+  //         title={"Ubicacion"}
+  //         description={"Ubicacion"}
+  //         draggable={false}
+  //       />
+  //     </MapView>
+  //   );
+  // };
 
   return (
     <View style={styles.container}>
@@ -964,7 +964,7 @@ const getNameFromId = async (id) => {
             )}
           </View>
 
-          {edit ? null : (
+          {/* {edit ? null : (
             <View>
               <Divider />
               <List.Subheader style={styles.listSubheader}>
@@ -973,7 +973,7 @@ const getNameFromId = async (id) => {
 
               <View style={styles.containerMapView}>{mapa()}</View>
             </View>
-          )}
+          )} */}
 
           <View style={{ marginTop: 16, marginBottom: 32 }}>
             <View

@@ -26,8 +26,6 @@ import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged }
 import { useFirebase } from "../../contexts/FirebaseContext";
 import * as Google from "expo-auth-session/providers/google";
 
-
-
 const validationSchema = yup.object().shape({
   email: yup
     .string()
@@ -85,9 +83,6 @@ const Login = ({ navigation }) => {
     return () => unsub();
   }, [])
   
-
-
-
   const { setUser } = useUserContext();
   const { theme } = useTheme();
 
@@ -106,19 +101,23 @@ const Login = ({ navigation }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
-        setUser({
-          ...json.data,
-          isRealtor: true,
-          token: json.token,
-        });
+        if(json.realtor) 
+        {
+          setUser({
+            ...json.realtor,
+            isRealtor: true,
+            token: json.token,
+          });
+          navigation.navigate("tabBuscar");
+        }
+        else  
+        {
+          throw new Error("Usuario o contraseña incorrectos");
+        }
       })
       .catch((error) => {
         console.error(error);
       })
-      .finally(() => {
-        navigation.navigate("tabBuscar");
-      });
   };
 
   return (

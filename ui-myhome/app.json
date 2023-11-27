@@ -30,8 +30,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.serg2404.myhome",
-            "config": {
-        "googleMapsApiKey": "AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg"
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB4z52SNhc7-rNgX5mXpbrL2ZCK880cd78"
+        }
       },
       "googleServicesFile": "./google-services.json",
       "permissions": [
@@ -51,9 +53,9 @@
       },
       "ios": {
         "bundleIdentifier": "com.serg2404.myhome",
-              "config": {
-        "googleMapsApiKey": "AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg"
-      },
+        "config": {
+          "googleMapsApiKey": "AIzaSyDmZz0loh7WXwL-nDDqueLUztOmF6M-bfg"
+        },
         "googleServicesFile": "./GoogleService-Info.plist"
       }
     },
@@ -96,6 +98,11 @@
     "owner": "myhome2023",
     "updates": {
       "url": "https://u.expo.dev/3ddd3104-c95b-4773-8273-a7b1a4c3d598"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3ddd3104-c95b-4773-8273-a7b1a4c3d598"
+      }
     }
   },
   "scheme": "my-home"

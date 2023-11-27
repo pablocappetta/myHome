@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import ListingCard from "../../components/ListingCard/ListingCard";
-import { ScrollView } from "react-native-gesture-handler";
 import { useUserContext } from "../../contexts/UserContext";
 import { Avatar, Button, IconButton, Text } from "react-native-paper";
 import { useScrollToTop } from "@react-navigation/native";
