@@ -36,7 +36,7 @@ const Favorites = ({ navigation }) => {
 
   const handleRemoveFromFavoritesAction = () => {
      // Remove favorite
-     fetch(`http://3.144.94.74:8000/api/users/${user._id}/favorites/${listing._id}`, {
+     fetch(`http://3.144.94.74:8000/api/users/${user._id}/favorites/${listingToRemove._id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
