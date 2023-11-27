@@ -109,9 +109,9 @@ class ListingService {
     }
   }
 
-  async deleteListing(listing) {
+  async deleteListing(id) {
     try {
-      return await ListingModel.deleteOne({ _id: listing._id });
+      return await ListingModel.deleteOne({ _id: id });
     } catch (err) {
       console.error(err);
       throw new InternalServerError("Error en deleteListing Service");
