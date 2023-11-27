@@ -54,7 +54,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Realtor"
+                properties:
+                  token:
+                    type: string
+                  realtor:
+                    $ref: "#/components/schemas/Realtor"
         "401":
           description: Unauthorized
   /realtors/{realtorId}:
@@ -544,29 +548,9 @@ paths:
           description: Review added successfully
         "400":
           description: Invalid input data
-  /users:
-    post:
-      summary: Register a new user
-      tags:
-        - Users
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-      responses:
-        "201":
-          description: Successfully registered the user
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "400":
-          description: Invalid input data
   /users/login:
     post:
-      summary: Log in as a user with Google
+      summary: Log in or register as user with Google
       tags:
         - Users
       requestBody:
@@ -575,26 +559,43 @@ paths:
           application/json:
             schema:
               properties:
-                token:
+                displayName:
                   required: true
                   type: string
                 email:
                   required: true
                   type: string
+                photoURL:
+                  required: true
+                  type: string
+                phone:
+                  type: string
+                stsTokenManager:
+                  type: object
       responses:
         "200":
           description: User logged in successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: "#/components/schemas/User"
         "401":
           description: Unauthorized
-  /users/me:
+  /users/{userId}:
     get:
       summary: Get current user's profile
       tags:
         - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: User profile retrieved successfully
@@ -604,31 +605,16 @@ paths:
                 $ref: "#/components/schemas/User"
         "401":
           description: Unauthorized access
-    put:
-      summary: Update current user's profile
-      tags:
-        - Users
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-      responses:
-        "200":
-          description: User profile updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "400":
-          description: Invalid input data
-        "401":
-          description: Unauthorized access
     delete:
       summary: Delete current user's profile
       tags:
         - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: User profile deleted successfully
@@ -715,9 +701,6 @@ components:
       type: object
       properties:
         name:
-          required: true
-          type: string
-        lastName:
           required: true
           type: string
         email:

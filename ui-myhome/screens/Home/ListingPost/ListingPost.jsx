@@ -20,7 +20,6 @@ import {
   Text,
   TextInput,
 } from "react-native-paper";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import Carousel from "react-native-reanimated-carousel";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
@@ -67,23 +66,21 @@ export const ListingPost = ({ navigation, ...props }) => {
   const [listingRealtorName, setListingRealtorName] = useState(null);
   const [listingRealtorAvatar, setListingRealtorAvatar] = useState(null);
 
-  
-const getNameFromId = async (id) => {
-  try {
-    const response = await fetch(
-      `http://3.144.94.74:8000/api/realtors/${id}`,
-      {
-        method: "GET",
-      }
-    );
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to get name from ID", error);
-    throw error;
-  }
-};
-
+  const getNameFromId = async (id) => {
+    try {
+      const response = await fetch(
+        `http://3.144.94.74:8000/api/realtors/${id}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Failed to get name from ID", error);
+      throw error;
+    }
+  };
 
   useEffect(() => {
     const getListingRealtorData = async () => {
@@ -102,44 +99,45 @@ const getNameFromId = async (id) => {
 
     if (like) {
       // Remove favorite
-      fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, { method: 'DELETE',
+      fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ userId, postId }),
-    })
-        .then(response => {
+      })
+        .then((response) => {
           if (response.ok) {
             setLike(false);
           } else {
             // Handle error
-            console.error('Failed to remove favorite');
+            console.error("Failed to remove favorite");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           // Handle error
-          console.error('Failed to remove favorite', error);
+          console.error("Failed to remove favorite", error);
         });
     } else {
       // Add favorite
       fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ userId, postId }),
       })
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             setLike(true);
           } else {
             // Handle error
-            console.error('Failed to add favorite');
+            console.error("Failed to add favorite");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           // Handle error
-          console.error('Failed to add favorite', error);
+          console.error("Failed to add favorite", error);
         });
     }
   };
@@ -721,7 +719,10 @@ const getNameFromId = async (id) => {
               </List.Subheader>
               <View style={styles.containerListingOwner}>
                 {listingRealtorAvatar && isStringALink(listingRealtorAvatar) ? (
-                  <Avatar.Image source={listingRealtorAvatar} size={36} />
+                  <Avatar.Image
+                    source={{ uri: listingRealtorAvatar }}
+                    size={36}
+                  />
                 ) : (
                   <Avatar.Icon icon="account" size={36} />
                 )}
@@ -793,8 +794,8 @@ const getNameFromId = async (id) => {
               />
             ) : (
               <List.Item
-                title="descubiertos"
-                description={listing?.property?.sqm?.uncovered}
+                title="Descubiertos"
+                description={listing?.property?.sqm?.uncovered || "120"}
                 left={(props) => <List.Icon {...props} icon="texture-box" />}
                 titleStyle={{ fontWeight: 800 }}
                 width={width / 2 - 16}
@@ -1008,10 +1009,15 @@ const getNameFromId = async (id) => {
                 </Button>
                 <Button
                   mode="contained"
-                  onPress={() =>{
-                    navigation.navigate("Booking", { screen: "Info", params: {realtorId: listing.realtorId, listingId: listing._id }})
-                  }
-                  }
+                  onPress={() => {
+                    navigation.navigate("Booking", {
+                      screen: "Info",
+                      params: {
+                        realtorId: listing.realtorId,
+                        listingId: listing._id,
+                      },
+                    });
+                  }}
                   icon={"calendar-clock"}
                   width={width / 2 - 16}
                 >
