@@ -13,7 +13,7 @@ import { useUserContext } from "../../contexts/UserContext";
 import * as ImagePicker from "expo-image-picker";
 
 const UserProfile = ({ navigation }) => {
-  const { user, setIsUserLogged, wipeUserData } = useUserContext();
+  const { user, setIsUserLogged, wipeUserData, setUser } = useUserContext();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const openMenu = () => setMenuVisible(true);
@@ -27,7 +27,7 @@ const UserProfile = ({ navigation }) => {
   };
 
   // Manejo de imagen
-  const [image, setImage] = React.useState([]);
+  const [image, setImage] = React.useState("");
 
   useEffect(() => {
     (async () => {
@@ -40,6 +40,34 @@ const UserProfile = ({ navigation }) => {
       }
     })();
   }, []);
+
+  function deleteImage() {
+    ToastAndroid.show("Foto de perfil eliminada", ToastAndroid.LONG);
+    const requestBody = {
+      name: user.name,
+      contactEmail: user.contactEmail,
+      phone: user.phone,
+      logo: null,
+    };
+    console.log(requestBody);
+    fetch("http://3.144.94.74:8000/api/realtors/" + user._id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        let token = user.token;
+        setUser({
+          ...json,
+          isRealtor: true,
+          token: token,
+        });
+      });
+  }
 
   const handleFileUpload = async () => {
     console.debug("imagen");
@@ -56,18 +84,33 @@ const UserProfile = ({ navigation }) => {
     }
   };
 
-  function changeUserImage(imageURI) {
+  function changeUserImage(URI) {
     ToastAndroid.show("Foto de perfil actualizada", ToastAndroid.LONG);
 
-    // fetch("http://3.144.94.74:8000/api/" + "realtors", {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-
-    //   }),
-    // });
+    const requestBody = {
+      name: user.name,
+      contactEmail: user.contactEmail,
+      phone: user.phone,
+      logo: URI[0].uri,
+    };
+    console.log(requestBody);
+    fetch("http://3.144.94.74:8000/api/realtors/" + user._id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        let token = user.token;
+        setUser({
+          ...json,
+          isRealtor: true,
+          token: token,
+        });
+      });
   }
 
   return (
@@ -87,7 +130,7 @@ const UserProfile = ({ navigation }) => {
               <Avatar.Image
                 size={180}
                 source={{
-                  uri: user?.logo || user?.profilePicture || image[0]?.uri, // TODO: Sacar image[0]?.uri cuando se complete el flujo
+                  uri: image[0]?.uri || user?.logo || user?.profilePicture,
                 }}
                 style={styles.avatar}
               />
@@ -101,9 +144,7 @@ const UserProfile = ({ navigation }) => {
           />
           <Divider />
           <Menu.Item
-            onPress={() => {
-              setImage("");
-            }}
+            onPress={deleteImage}
             title="Eliminar"
             leadingIcon={"delete"}
           />

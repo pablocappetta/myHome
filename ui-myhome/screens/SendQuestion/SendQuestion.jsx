@@ -5,6 +5,7 @@ import {
   Snackbar,
   Dialog,
   Paragraph,
+  Text,
 } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 import { Appbar } from "react-native-paper";
@@ -71,6 +72,9 @@ function SendQuestion({ navigation }) {
       </Appbar.Header>
 
       <View style={styles.formContainer}>
+        <Text style={{ marginBottom: 20, fontSize: 18 }}>
+          Enviale tu consulta al propietario
+        </Text>
         <TextInput
           styles={styles.input}
           mode="outlined"
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    marginTop: 50,
+    marginTop: 20,
     padding: 20,
   },
   button: {

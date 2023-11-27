@@ -473,29 +473,6 @@ const NewPost = ({ navigation }) => {
                 }}
               />
             </View>
-
-            {/* <View className="flex flex-row gap-2">
-              <TextInput
-                className="rounded-t-md w-[350px] mb-2"
-                label={"Orientacion relativa"}
-                value={orientacionRelativa}
-                onChangeText={(orientacionRelativa) =>
-                  setOrientacionRelativa(orientacionRelativa)
-                }
-                mode="outlined"
-              ></TextInput>
-            </View>
-            <View className="flex flex-row gap-2">
-              <TextInput
-                className="rounded-t-md w-[350px] mb-2"
-                label={"Orientacion absoluta"}
-                value={orientacionAbsoluta}
-                onChangeText={(orientacionAbsoluta) =>
-                  setOrientacionAbsoluta(orientacionAbsoluta)
-                }
-                mode="outlined"
-              ></TextInput>
-            </View> */}
             <View className="flex flex-row gap-4 px-4">
               <View className="flex flex-row items-center w-[45%] justify-between">
                 <Text className="pb-[5px] text-[16px]">Cochera</Text>

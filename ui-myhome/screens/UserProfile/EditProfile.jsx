@@ -6,7 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function EditProfile({ navigation }) {
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
 
   // Manejo de imagen
   const [image, setImage] = React.useState("");
@@ -34,20 +34,8 @@ export default function EditProfile({ navigation }) {
 
     if (!result.canceled) {
       setImage(result.assets);
-      changeUserImage(result.assets);
     }
   };
-
-  function changeUserImage(imageURI) {
-    // fetch("http://3.144.94.74:8000/api/" + "realtors", {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //   }),
-    // });
-  }
 
   function handlePasswordRecovery() {
     const requestBody = {
@@ -80,25 +68,44 @@ export default function EditProfile({ navigation }) {
       });
   }
 
-  const [name, setName] = useState(user.name);
-  const [contactEmail, setContactEmail] = useState(user.contactEmail);
-  const [phone, setPhone] = useState(user.phone);
+  const [name, setName] = useState();
+  const [contactEmail, setContactEmail] = useState();
+  const [phone, setPhone] = useState();
 
   function handleChanges() {
     const requestBody = {
-      name: name,
-      contactEmail: contactEmail,
-      phone: phone,
+      name: name || user.name,
+      contactEmail: contactEmail || user.contactEmail,
+      phone: phone || user.phone,
       logo: image[0]?.uri || user.logo,
     };
     console.log(requestBody);
-    fetch(`http://3.144.94.74:8000/api/realtors/${user._id}`, {
+    fetch("http://3.144.94.74:8000/api/realtors/" + user._id, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
-    });
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        let token = user.token;
+        setUser({
+          ...json,
+          isRealtor: true,
+          token: token,
+        });
+        ToastAndroid.show("Usuario actualizada", ToastAndroid.LONG);
+        navigation.navigate("Perfil");
+      })
+      .catch((err) => {
+        console.log(err);
+        ToastAndroid.show(
+          "Lo sentimos, no pudimos actualizar la tu usuario. Intentelo mas tarde.",
+          ToastAndroid.LONG
+        );
+      });
   }
 
   return (
@@ -112,7 +119,7 @@ export default function EditProfile({ navigation }) {
           <Avatar.Image
             size={180}
             source={{
-              uri: user?.logo || user?.profilePicture || image[0]?.uri, // TODO: Sacar image[0]?.uri cuando se complete el flujo
+              uri: image[0]?.uri || user?.logo || user?.profilePicture,
             }}
             style={styles.avatar}
           />
