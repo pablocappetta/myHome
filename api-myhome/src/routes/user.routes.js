@@ -18,6 +18,9 @@ router.post("/login", UserController.googleLogin);
 //Devuelve un usuario por id
 router.get("/:id", UserController.getUserById); //GET USUARIOS BY ID
 
+//Elimina un usuario por id
+router.delete("/:id", UserController.deleteUser);
+
 // Devuelve favoritos del usuario
 router.get("/:id/favorites", UserController.getUserFavorites);
 

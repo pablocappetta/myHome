@@ -38,10 +38,11 @@ class UserController {
     }
   }
 
-  async createUser(req, res, next) {
+  async deleteUser(req, res, next) {
     try {
-      const newUser = await UserService.createUser(req.body);
-      return res.status(201).json(newUser);
+      const id = req.params.id;
+      const user = await UserService.deleteUser(id);
+      return res.status(204).json();
     } catch (err) {
       console.error(err);
       next(err);

@@ -53,6 +53,15 @@ class UserService {
     }
   }
 
+  async deleteUser(userId) {
+    try {
+      await UserModel.deleteOne({ _id: userId });
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en deleteUser Service");
+    }
+  }
+
   async getListingsByRealtorId(realtorId) {
     try {
       return await ListingModel.find({ realtorId });
