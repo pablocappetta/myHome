@@ -91,7 +91,8 @@ class UserService {
       const user = await UserModel.findById(userId);
 
       if (!user.favoriteListings.includes(listingId)) {
-        console.log("llego al if");
+        
+
         user.favoriteListings.push(listingId);
         user.save();
       }
