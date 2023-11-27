@@ -1,8 +1,6 @@
 let instance = null;
 require("dotenv").config();
 const RealtorService = require("../services/realtor.service");
-const ReservationService = require("../services/reservation.service");
-const ListingService = require("../services/listings.service");
 const jwt = require("jsonwebtoken");
 
 class RealtorController {
@@ -45,30 +43,26 @@ class RealtorController {
     }
   }
 
+
   async deleteRealtor(req, res, next) {
-    const { id } = req.params;
+    const { realtorId } = req.params;
+  
     try {
-      // Eliminar listados del agente
-      await ListingModel.deleteMany({ realtorId: id });
+      const existingRealtor = await RealtorService.getRealtorById(realtorId);
   
-      // Obtener reservas del agente
-      const reservations = await ReservationModel.find({ realtorId: id });
-  
-      // Eliminar cada reserva y su correspondiente listado
-      for (const reservation of reservations) {
-        await ReservationModel.deleteOne({ _id: reservation._id });
-        await ListingModel.deleteOne({ _id: reservation.listingId });
+      if (!existingRealtor) {
+        return res.status(404).json({ error: 'La inmobiliaria no existe' });
       }
-      
-      // Eliminar agente inmobiliario
-      await RealtorModel.deleteOne({ _id: id });
   
+      await RealtorService.deleteRealtor(realtorId);
+      return res.status(200).json();
     } catch (err) {
       console.error(err);
-      throw new Error("Error en deleteRealtor Service");
+      next(err);
     }
   }
   
+
   async updateRealtor(req, res, next) {
     const { realtorId } = req.params;
     const realtor = req.body;
