@@ -19,7 +19,6 @@ import {
   Text,
   TextInput,
 } from "react-native-paper";
-import MapView from "react-native-maps";
 import Carousel from "react-native-reanimated-carousel";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
@@ -28,7 +27,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 import { useUserContext } from "../../../contexts/UserContext";
 import { isStringALink, upperCaseFirst } from "../../../helpers/helpers";
-//Es un work in progress. Tengo un quilombo de estilos y cosas por todos lados. No me juzguen :P
 
 export const ListingPost = ({ navigation, ...props }) => {
   const { user, isUserLogged } = useUserContext();
