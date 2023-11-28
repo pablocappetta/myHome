@@ -32,6 +32,7 @@ import ForgotPassword from "../Login/ForgotPassword/ForgotPassword";
 import PasswordRecovery from "../Login/PasswordRecovery/PasswordRecovery";
 import EditProfile from "../UserProfile/EditProfile";
 import ProfileEdit from "../ProfileEdit/ProfileEdit";
+import TermsAndConditions from "../Settings/TermsAndConditions/TermsAndConditions";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -92,7 +93,6 @@ const SearchScreenRoutes = () => {
       }}
     >
       <Stack.Screen name="Home" component={Home} />
-      {/* <Stack.Screen name="Perfil" component={UserProfile} /> */}
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
       <Stack.Screen name="Login" component={Login} />
@@ -136,20 +136,6 @@ const ReservationsScreenRoutes = () => {
   );
 };
 
-const UserProfileScreenRoutes = () => {
-  return (
-    <Stack.Navigator
-      initialRouteName="Perfil"
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="Perfil" component={UserProfile} />
-      <Stack.Screen name="Ajustes" component={Settings} />
-    </Stack.Navigator>
-  );
-};
-
 const MyAccountScreenRoutes = () => {
   return (
     <Stack.Navigator
@@ -162,6 +148,7 @@ const MyAccountScreenRoutes = () => {
       <Stack.Screen name="Perfil" component={UserProfile} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Privacidad" component={PrivacyPolicy} />
+      <Stack.Screen name="Terms" component={TermsAndConditions} />
       <Stack.Screen name="MisReservas" component={Reservations} />
       <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
       <Stack.Screen name="Register" component={Register} />

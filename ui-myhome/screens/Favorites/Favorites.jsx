@@ -22,7 +22,6 @@ const Favorites = ({ navigation }) => {
   }, []);
 
   const fetchFavorites = async () => {
-    
     try {
       const response = await fetch(
         `http://3.144.94.74:8000/api/users/${user._id}/favorites`,
@@ -31,7 +30,7 @@ const Favorites = ({ navigation }) => {
           cache: "no-cache",
           headers: {
             "Content-Type": "application/json",
-          }, 
+          },
         }
       );
       if (response.length === 0) return;
@@ -43,13 +42,16 @@ const Favorites = ({ navigation }) => {
   };
 
   const handleRemoveFromFavoritesAction = () => {
-     // Remove favorite
-     fetch(`http://3.144.94.74:8000/api/users/${user._id}/favorites/${listingToRemove._id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
+    // Remove favorite
+    fetch(
+      `http://3.144.94.74:8000/api/users/${user._id}/favorites/${listingToRemove._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    })
+    )
       .then((response) => {
         if (response.ok) {
           const newListings = listings.filter(
@@ -67,7 +69,6 @@ const Favorites = ({ navigation }) => {
         // Handle error
         console.error("Failed to remove favorite", error);
       });
-
   };
 
   const handleRefreshFavorites = async () => {
@@ -88,11 +89,13 @@ const Favorites = ({ navigation }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Favoritos" />
-        <Appbar.Action
-          icon="refresh"
-          onPress={handleRefreshFavorites}
-          disabled={refreshing}
-        />
+        {user.isLogged && (
+          <Appbar.Action
+            icon="refresh"
+            onPress={handleRefreshFavorites}
+            disabled={refreshing}
+          />
+        )}
       </Appbar.Header>
       <ScrollView vertical ref={ref}>
         <View style={styles.containerCardsFavoriteListing}>

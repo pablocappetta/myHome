@@ -9,7 +9,7 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 import ListingCard from "../../components/ListingCard/ListingCard";
 import { useUserContext } from "../../contexts/UserContext";
-import { Avatar, Button, IconButton, Text } from "react-native-paper";
+import { Avatar, Button, Icon, IconButton, Text } from "react-native-paper";
 import { useScrollToTop } from "@react-navigation/native";
 
 const HomeOwner = ({ navigation }) => {
@@ -116,7 +116,7 @@ const HomeOwner = ({ navigation }) => {
                 </View>
               ) : (
                 <View horizontal style={styles.listingCardsContainer}>
-                  {ownerListings.length > 0 &&
+                  {ownerListings.length > 0 ? (
                     ownerListings.map((item, index) => (
                       <TouchableOpacity
                         key={index + item._id}
@@ -124,7 +124,15 @@ const HomeOwner = ({ navigation }) => {
                       >
                         <ListingCard listing={item} type={"recent"} />
                       </TouchableOpacity>
-                    ))}
+                    ))
+                  ) : (
+                    <View style={styles.containerListingsHome}>
+                      <Icon source="home-flood" size={72} />
+                      <Text variant="titleMedium">
+                        No tenés propiedades publicadas 😔
+                      </Text>
+                    </View>
+                  )}
                 </View>
               )}
             </View>
@@ -172,6 +180,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     justifyContent: "center",
     gap: 16,
+  },
+  containerListingsHome: {
+    display: "flex",
+    margin: 24,
+    alignItems: "center",
+    gap: 48,
   },
 });
 

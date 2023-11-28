@@ -41,7 +41,7 @@ const Reservations = ({ navigation }) => {
   const handleRefresh = async () => {
     try {
       const reservations = await getReservations();
-      if(reservations.length === 0) return;
+      if (reservations.length === 0) return;
       setListings(reservations);
     } catch (error) {
       console.error("Error refreshing reservations:", error);
@@ -90,7 +90,9 @@ const Reservations = ({ navigation }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Reservas" />
-        <Appbar.Action icon="refresh" onPress={handleRefresh} />
+        {user.isLogged && (
+          <Appbar.Action icon="refresh" onPress={handleRefresh} />
+        )}
       </Appbar.Header>
       <ScrollView vertical ref={ref}>
         <View style={styles.containerCardsReservationListing}>

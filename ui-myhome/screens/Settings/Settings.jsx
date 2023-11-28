@@ -24,7 +24,6 @@ const Settings = ({ navigation }) => {
     navigation.navigate("tabHome");
   };
 
-
   const handleDeleteAccount = () => {
     // Call API to delete account
     const userId = user.id;
@@ -44,7 +43,6 @@ const Settings = ({ navigation }) => {
       });
   };
 
-  
   const ref = useRef(null);
 
   useScrollToTop(ref);
@@ -147,15 +145,6 @@ const Settings = ({ navigation }) => {
           />
         </List.Section>
         <List.Section>
-          <List.Subheader>Ayuda</List.Subheader>
-          <List.Item
-            title="Preguntas frecuentes / Ayuda"
-            left={() => <IconButton icon={"help-circle-outline"} />}
-            right={() => <IconButton icon={"chevron-right"} />}
-            onPress={() => navigation.navigate("FAQ")}
-          />
-        </List.Section>
-        <List.Section>
           <List.Subheader>Privacidad y legal</List.Subheader>
           <List.Item
             title="Políticas de privacidad"
@@ -168,19 +157,13 @@ const Settings = ({ navigation }) => {
             title="Términos y condiciones"
             left={() => <IconButton icon={"information-outline"} />}
             right={() => <IconButton icon={"chevron-right"} />}
-            onPress={() => navigation.navigate("TermsAndConditions")}
+            onPress={() => navigation.navigate("Terms")}
           />
         </List.Section>
 
         {isUserLogged && (
           <List.Section>
             <List.Subheader>Seguridad de la cuenta</List.Subheader>
-            {/* <List.Item
-              title="Cambiar contraseña"
-              left={() => <IconButton icon={"shield-account-outline"} />}
-              right={() => <IconButton icon={"chevron-right"} />}
-            />
-            <Divider /> */}
             <List.Item
               title="Cerrar sesión"
               left={() => <IconButton icon={"logout"} />}
@@ -240,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 24,
-    marginTop: 24,
+    marginTop: 48,
     marginBottom: 8,
     paddingHorizontal: 8,
   },

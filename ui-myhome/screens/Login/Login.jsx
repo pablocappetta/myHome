@@ -22,7 +22,12 @@ import * as yup from "yup";
 import { useUserContext } from "../../contexts/UserContext";
 import { REACT_APP_API_URL } from "@env";
 import { useTheme } from "../../contexts/ThemeContext";
-import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithCredential,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { useFirebase } from "../../contexts/FirebaseContext";
 import * as Google from "expo-auth-session/providers/google";
 
@@ -38,51 +43,55 @@ const Login = ({ navigation }) => {
   const fireBaseApp = useFirebase();
   const provider = new GoogleAuthProvider(fireBaseApp);
   const [request, response, promptAsync] = Google.useAuthRequest({
-    iosClientId: "78227269948-mk5jjqg671rssjhev8bvikpkbdpntb8a.apps.googleusercontent.com",
-    androidClientId: "78227269948-hoo6255a6a4e8uq3i8luo648kgpraiq4.apps.googleusercontent.com",
+    iosClientId:
+      "78227269948-mk5jjqg671rssjhev8bvikpkbdpntb8a.apps.googleusercontent.com",
+    androidClientId:
+      "78227269948-hoo6255a6a4e8uq3i8luo648kgpraiq4.apps.googleusercontent.com",
   });
 
   const auth = getAuth(fireBaseApp);
 
-  React.useEffect( () => {
-    if (response?.type === "success") { 
+  React.useEffect(() => {
+    if (response?.type === "success") {
       const { id_token } = response.params;
-      const credential = GoogleAuthProvider.credential(id_token)
-      signInWithCredential(auth, credential).then((userCredential) => {
-        const user = {
-          "name": "Sergio",
-          "lastName": "User",
-          "email": "serg2404@gmail.com",
-          "avatar": "",
-          "phone": "1122334455",
-          "_id": "6562b4c4b2258b1ba9bf5b86",
-          "creationDate": "2023-11-26T03:00:20.933Z"
-        }
-        setUser({
-          ...user,
-          isRealtor: false,
-          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTQ5NTMzNmI2NWQ4ODYzYmU5NjQ1OGMiLCJuYW1lIjoiU2VyZ2lvIEdhcnJvbmkiLCJsb2dpbkVtYWlsIjoic2VyZzI0MDRAZ21haWwuY29tIiwiY29udGFjdEVtYWlsIjoic2VyZzI0MDRAZ21haWwuY29tIiwicGhvbmUiOiIxMTIyMzM0NCIsInJldmlld3MiOltdLCJjcmVhdGlvbkRhdGUiOiIyMDIzLTExLTA2VDIwOjU3OjI2LjIyOVoiLCJpYXQiOjE3MDEwMTU4NDQsImV4cCI6MTcwMTEwMjI0NH0.G0Sl8LWfGCxu8--9uv80fHAqkgCw0eeTxbALrCSnma0',
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential)
+        .then((userCredential) => {
+          const user = {
+            name: "Sergio",
+            lastName: "User",
+            email: "serg2404@gmail.com",
+            avatar: "",
+            phone: "1122334455",
+            _id: "6562b4c4b2258b1ba9bf5b86",
+            creationDate: "2023-11-26T03:00:20.933Z",
+          };
+          setUser({
+            ...user,
+            isRealtor: false,
+            token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTQ5NTMzNmI2NWQ4ODYzYmU5NjQ1OGMiLCJuYW1lIjoiU2VyZ2lvIEdhcnJvbmkiLCJsb2dpbkVtYWlsIjoic2VyZzI0MDRAZ21haWwuY29tIiwiY29udGFjdEVtYWlsIjoic2VyZzI0MDRAZ21haWwuY29tIiwicGhvbmUiOiIxMTIyMzM0NCIsInJldmlld3MiOltdLCJjcmVhdGlvbkRhdGUiOiIyMDIzLTExLTA2VDIwOjU3OjI2LjIyOVoiLCJpYXQiOjE3MDEwMTU4NDQsImV4cCI6MTcwMTEwMjI0NH0.G0Sl8LWfGCxu8--9uv80fHAqkgCw0eeTxbALrCSnma0",
+          });
+          navigation.navigate("MiCuenta");
+          navigation.navigate("tabBuscar");
         })
-        navigation.navigate("MiCuenta");
-        navigation.navigate("tabBuscar");
-      }).catch((error) => {
-        console.log(error)
-      }
-      )
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, [response]);
 
   React.useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user)
+        console.log(user);
       } else {
-        console.log("no user")
+        console.log("no user");
       }
     });
     return () => unsub();
-  }, [])
-  
+  }, []);
+
   const { setUser } = useUserContext();
   const { theme } = useTheme();
 
@@ -101,23 +110,21 @@ const Login = ({ navigation }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        if(json.realtor) 
-        {
+        if (json.realtor) {
           setUser({
             ...json.realtor,
             isRealtor: true,
             token: json.token,
           });
-          navigation.navigate("tabBuscar");
-        }
-        else  
-        {
+          navigation.navigate("MiCuenta");
+          navigation.navigate("tabHome");
+        } else {
           throw new Error("Usuario o contraseña incorrectos");
         }
       })
       .catch((error) => {
         console.error(error);
-      })
+      });
   };
 
   return (
