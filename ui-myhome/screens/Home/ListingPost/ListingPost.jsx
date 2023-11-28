@@ -99,13 +99,16 @@ export const ListingPost = ({ navigation, ...props }) => {
 
     if (like) {
       // Remove favorite
-      await fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId, postId }),
-      })
+      await fetch(
+        `http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId, postId }),
+        }
+      )
         .then((response) => {
           console.log(response);
           if (response.ok) {
@@ -120,14 +123,17 @@ export const ListingPost = ({ navigation, ...props }) => {
           console.error("Failed to remove favorite", error);
         });
     } else {
-      console.log(userId, postId)
+      console.log(userId, postId);
       // Add favorite
-      await fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      await fetch(
+        `http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      })
+      )
         .then((response) => {
           if (response.ok) {
             setLike(true);
@@ -591,6 +597,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                     defaultValue={listing.title}
                     onChangeText={(encabezado) => handleEncabezado(encabezado)}
                     mode="outlined"
+                    maxLength={12}
                   ></TextInput>
                 </View>
               ) : (

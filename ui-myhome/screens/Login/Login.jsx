@@ -58,19 +58,18 @@ const Login = ({ navigation }) => {
       signInWithCredential(auth, credential)
         .then((userCredential) => {
           const user = {
-            name: "Sergio",
-            lastName: "User",
-            email: "serg2404@gmail.com",
-            avatar: "",
-            phone: "1122334455",
-            _id: "6562b4c4b2258b1ba9bf5b86",
-            creationDate: "2023-11-26T03:00:20.933Z",
+            name: userCredential.user.displayName,
+            loginEmail: userCredential.user.email,
+            contactEmail: userCredential.user.email,
+            profilePicture: userCredential.user.photoURL,
+            phone: userCredential.user.phoneNumber,
+            creationDate: userCredential.user.metadata.creationTime,
+            isVerified: true,
           };
+
           setUser({
             ...user,
             isRealtor: false,
-            token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTQ5NTMzNmI2NWQ4ODYzYmU5NjQ1OGMiLCJuYW1lIjoiU2VyZ2lvIEdhcnJvbmkiLCJsb2dpbkVtYWlsIjoic2VyZzI0MDRAZ21haWwuY29tIiwiY29udGFjdEVtYWlsIjoic2VyZzI0MDRAZ21haWwuY29tIiwicGhvbmUiOiIxMTIyMzM0NCIsInJldmlld3MiOltdLCJjcmVhdGlvbkRhdGUiOiIyMDIzLTExLTA2VDIwOjU3OjI2LjIyOVoiLCJpYXQiOjE3MDEwMTU4NDQsImV4cCI6MTcwMTEwMjI0NH0.G0Sl8LWfGCxu8--9uv80fHAqkgCw0eeTxbALrCSnma0",
           });
           navigation.navigate("MiCuenta");
           navigation.navigate("tabBuscar");
