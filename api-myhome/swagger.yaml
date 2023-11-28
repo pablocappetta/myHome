@@ -980,7 +980,7 @@ components:
           readOnly: true
           type: string
           format: date-time
-    Notification: #TODO: definir campos
+    Notification:
       type: object
       properties:
         listingId:
