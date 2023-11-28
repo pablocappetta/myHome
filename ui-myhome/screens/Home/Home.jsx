@@ -181,18 +181,8 @@ const Home = ({ navigation }) => {
                         paddingHorizontal: 16,
                       }}
                     >
-                      Destacados
+                      Cerca tuyo
                     </Text>
-                    <TouchableOpacity>
-                      <Text
-                        variant="labelLarge"
-                        style={{
-                          paddingHorizontal: 16,
-                        }}
-                      >
-                        Ver más
-                      </Text>
-                    </TouchableOpacity>
                   </View>
                   <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
                     <View style={styles.listingCardsContainer}>
@@ -256,16 +246,6 @@ const Home = ({ navigation }) => {
                     >
                       Resultados de la búsqueda
                     </Text>
-                    <TouchableOpacity>
-                      <Text
-                        variant="labelLarge"
-                        style={{
-                          paddingHorizontal: 16,
-                        }}
-                      >
-                        Ver más
-                      </Text>
-                    </TouchableOpacity>
                   </View>
                   <View horizontal style={styles.listingCardsContainer}>
                     {highlightedListings.map((item, index) => (
