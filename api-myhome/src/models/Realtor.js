@@ -26,6 +26,13 @@ const RealtorSchema = new Schema(
       },
     ],
     phone: { type: String, required: true },
+    notifications: [
+      {
+        date: { type: Date, default: Date.now },
+        message: { type: String, required: true },
+        listingId: { type: mongoose.Schema.Types.ObjectId, ref: "listings" },
+      },
+    ],
     creationDate: { type: Date, default: Date.now },
   },
   { versionKey: false }

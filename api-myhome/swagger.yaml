@@ -125,9 +125,9 @@ paths:
             description: Realtor not found
           "401":
             description: Unauthorized access
-  /realtors/{realtorId}/message: #Los mensajes no se ven desde la app. Se manda un mail.
+  /realtors/{realtorId}/notifications:
     post:
-      summary: Send a message to a realtor
+      summary: Send a notification to a realtor
       tags:
         - Realtors
       parameters:
@@ -137,30 +137,49 @@ paths:
           schema:
             type: string
       requestBody:
+        required: true
         content:
           application/json:
-            type: object
-            required: true
             schema:
-              properties:
-                name:
-                  required: true
-                  type: string
-                email:
-                  required: true
-                  type: string
-                  format: email
-                phone:
-                  required: true
-                  type: string
-                message:
-                  required: true
-                  type: string
+              $ref: "#/components/schemas/Notification"
       responses:
         "201":
-          description: Message sent successfully
+          description: Notification sent successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
         "400":
           description: Invalid input data
+  /realtors/{realtorId}/notifications/{notificationId}:
+    delete:
+      summary: Delete a notification
+      tags:
+        - Realtors
+      parameters:
+        - in: path
+          name: realtorId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Notification deleted successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+        "404":
+          description: Notification not found
   /realtors/password-reset:
     post:
       summary: Send password reset email
@@ -740,6 +759,11 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Review"
+        notifications:
+          readOnly: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
     Listing:
       type: object
       properties:
@@ -952,6 +976,19 @@ components:
           enum:
             - mañana
             - tarde
+        creationDate:
+          readOnly: true
+          type: string
+          format: date-time
+    Notification: #TODO: definir campos
+      type: object
+      properties:
+        listingId:
+          required: true
+          type: string
+        message:
+          required: true
+          type: string
         creationDate:
           readOnly: true
           type: string
