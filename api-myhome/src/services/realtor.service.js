@@ -4,6 +4,7 @@ const {
   ConflictError,
   InternalServerError,
   UnauthorizedError,
+  NotFoundError,
 } = require("../middlewares/errorHandler");
 const RealtorModel = require("../models/Realtor");
 const bcrypt = require("bcrypt");
@@ -65,32 +66,30 @@ class RealtorService {
     }
   }
 
-
   async deleteRealtor(realtorId) {
-  
     try {
       // Use ListingService to delete listings
       const listings = await ListingService.getListingsByRealtorId(realtorId);
       for (const listing of listings) {
         await ListingService.deleteListing(listing._id);
       }
-  
+
       // Use ReservationService to delete reservations and corresponding listings
-      const reservations = await ReservationService.getReservationsByRealtorId(realtorId);
+      const reservations = await ReservationService.getReservationsByRealtorId(
+        realtorId
+      );
       for (const reservation of reservations) {
         await ReservationService.deleteReservation(reservation._id);
         await ListingService.deleteListing(reservation.listingId);
       }
-  
+
       // Use RealtorService to delete the realtor
       await RealtorModel.deleteOne({ _id: realtorId });
-  
     } catch (err) {
       console.error(err);
       throw new Error("Error en deleteRealtor Service");
     }
   }
-  
 
   async updateRealtor(realtorId, updatedRealtor) {
     try {
@@ -128,8 +127,54 @@ class RealtorService {
     }
   }
 
-  async sendMessage(realtorId, message) {
-    // TODO:
+  async addNotification(realtorId, notification) {
+    try {
+      const realtor = await RealtorModel.findById(realtorId);
+      if (!realtor) {
+        throw new NotFoundError("Realtor not found");
+      }
+
+      realtor.notifications.push(notification);
+
+      await realtor.save();
+
+      return realtor.notifications;
+    } catch (err) {
+      console.error(err);
+      if (err instanceof NotFoundError) {
+        throw err;
+      }
+      if (err instanceof ValidationError) {
+        throw new BadRequestError("Error en validaciones de Mongoose.");
+      }
+      throw new InternalServerError("Error in addNotification Service");
+    }
+  }
+
+  async deleteNotification(realtorId, notificationId) {
+    try {
+      const realtor = await RealtorModel.findById(realtorId);
+      if (!realtor) {
+        throw new NotFoundError("Realtor not found");
+      }
+
+      const notification = realtor.notifications.id(notificationId);
+      if (!notification) {
+        throw new NotFoundError("Notification not found");
+      }
+
+      realtor.notifications.pull(notificationId);
+
+      await realtor.save();
+
+      return realtor.notifications;
+    } catch (err) {
+      console.error(err);
+      if (err instanceof NotFoundError) {
+        throw err;
+      }
+      throw new InternalServerError("Error in deleteNotification Service");
+    }
   }
 
   async addReview(realtorId, review) {
