@@ -65,32 +65,30 @@ class RealtorService {
     }
   }
 
-
   async deleteRealtor(realtorId) {
-  
     try {
       // Use ListingService to delete listings
       const listings = await ListingService.getListingsByRealtorId(realtorId);
       for (const listing of listings) {
         await ListingService.deleteListing(listing._id);
       }
-  
+
       // Use ReservationService to delete reservations and corresponding listings
-      const reservations = await ReservationService.getReservationsByRealtorId(realtorId);
+      const reservations = await ReservationService.getReservationsByRealtorId(
+        realtorId
+      );
       for (const reservation of reservations) {
         await ReservationService.deleteReservation(reservation._id);
         await ListingService.deleteListing(reservation.listingId);
       }
-  
+
       // Use RealtorService to delete the realtor
       await RealtorModel.deleteOne({ _id: realtorId });
-  
     } catch (err) {
       console.error(err);
       throw new Error("Error en deleteRealtor Service");
     }
   }
-  
 
   async updateRealtor(realtorId, updatedRealtor) {
     try {
@@ -157,8 +155,12 @@ class RealtorService {
     }
   }
 
-  async passwordReset(realtorId) {
-    // TODO:
+  async getRealtorByLoginEmail(loginEmail) {
+    const realtor = await RealtorModel.findOne({ loginEmail });
+    if (!realtor) {
+      throw new Error("Realtor not found");
+    }
+    return realtor;
   }
 }
 
