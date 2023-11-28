@@ -86,16 +86,13 @@ class UserService {
 
   async addFavorite(userId, listingId) {
     try {
-     
-
       const user = await UserModel.findById(userId);
 
       if (!user.favoriteListings.includes(listingId)) {
-        
-
         user.favoriteListings.push(listingId);
         user.save();
       }
+      return user;
     } catch (error) {
       console.error(error);
       // Handle specific error types
@@ -116,6 +113,7 @@ class UserService {
         user.favoriteListings.splice(index, 1);
         user.save();
       }
+      return user;
     } catch (error) {
       console.error(error);
       if (error.name === "ValidationError") {
