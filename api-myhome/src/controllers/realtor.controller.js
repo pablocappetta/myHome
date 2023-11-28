@@ -78,6 +78,18 @@ class RealtorController {
     }
   }
 
+  async changeRealtorLogo(req, res, next) {
+    const { id } = req.params;
+    const image = req.files;
+    try {
+      const realtor = await RealtorService.changeRealtorLogo(id, image);
+      return res.status(200).json(realtor);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+
   async getRealtorByToken(req, res, next) {
     const { token } = req;
     try {

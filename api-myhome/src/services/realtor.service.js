@@ -108,6 +108,20 @@ class RealtorService {
     }
   }
 
+
+  async changeRealtorLogo(realtorId, image) {
+    const realtorFromDb = await this.getRealtorById(realtorId);
+    const imageLink = image.link;
+  
+    try {
+      realtorFromDb.realtor.logo = imageLink;
+      return await this.updateRealtor(realtorFromDb);
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en changeRealtorLogo Service");
+    }
+  }
+
   async login(loginEmail, password) {
     try {
       const realtor = await RealtorModel.findOne({ loginEmail });
