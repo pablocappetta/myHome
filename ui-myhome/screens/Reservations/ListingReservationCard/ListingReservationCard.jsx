@@ -129,12 +129,7 @@ const ListingReservationCard = ({
           >
             Cancelar
           </Button>
-          <Button
-            icon={"eye"}
-            mode="contained"
-            onPress={() => handleRemoveFavorite(reservation)}
-            width="50%"
-          >
+          <Button icon={"eye"} mode="contained" width="50%">
             Ver reserva
           </Button>
         </View>

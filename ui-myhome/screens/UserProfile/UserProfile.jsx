@@ -22,7 +22,7 @@ const UserProfile = ({ navigation }) => {
 
   const handleLogout = () => {
     wipeUserData();
-    navigation.navigate("tabMiCuenta");
+    navigation.navigate("MiCuenta");
     navigation.navigate("Home");
   };
 
@@ -167,7 +167,7 @@ const UserProfile = ({ navigation }) => {
               icon="heart"
               mode="contained-tonal"
               style={styles.actionButton}
-              onPress={() => {}}
+              onPress={() => navigation.navigate("Favoritos")}
             >
               Ver Favoritos
             </Button>
@@ -181,14 +181,6 @@ const UserProfile = ({ navigation }) => {
               Editar mi perfil
             </Button>
           )}
-          <Button
-            icon="home"
-            mode="contained-tonal"
-            style={styles.actionButton}
-            onPress={() => navigation.navigate("tabHome")}
-          >
-            Mis Propiedades
-          </Button>
         </View>
 
         <Button

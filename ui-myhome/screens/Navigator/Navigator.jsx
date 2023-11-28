@@ -155,6 +155,7 @@ const MyAccountScreenRoutes = () => {
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
       <Stack.Screen name="EditProf" component={EditProfile} />
+      <Stack.Screen name="Favoritos" component={Favorites} />
     </Stack.Navigator>
   );
 };
