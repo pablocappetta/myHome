@@ -90,9 +90,8 @@ class UserService {
 
       if (!user.favoriteListings.includes(listingId)) {
         user.favoriteListings.push(listingId);
-        user.save();
+        await user.save();
       }
-      return user;
     } catch (error) {
       console.error(error);
       // Handle specific error types
@@ -111,9 +110,8 @@ class UserService {
       const index = user.favoriteListings.indexOf(listingId);
       if (index !== -1) {
         user.favoriteListings.splice(index, 1);
-        user.save();
+        await user.save();
       }
-      return user;
     } catch (error) {
       console.error(error);
       if (error.name === "ValidationError") {
