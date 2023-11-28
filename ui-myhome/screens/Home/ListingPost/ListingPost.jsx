@@ -93,13 +93,13 @@ export const ListingPost = ({ navigation, ...props }) => {
     getListingRealtorData();
   }, [listing?.realtorId]);
 
-  const handleLikePress = () => {
+  const handleLikePress = async () => {
     const userId = user?._id; // Assuming you have the user ID available
-    const postId = listing.realtorId; // Assuming you have the post ID available
+    const postId = listing._id; // Assuming you have the post ID available
 
     if (like) {
       // Remove favorite
-      fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
+      await fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -107,6 +107,7 @@ export const ListingPost = ({ navigation, ...props }) => {
         body: JSON.stringify({ userId, postId }),
       })
         .then((response) => {
+          console.log(response);
           if (response.ok) {
             setLike(false);
           } else {
@@ -119,13 +120,13 @@ export const ListingPost = ({ navigation, ...props }) => {
           console.error("Failed to remove favorite", error);
         });
     } else {
+      console.log(userId, postId)
       // Add favorite
-      fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
+      await fetch(`http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId, postId }),
+        }
       })
         .then((response) => {
           if (response.ok) {

@@ -43,8 +43,8 @@ const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
   return (
     <Card>
       <View style={styles.listingTypeChip}>
-        <ListingTypeChip listingType={upperCaseFirst(listing?.property?.type)}>
-          {upperCaseFirst(listing?.property?.type)}
+        <ListingTypeChip listingType={upperCaseFirst(listing?.type)}>
+          {upperCaseFirst(listing?.type)}
         </ListingTypeChip>
         <IconButton
           icon="heart"

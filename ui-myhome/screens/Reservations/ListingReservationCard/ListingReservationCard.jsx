@@ -4,6 +4,7 @@ import { Card, IconButton, Text, Dialog, Button } from "react-native-paper";
 import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
+import { upperCaseFirst } from "../../../helpers/helpers";
 
 const ListingReservationCard = ({
   navigation,
@@ -47,7 +48,7 @@ const ListingReservationCard = ({
     <Card>
       <View style={styles.reservationTypeChip}>
         <ListingTypeChip listingType={reservation.listingDetails.type}>
-          {reservation.listingDetails.type.toUpperCase()}
+          {upperCaseFirst(reservation.listingDetails.type)}
         </ListingTypeChip>
       </View>
       <Card.Cover

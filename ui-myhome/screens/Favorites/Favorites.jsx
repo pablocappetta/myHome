@@ -22,9 +22,17 @@ const Favorites = ({ navigation }) => {
   }, []);
 
   const fetchFavorites = async () => {
+    
     try {
       const response = await fetch(
-        `http://3.144.94.74:8000/api/users/${user._id}/favorites`
+        `http://3.144.94.74:8000/api/users/${user._id}/favorites`,
+        {
+          method: "GET",
+          cache: "no-cache",
+          headers: {
+            "Content-Type": "application/json",
+          }, 
+        }
       );
       if (response.length === 0) return;
       const data = await response.json();
