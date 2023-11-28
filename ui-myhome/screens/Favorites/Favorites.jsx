@@ -12,7 +12,7 @@ const Favorites = ({ navigation }) => {
   const [listingToRemove, setListingToRemove] = useState(null);
   const [listings, setListings] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { user } = useUserContext();
+  const { user, isUserLogged } = useUserContext();
 
   useScrollToTop(ref);
 
@@ -89,7 +89,7 @@ const Favorites = ({ navigation }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Favoritos" />
-        {user.isLogged && (
+        {isUserLogged && (
           <Appbar.Action
             icon="refresh"
             onPress={handleRefreshFavorites}

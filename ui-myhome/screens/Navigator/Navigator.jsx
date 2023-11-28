@@ -237,7 +237,7 @@ const Navigator = () => {
             }}
           />
           <Tab.Screen
-            name="tabMisPublicaciones"
+            name="tabMisReservas"
             component={ReservationsScreenRoutes}
             options={{
               tabBarLabel: "Mis Reservas",

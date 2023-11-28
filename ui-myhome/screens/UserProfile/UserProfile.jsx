@@ -152,7 +152,7 @@ const UserProfile = ({ navigation }) => {
         <Text style={styles.fullName} numberOfLines={1}>{`${user.name}`}</Text>
         <View style={styles.emailContainer}>
           <Text style={styles.email} numberOfLines={1}>
-            {user.loginEmail}
+            {user.loginEmail || user.contactEmail || user.email}
           </Text>
           <IconButton
             icon={user.isRealtor ? "check" : "alert"}
@@ -176,6 +176,7 @@ const UserProfile = ({ navigation }) => {
               mode="outlined"
               style={styles.actionButton}
               onPress={() => navigation.navigate("EditProf")}
+              icon={"account-edit"}
             >
               Editar mi perfil
             </Button>
@@ -190,11 +191,11 @@ const UserProfile = ({ navigation }) => {
           </Button>
         </View>
 
-
         <Button
-          mode="outlined"
+          mode="contained"
           style={styles.logoutButton}
           onPress={handleLogout}
+          icon={"logout"}
         >
           Cerrar Sesión
         </Button>

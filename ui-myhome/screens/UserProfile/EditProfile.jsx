@@ -79,7 +79,7 @@ export default function EditProfile({ navigation }) {
       phone: phone || user.phone,
       logo: image[0]?.uri || user.logo,
     };
-    console.log(requestBody);
+
     fetch("http://3.144.94.74:8000/api/realtors/" + user._id, {
       method: "PUT",
       headers: {
@@ -102,7 +102,7 @@ export default function EditProfile({ navigation }) {
       .catch((err) => {
         console.log(err);
         ToastAndroid.show(
-          "Lo sentimos, no pudimos actualizar la tu usuario. Intentelo mas tarde.",
+          "Lo sentimos, no pudimos actualizar la tu usuario. Intentelo más tarde.",
           ToastAndroid.LONG
         );
       });
@@ -126,13 +126,11 @@ export default function EditProfile({ navigation }) {
           <View style={styles.container}>
             <Button
               icon="camera"
-              mode="outlined"
+              mode="contained-tonal"
               onPress={handleFileUpload}
               style={{ width: 250 }}
             >
-              <Text style={{ paddingHorizontal: 10 }}>
-                Cambiar foto de perfil
-              </Text>
+              Cambiar foto de perfil
             </Button>
             <View style={{ gap: 5 }}>
               <Text style={{ paddingHorizontal: 5 }}>Nombre</Text>
@@ -141,6 +139,7 @@ export default function EditProfile({ navigation }) {
                 placeholder="Nombre"
                 style={styles.input}
                 onChangeText={(e) => setName(e)}
+                mode="outlined"
               />
             </View>
             {/* <Text>loginEmail</Text> */}
@@ -153,15 +152,18 @@ export default function EditProfile({ navigation }) {
                 placeholder="Sin especificar"
                 style={styles.input}
                 onChangeText={(e) => setContactEmail(e)}
+                mode="outlined"
               />
             </View>
             <View style={{ gap: 5 }}>
               <Text style={{ paddingHorizontal: 5 }}>Telefono</Text>
               <TextInput
+                textContentType="telephoneNumber"
                 defaultValue={user.phone}
                 placeholder="Telefono"
                 style={styles.input}
                 onChangeText={(e) => setPhone(e)}
+                mode="outlined"
               />
             </View>
 
@@ -173,17 +175,17 @@ export default function EditProfile({ navigation }) {
               }}
               style={{ width: 250 }}
             >
-              <Text style={{ paddingHorizontal: 10 }}>Cambiar contraseña</Text>
+              Cambiar contraseña
             </Button>
             <Button
               icon="check"
-              mode="contained-tonal"
+              mode="contained"
               onPress={() => {
                 handleChanges();
               }}
               style={{ width: 250, marginBottom: 60 }}
             >
-              <Text style={{ paddingHorizontal: 10 }}>Realizar cambios</Text>
+              Guardar cambios
             </Button>
           </View>
         </View>

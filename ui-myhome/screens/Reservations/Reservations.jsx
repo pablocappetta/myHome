@@ -12,7 +12,7 @@ const Reservations = ({ navigation }) => {
   const [listingToRemove, setListingToRemove] = useState(null);
   const [listings, setListings] = useState([]);
 
-  const { user } = useUserContext();
+  const { user, isUserLogged } = useUserContext();
 
   useScrollToTop(ref);
 
@@ -90,7 +90,7 @@ const Reservations = ({ navigation }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Reservas" />
-        {user.isLogged && (
+        {isUserLogged && (
           <Appbar.Action icon="refresh" onPress={handleRefresh} />
         )}
       </Appbar.Header>
@@ -98,15 +98,10 @@ const Reservations = ({ navigation }) => {
         <View style={styles.containerCardsReservationListing}>
           {listings.length > 0 ? (
             listings.map((listing) => (
-              <TouchableOpacity
-                key={listing.id}
-                onPress={() => navigation.navigate("Post", listing)}
-              >
-                <ListingReservationCard
-                  reservation={listing}
-                  handleRemoveFavorite={handleRemoveReservation}
-                />
-              </TouchableOpacity>
+              <ListingReservationCard
+                reservation={listing}
+                handleRemoveFavorite={handleRemoveReservation}
+              />
             ))
           ) : (
             <View style={styles.containerNoReservations}>

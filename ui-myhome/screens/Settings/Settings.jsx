@@ -21,7 +21,7 @@ const Settings = ({ navigation }) => {
 
   const handleLogout = () => {
     wipeUserData();
-    navigation.navigate("tabHome");
+    navigation.navigate("tabBuscar");
   };
 
   const handleDeleteAccount = () => {
@@ -35,7 +35,7 @@ const Settings = ({ navigation }) => {
       .then((data) => {
         // Handle success response
         wipeUserData();
-        navigation.navigate("tabHome");
+        navigation.navigate("tabBuscar");
       })
       .catch((error) => {
         // Handle error
