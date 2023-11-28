@@ -10,42 +10,42 @@ class CustomError extends Error {
 class BadRequestError extends CustomError {
   constructor(log) {
     console.error(log);
-    super(400, "Input Error");
+    super(400, log);
   }
 }
 
 class UnauthorizedError extends CustomError {
   constructor(log) {
     console.error(log);
-    super(401, "Unauthorized");
+    super(401, log);
   }
 }
 
 class ConflictError extends CustomError {
   constructor(log) {
     console.error(log);
-    super(409, "Conflict");
+    super(409, log);
   }
 }
 
 class ForbiddenError extends CustomError {
   constructor(log) {
     console.error(log);
-    super(403, "Forbidden");
+    super(403, log);
   }
 }
 
 class NotFoundError extends CustomError {
   constructor(log) {
     console.error(log);
-    super(404, "Not Found");
+    super(404, log);
   }
 }
 
 class InternalServerError extends CustomError {
   constructor(log) {
     console.error(log);
-    super(500, "Internal Server Error");
+    super(500, log);
   }
 }
 
