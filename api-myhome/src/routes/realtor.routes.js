@@ -85,33 +85,15 @@ router.post("/password-reset", async (req, res) => {
 });
 
 //Restablece la contraseña de un usuario
-router.post("/password-reset/:token", async (req, res) => {
-  const { token } = req.params;
-  const { password } = req.body;
-
-  try {
-    const { loginEmail } = jwt.verify(token, process.env.PRIVATE_KEY);
-
-    const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
-
-    if (realtor) {
-      realtor.password = await bcrypt.hash(password, 10);
-      await RealtorService.updateRealtor(realtor);
-      res.status(200).json({
-        message: "Contraseña actualizada correctamente",
-      });
-    } else {
-      res.status(404).json({
-        message: "No se ha encontrado el usuario",
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      message: "Error al actualizar la contraseña",
-    });
-  }
-});
+router.post(
+  "/password-reset/:token",
+  [
+    check("token").not().isEmpty(),
+    check("password").not().isEmpty(),
+    checkFields,
+  ],
+  RealtorController.passwordReset
+);
 
 //agrega una notificacion de un realtor
 router.post(

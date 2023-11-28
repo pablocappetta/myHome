@@ -22,7 +22,7 @@ class AuthService {
     }
   }
 
-  async generateToken(id, type) {
+  async generateLoginToken(id, type) {
     try {
       const token = jwt.sign(
         {

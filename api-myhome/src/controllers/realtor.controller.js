@@ -32,6 +32,89 @@ class RealtorController {
     }
   }
 
+  async passwordResetStart(req, res, next) {
+    const { email: loginEmail } = req.body;
+
+    const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
+
+    if (realtor) {
+      const token = jwt.sign({ loginEmail }, process.env.PRIVATE_KEY, {
+        expiresIn: "1h",
+      });
+
+      const transporter = nodemailer.createTransport({
+        service: "Outlook",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: loginEmail,
+        subject: "myHome - Solicitud de restablecimiento contraseña",
+        html: `
+      <p>¡Hola, ${realtor.name}!</p>
+      <p>Has solicitado restablecer tu contraseña. Para hacerlo, por favor copiá el siguiente código en la aplicación:</p>
+      <p><b>${token}</b></p>
+      <p>Si no solicitaste este restablecimiento de contraseña, podés ignorar este mensaje.</p>
+      <p>Saludos,</p>
+      <b>El equipo de myHome</b>
+      `,
+      };
+
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            message: "Error al enviar el email",
+          });
+        } else {
+          console.log(info);
+          return res.status(200).json({
+            message: "Se ha enviado un email para restablecer la contraseña",
+          });
+        }
+      });
+
+      res.status(200).json({
+        message: "Se ha enviado un email para restablecer la contraseña",
+      });
+    } else {
+      res.status(404).json({
+        message: "No se ha encontrado el usuario",
+      });
+    }
+  }
+
+  async passwordResetFinish(req, res, next) {
+    try {
+      const { token } = req.params;
+      const { password } = req.body;
+      const { loginEmail } = jwt.verify(token, process.env.PRIVATE_KEY);
+
+      const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
+
+      if (realtor) {
+        realtor.password = await bcrypt.hash(password, 10);
+        await RealtorService.updateRealtor(realtor);
+        res.status(200).json({
+          message: "Contraseña actualizada correctamente",
+        });
+      } else {
+        res.status(404).json({
+          message: "No se ha encontrado el usuario",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        message: "Error al actualizar la contraseña",
+      });
+    }
+  }
+
   async createRealtor(req, res, next) {
     try {
       const { body } = req;
@@ -104,7 +187,10 @@ class RealtorController {
         req.body.email,
         req.body.password
       );
-      const token = await AuthService.generateToken(realtor._id, "realtor");
+      const token = await AuthService.generateLoginToken(
+        realtor._id,
+        "realtor"
+      );
       return res.status(200).json({ token: token, realtor: realtor });
     } catch (err) {
       console.error(err);
