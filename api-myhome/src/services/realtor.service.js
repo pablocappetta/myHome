@@ -107,6 +107,20 @@ class RealtorService {
     }
   }
 
+  async updateRealtorPassword(realtorId, password) {
+    try {
+      const updatedRealtor = await RealtorModel.findOneAndUpdate(
+        { _id: realtorId },
+        { password },
+        { new: true }
+      );
+      updatedRealtor.password = undefined;
+      return updatedRealtor;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en updateRealtorPassword Service");
+    }
+  }
 
   async changeRealtorLogo(realtorId, image) {
     const realtorFromDb = await this.getRealtorById(realtorId);
@@ -130,9 +144,11 @@ class RealtorService {
         );
       }
       const isPasswordOk = await bcrypt.compare(password, realtor.password);
+
       if (!isPasswordOk) {
         throw new UnauthorizedError("Contraseña incorrecta");
       }
+
       realtor.password = undefined;
       return realtor;
     } catch (err) {
@@ -216,8 +232,12 @@ class RealtorService {
     }
   }
 
-  async passwordReset(realtorId) {
-    // TODO:
+  async getRealtorByLoginEmail(loginEmail) {
+    const realtor = await RealtorModel.findOne({ loginEmail });
+    if (!realtor) {
+      throw new Error("Realtor not found");
+    }
+    return realtor;
   }
 }
 

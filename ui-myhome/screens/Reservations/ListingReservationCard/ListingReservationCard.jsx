@@ -4,6 +4,7 @@ import { Card, IconButton, Text, Dialog, Button } from "react-native-paper";
 import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
 import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
+import { upperCaseFirst } from "../../../helpers/helpers";
 
 const ListingReservationCard = ({
   navigation,
@@ -12,32 +13,8 @@ const ListingReservationCard = ({
 }) => {
   const styles = StyleSheet.create({
     reservationImage: {
-      width: 170,
-      height: 190,
-    },
-    reservationTypeChip: {
-      position: "absolute",
-      zIndex: 1,
-      left: 8,
-      top: 8,
-    },
-    priceContainer: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "flex-start",
-      alignlistings: "center",
-      marginTop: 18,
-      position: "absolute",
-      left: 17,
-      top: 72,
-    },
-    cardContentContainer: {
-      display: "flex",
-      flexDirection: "column",
-      position: "absolute",
-      width: 190,
-      top: 8,
-      right: 5,
+      width: "50%",
+      height: 80,
     },
   });
 
@@ -45,84 +22,117 @@ const ListingReservationCard = ({
 
   return (
     <Card>
-      <View style={styles.reservationTypeChip}>
-        <ListingTypeChip listingType={reservation.listingDetails.type}>
-          {reservation.listingDetails.type.toUpperCase()}
-        </ListingTypeChip>
-      </View>
-      <Card.Cover
-        source={{ uri: reservation.listingDetails.property.photos[0] }}
-        style={styles.reservationImage}
-        defaultSource={
-          theme.dark
-            ? require("../../../assets/images/darkBlurredImage.jpg")
-            : require("../../../assets/images/blurredImage.jpg")
-        }
-      />
       <Card.Content style={styles.cardContentContainer}>
-        <View>
-          <Text
-            variant="titleMedium"
-            style={{ marginTop: 6 }}
-            numberOfLines={1}
-          >
-            {reservation.listingDetails.type}
-          </Text>
-          <IconButton
-            icon="star"
-            size={20}
-            style={{ bottom: 35, left: 130 }}
-            onPress={() => navigation.navigate("Review")}
-            iconColor="#6750A4"
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <Card.Cover
+            source={{ uri: reservation.listingDetails.property.photos[0] }}
+            style={styles.reservationImage}
+            defaultSource={
+              theme.dark
+                ? require("../../../assets/images/darkBlurredImage.jpg")
+                : require("../../../assets/images/blurredImage.jpg")
+            }
           />
+          <View
+            style={{ display: "flex", flexDirection: "column", width: "50%" }}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginLeft: 8,
+              }}
+            >
+              <Button
+                icon={"information-outline"}
+                labelStyle={{ fontSize: 18 }}
+              >
+                {upperCaseFirst(reservation.listingDetails.type)}
+              </Button>
+              <IconButton
+                icon="star"
+                size={16}
+                onPress={() => navigation.navigate("Review")}
+                mode="contained"
+                style={{ margin: 0, padding: 0 }}
+              />
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignContent: "center",
+                alignItems: "center",
+                marginLeft: 8,
+              }}
+            >
+              <IconButton icon={"map-marker"} size={14} />
+              <Text>{reservation.listingDetails.property.address.city}</Text>
+            </View>
+          </View>
         </View>
+
         <View
           style={{
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            alignlistings: "center",
-            marginTop: 5,
-            position: "absolute",
-            left: 17,
-            top: 30,
+            flexDirection: "row",
+            justifyContent: "space-around",
+            marginBottom: 8,
           }}
         >
-          <Text variant="bodySmall" numberOfLines={1}>
-            {reservation.listingDetails.property.address.city}
-          </Text>
-          <Text variant="bodySmall" numberOfLines={1}>
-            Vencimiento:
-          </Text>
-          <Text variant="bodySmall" numberOfLines={1}>
-            {new Date(reservation.reservationEndDate).toLocaleDateString('es-AR')}
-          </Text>
-        </View>
-
-        <View style={styles.priceContainer}>
           <View
             style={{
               display: "flex",
               flexDirection: "row",
-              gap: 4,
+              alignContent: "center",
+              alignItems: "center",
             }}
           >
-            <Text variant="bodySmall" style={{ fontWeight: 600 }}>
-              Reserva: {reservation.listingDetails.price.currency}
-            </Text>
-            <Text variant="bodySmall" style={{ fontWeight: 800 }}>
+            <IconButton icon={"cash"} size={18} />
+            <Text variant="bodySmall">
               ${commaNumber(reservation.listingDetails.price.amount / 2)}
             </Text>
           </View>
+
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <IconButton icon={"calendar"} size={18} />
+            <Text variant="bodySmall" numberOfLines={1}>
+              {new Date(reservation.reservationEndDate).toLocaleDateString(
+                "es-AR"
+              )}
+            </Text>
+          </View>
         </View>
-        <Button
-          icon={"close"}
-          mode="contained-tonal"
-          style={{ bottom: -55, left: 64, width: 108 }}
-          onPress={() => handleRemoveFavorite(reservation)}
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "space-around",
+            gap: 24,
+          }}
         >
-          Cancelar
-        </Button>
+          <Button
+            icon={"close"}
+            mode="contained-tonal"
+            onPress={() => handleRemoveFavorite(reservation)}
+            width="50%"
+          >
+            Cancelar
+          </Button>
+          <Button icon={"eye"} mode="contained" width="50%">
+            Ver reserva
+          </Button>
+        </View>
       </Card.Content>
     </Card>
   );

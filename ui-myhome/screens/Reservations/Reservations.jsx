@@ -12,7 +12,7 @@ const Reservations = ({ navigation }) => {
   const [listingToRemove, setListingToRemove] = useState(null);
   const [listings, setListings] = useState([]);
 
-  const { user } = useUserContext();
+  const { user, isUserLogged } = useUserContext();
 
   useScrollToTop(ref);
 
@@ -20,7 +20,7 @@ const Reservations = ({ navigation }) => {
     const fetchReservations = async () => {
       try {
         const reservations = await getReservations();
-        if (!reservations.ok) return;
+        if (reservations.length === 0) return;
         setListings(reservations);
       } catch (error) {
         console.error("Error fetching reservations:", error);
@@ -41,7 +41,7 @@ const Reservations = ({ navigation }) => {
   const handleRefresh = async () => {
     try {
       const reservations = await getReservations();
-      if (!reservations.ok) return;
+      if (reservations.length === 0) return;
       setListings(reservations);
     } catch (error) {
       console.error("Error refreshing reservations:", error);
@@ -90,21 +90,18 @@ const Reservations = ({ navigation }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Reservas" />
-        <Appbar.Action icon="refresh" onPress={handleRefresh} />
+        {isUserLogged && (
+          <Appbar.Action icon="refresh" onPress={handleRefresh} />
+        )}
       </Appbar.Header>
       <ScrollView vertical ref={ref}>
         <View style={styles.containerCardsReservationListing}>
           {listings.length > 0 ? (
             listings.map((listing) => (
-              <TouchableOpacity
-                key={listing.id}
-                onPress={() => navigation.navigate("Post", listing)}
-              >
-                <ListingReservationCard
-                  reservation={listing}
-                  handleRemoveFavorite={handleRemoveReservation}
-                />
-              </TouchableOpacity>
+              <ListingReservationCard
+                reservation={listing}
+                handleRemoveFavorite={handleRemoveReservation}
+              />
             ))
           ) : (
             <View style={styles.containerNoReservations}>

@@ -123,7 +123,18 @@ class RealtorController {
       next(err);
     }
   }
-
+  
+  async getRealtorByLoginEmail(req, res, next) {
+    const { loginEmail } = req.params;
+    try {
+      const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
+      return res.status(200).json(realtor);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+  
   async addNotification(req, res, next) {
     try {
       const { realtorId } = req.params;
