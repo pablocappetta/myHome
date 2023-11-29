@@ -38,6 +38,32 @@ class AuthService {
       throw new InternalServerError("Error al generar token");
     }
   }
+
+  async generatePasswordResetToken(loginEmail) {
+    try {
+      const token = jwt.sign(
+        {
+          loginEmail: loginEmail,
+        },
+        process.env.PRIVATE_KEY,
+        { expiresIn: "1h" }
+      );
+      return token;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error al generar token");
+    }
+  }
+
+  async getLoginEmailFromPasswordResetToken(token) {
+    try {
+      const { loginEmail } = jwt.verify(token, process.env.PRIVATE_KEY);
+      return loginEmail;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error al obtener loginEmail");
+    }
+  }
 }
 
 module.exports = new AuthService();

@@ -107,11 +107,10 @@ class RealtorService {
     }
   }
 
-
   async changeRealtorLogo(realtorId, image) {
     const realtorFromDb = await this.getRealtorById(realtorId);
     const imageLink = image.link;
-  
+
     try {
       realtorFromDb.realtor.logo = imageLink;
       return await this.updateRealtor(realtorFromDb);
@@ -135,6 +134,22 @@ class RealtorService {
       }
       realtor.password = undefined;
       return realtor;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  async passwordReset(loginEmail, password) {
+    try {
+      const realtor = await RealtorModel.findOne({ loginEmail });
+      if (!realtor) {
+        throw new UnauthorizedError(
+          "No existe realtore registrado con ese email"
+        );
+      }
+      realtor.password = await bcrypt.hash(password, 10);
+      realtor.save();
     } catch (err) {
       console.error(err);
       throw err;
