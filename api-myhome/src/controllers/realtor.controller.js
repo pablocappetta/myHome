@@ -22,8 +22,8 @@ class RealtorController {
   }
 
   async getRealtorById(req, res, next) {
-    const { realtorId } = req.params;
     try {
+      const { realtorId } = req.params;
       const realtor = await RealtorService.getRealtorById(realtorId);
       return res.status(200).json(realtor);
     } catch (err) {
@@ -33,8 +33,8 @@ class RealtorController {
   }
 
   async createRealtor(req, res, next) {
-    const { body } = req;
     try {
+      const { body } = req;
       const realtor = await RealtorService.createRealtor(body);
       return res.status(201).json(realtor);
     } catch (err) {
@@ -44,9 +44,8 @@ class RealtorController {
   }
 
   async deleteRealtor(req, res, next) {
-    const { realtorId } = req.params;
-
     try {
+      const { realtorId } = req.params;
       const existingRealtor = await RealtorService.getRealtorById(realtorId);
 
       if (!existingRealtor) {
@@ -62,9 +61,9 @@ class RealtorController {
   }
 
   async updateRealtor(req, res, next) {
-    const { realtorId } = req.params;
-    const realtor = req.body;
     try {
+      const { realtorId } = req.params;
+      const realtor = req.body;
       const updatedRealtor = await RealtorService.updateRealtor(
         realtorId,
         realtor
@@ -76,9 +75,21 @@ class RealtorController {
     }
   }
 
-  async getRealtorByToken(req, res, next) {
-    const { token } = req;
+  async changeRealtorLogo(req, res, next) {
+    const { id } = req.params;
+    const image = req.files;
     try {
+      const realtor = await RealtorService.changeRealtorLogo(id, image);
+      return res.status(200).json(realtor);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+
+  async getRealtorByToken(req, res, next) {
+    try {
+      const { token } = req;
       const realtor = await RealtorService.getRealtorByToken(token);
       return res.status(200).json(realtor);
     } catch (err) {
@@ -102,10 +113,9 @@ class RealtorController {
   }
 
   async addReview(req, res, next) {
-    const { realtorId } = req.params;
-    const review = req.body;
-
     try {
+      const { realtorId } = req.params;
+      const review = req.body;
       const updatedRealtor = await RealtorService.addReview(realtorId, review);
       return res.status(200).json(updatedRealtor);
     } catch (err) {
@@ -113,12 +123,41 @@ class RealtorController {
       next(err);
     }
   }
-
+  
   async getRealtorByLoginEmail(req, res, next) {
     const { loginEmail } = req.params;
     try {
       const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
       return res.status(200).json(realtor);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+  
+  async addNotification(req, res, next) {
+    try {
+      const { realtorId } = req.params;
+      const notification = req.body;
+      const notifications = await RealtorService.addNotification(
+        realtorId,
+        notification
+      );
+      return res.status(201).json(notifications);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+
+  async deleteNotification(req, res, next) {
+    try {
+      const { realtorId, notificationId } = req.params;
+      const notifications = await RealtorService.deleteNotification(
+        realtorId,
+        notificationId
+      );
+      return res.status(200).json(notifications);
     } catch (err) {
       console.error(err);
       next(err);

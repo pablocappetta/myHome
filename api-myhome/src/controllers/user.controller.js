@@ -82,11 +82,8 @@ class UserController {
       const favoritesDetails = [];
       for (const listingId of favorites) {
         const listing = await ListingService.getListingById(listingId);
-        if (!listing) {
-          await UserService.removeFavorite(id, listingId);
-        } else {
+        if (listing)
           favoritesDetails.push(await ListingService.getListingById(listingId));
-        }
       }
       res.status(200).json(favoritesDetails);
     } catch (error) {
@@ -97,7 +94,6 @@ class UserController {
 
   async addFavorite(req, res, next) {
     try {
-      
       const { id, listingId } = req.params;
       await UserService.addFavorite(id, listingId);
       res.status(200).json();

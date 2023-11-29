@@ -86,15 +86,11 @@ class UserService {
 
   async addFavorite(userId, listingId) {
     try {
-     
-
       const user = await UserModel.findById(userId);
 
       if (!user.favoriteListings.includes(listingId)) {
-        
-
         user.favoriteListings.push(listingId);
-        user.save();
+        await user.save();
       }
     } catch (error) {
       console.error(error);
@@ -114,7 +110,7 @@ class UserService {
       const index = user.favoriteListings.indexOf(listingId);
       if (index !== -1) {
         user.favoriteListings.splice(index, 1);
-        user.save();
+        await user.save();
       }
     } catch (error) {
       console.error(error);

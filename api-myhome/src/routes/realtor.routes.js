@@ -113,6 +113,24 @@ router.post("/password-reset/:token", async (req, res) => {
   }
 });
 
+//agrega una notificacion de un realtor
+router.post(
+  "/:realtorId/notifications",
+  [check("realtorId").not().isEmpty(), checkFields],
+  RealtorController.addNotification
+);
+
+//elimina una notificacion de un realtor
+router.delete(
+  "/:realtorId/notifications/:notificationId",
+  [
+    check("realtorId").not().isEmpty(),
+    check("notificationId").not().isEmpty(),
+    checkFields,
+  ],
+  RealtorController.deleteNotification
+);
+
 //Actualiza un realtor
 router.put(
   "/:realtorId",
@@ -121,6 +139,13 @@ router.put(
     checkFields,
   ],
   RealtorController.updateRealtor
+);
+
+//Cambia el logo del realtor
+router.post(
+  "/:realtorId/images",
+  upload.array("image", 10),
+  RealtorController.changeRealtorLogo
 );
 
 // Borra un realtor, listings y reservas

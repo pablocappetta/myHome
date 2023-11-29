@@ -4,6 +4,7 @@ const {
   ConflictError,
   InternalServerError,
   UnauthorizedError,
+  NotFoundError,
 } = require("../middlewares/errorHandler");
 const RealtorModel = require("../models/Realtor");
 const bcrypt = require("bcrypt");
@@ -121,6 +122,19 @@ class RealtorService {
     }
   }
 
+  async changeRealtorLogo(realtorId, image) {
+    const realtorFromDb = await this.getRealtorById(realtorId);
+    const imageLink = image.link;
+  
+    try {
+      realtorFromDb.realtor.logo = imageLink;
+      return await this.updateRealtor(realtorFromDb);
+    } catch (err) {
+      console.error(err);
+      throw new Error("Error en changeRealtorLogo Service");
+    }
+  }
+
   async login(loginEmail, password) {
     try {
       const realtor = await RealtorModel.findOne({ loginEmail });
@@ -143,8 +157,54 @@ class RealtorService {
     }
   }
 
-  async sendMessage(realtorId, message) {
-    // TODO:
+  async addNotification(realtorId, notification) {
+    try {
+      const realtor = await RealtorModel.findById(realtorId);
+      if (!realtor) {
+        throw new NotFoundError("Realtor not found");
+      }
+
+      realtor.notifications.push(notification);
+
+      await realtor.save();
+
+      return realtor.notifications;
+    } catch (err) {
+      console.error(err);
+      if (err instanceof NotFoundError) {
+        throw err;
+      }
+      if (err instanceof ValidationError) {
+        throw new BadRequestError("Error en validaciones de Mongoose.");
+      }
+      throw new InternalServerError("Error in addNotification Service");
+    }
+  }
+
+  async deleteNotification(realtorId, notificationId) {
+    try {
+      const realtor = await RealtorModel.findById(realtorId);
+      if (!realtor) {
+        throw new NotFoundError("Realtor not found");
+      }
+
+      const notification = realtor.notifications.id(notificationId);
+      if (!notification) {
+        throw new NotFoundError("Notification not found");
+      }
+
+      realtor.notifications.pull(notificationId);
+
+      await realtor.save();
+
+      return realtor.notifications;
+    } catch (err) {
+      console.error(err);
+      if (err instanceof NotFoundError) {
+        throw err;
+      }
+      throw new InternalServerError("Error in deleteNotification Service");
+    }
   }
 
   async addReview(realtorId, review) {
