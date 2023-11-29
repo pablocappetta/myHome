@@ -102,7 +102,7 @@ class ListingController {
     }
   }
 
-  async addImages(req, res) {
+  async addImages(req, res, next) {
     const { id } = req.params;
     const images = req.files;
     try {
@@ -110,6 +110,7 @@ class ListingController {
       return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
+      next(err);
     }
   }
 
