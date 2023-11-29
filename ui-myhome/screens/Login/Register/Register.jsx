@@ -71,6 +71,10 @@ const Register = ({ navigation }) => {
           );
           navigation.navigate("Login");
         } else {
+          ToastAndroid.show(
+            "Error al registrarse, intente nuevamente",
+            ToastAndroid.LONG
+          );
           throw new Error("Network response was not ok");
         }
       })

@@ -140,9 +140,11 @@ class RealtorService {
         );
       }
       const isPasswordOk = await bcrypt.compare(password, realtor.password);
+
       if (!isPasswordOk) {
         throw new UnauthorizedError("Contraseña incorrecta");
       }
+
       realtor.password = undefined;
       return realtor;
     } catch (err) {

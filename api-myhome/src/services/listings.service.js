@@ -124,7 +124,7 @@ class ListingService {
     try {
       listingFromDb.property.photos =
         listingFromDb.property.photos.concat(imageLinks);
-      return await this.updateListing(listingFromDb);
+      return await this.updateListing(listingFromDb._id, listingFromDb);
     } catch (err) {
       console.error(err);
       throw new Error("Error en addImagesToListing Service");

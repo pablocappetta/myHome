@@ -68,7 +68,13 @@ const ListingCard = ({ listing, type }) => {
         }
       />
       <Card.Content style={styles.cardContentContainer}>
-        <Text variant="titleSmall" style={{ marginTop: 6 }}>
+        <Text
+          variant="titleSmall"
+          style={{ marginTop: 6, fontSize: 16, fontWeight: "bold" }}
+        >
+          {listing?.title}
+        </Text>
+        <Text variant="titleSmall">
           {listing?.property?.type || listing?.type}
         </Text>
         <Text variant="bodySmall" numberOfLines={2} style={{ width: "100%" }}>

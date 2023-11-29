@@ -43,8 +43,8 @@ const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
   return (
     <Card>
       <View style={styles.listingTypeChip}>
-        <ListingTypeChip listingType={upperCaseFirst(listing.listingType)}>
-          {upperCaseFirst(listing.listingType)}
+        <ListingTypeChip listingType={upperCaseFirst(listing?.type)}>
+          {upperCaseFirst(listing?.type)}
         </ListingTypeChip>
         <IconButton
           icon="heart"
@@ -55,20 +55,20 @@ const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
         />
       </View>
       <Card.Cover
-        source={{ uri: listing.image }}
+        source={{ uri: listing?.photos?.[0] }}
         style={styles.listingImage}
         defaultSource={
-          theme.dark
+          theme?.dark
             ? require("../../../assets/images/darkBlurredImage.jpg")
             : require("../../../assets/images/blurredImage.jpg")
         }
       />
       <Card.Content style={styles.cardContentContainer}>
         <Text variant="titleMedium" style={{ marginTop: 6 }} numberOfLines={1}>
-          {listing.type}
+          {listing?.property?.type}
         </Text>
         <Text variant="bodySmall" numberOfLines={1}>
-          {listing.location}
+          {listing?.property?.address?.city}
         </Text>
         <View style={styles.priceContainer}>
           <View
@@ -79,10 +79,10 @@ const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
             }}
           >
             <Text variant="bodyLarge" style={{ fontWeight: 600 }}>
-              {listing.currency}
+              {listing?.price?.currency }
             </Text>
             <Text variant="bodyLarge" style={{ fontWeight: 800 }}>
-              ${commaNumber(listing.price)}
+              ${commaNumber(listing?.price?.amount)}
             </Text>
           </View>
         </View>
