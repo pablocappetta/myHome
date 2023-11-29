@@ -69,12 +69,13 @@ router.put(
   RealtorController.updateRealtor
 );
 
-//Cambia el logo del realtor
-router.post(
-  "/:realtorId/images",
-  upload.array("image", 10),
-  RealtorController.changeRealtorLogo
-);
+// ESTO LO COMENTO PORQUE NO ESTA ANDANDO. atte Mateo
+// //Cambia el logo del realtor
+// router.post(
+//   "/:realtorId/images",
+//   upload.array("image", 10),
+//   RealtorController.changeRealtorLogo
+// );
 
 // Borra un realtor, listings y reservas
 router.delete(
