@@ -2,6 +2,7 @@ let instance = null;
 require("dotenv").config();
 const RealtorService = require("../services/realtor.service");
 const AuthService = require("../services/auth.service");
+const nodemailer = require("nodemailer");
 
 class RealtorController {
   static getInstance() {
@@ -35,14 +36,11 @@ class RealtorController {
   async passwordResetStart(req, res, next) {
     const { email: loginEmail } = req.body;
 
-    const isRegistered = await RealtorService.isRealtorRegistered(loginEmail);
-
-    if (!isRegistered) {
+    const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
+    if (!realtor) {
       return res.status(200).json();
     }
-
     const token = await AuthService.generatePasswordResetToken(loginEmail);
-
     const transporter = nodemailer.createTransport({
       service: "Outlook",
       auth: {
@@ -87,7 +85,6 @@ class RealtorController {
       if (!loginEmail) {
         throw new UnauthorizedError("Token inválido");
       }
-
       await RealtorService.passwordReset(loginEmail, password);
       return res.status(200).json();
     } catch (err) {

@@ -1,7 +1,10 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const RealtorModel = require("../models/Realtor");
-const { InternalServerError } = require("../middlewares/errorHandler");
+const {
+  InternalServerError,
+  UnauthorizedError,
+} = require("../middlewares/errorHandler");
 const jwt = require("jsonwebtoken");
 
 class AuthService {
@@ -61,7 +64,7 @@ class AuthService {
       return loginEmail;
     } catch (err) {
       console.error(err);
-      throw new InternalServerError("Error al obtener loginEmail");
+      throw new UnauthorizedError("Error al obtener loginEmail");
     }
   }
 }

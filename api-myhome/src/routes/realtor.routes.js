@@ -26,7 +26,7 @@ router.post(
 //Restablece la contraseña de un usuario
 router.post(
   "/password-reset",
-  [check("loginEmail").not().isEmpty(), checkFields],
+  [check("email").not().isEmpty(), checkFields],
   RealtorController.passwordResetStart
 );
 

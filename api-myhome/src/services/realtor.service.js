@@ -35,6 +35,17 @@ class RealtorService {
     }
   }
 
+  async getRealtorByLoginEmail(loginEmail) {
+    try {
+      const realtor = await RealtorModel.findOne({ loginEmail });
+      realtor.password = undefined;
+      return realtor;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en getRealtorByLoginEmail Service");
+    }
+  }
+
   async isRealtorRegistered(loginEmail) {
     try {
       const realtor = await RealtorModel.findOne({ loginEmail });
@@ -229,10 +240,6 @@ class RealtorService {
       console.error(err);
       throw new InternalServerError("Error in addReview Service");
     }
-  }
-
-  async passwordReset(realtorId) {
-    // TODO:
   }
 }
 
