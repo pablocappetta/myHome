@@ -79,7 +79,12 @@ const NotificationView = ({ navigation, ...props }) => {
           <Text className="my-1 text-[18px] font-medium">
             Consulta por: {listing?.title || "listing title"}
           </Text>
-          <Button icon="home">ver propiedad</Button>
+          <Button
+            icon="home"
+            onPress={() => navigation.navigate("Post", listing)}
+          >
+            ver propiedad
+          </Button>
         </View>
         <View className="flex px-2 mt-1">
           <Text className="my-4 text-[15px] font-medium">
