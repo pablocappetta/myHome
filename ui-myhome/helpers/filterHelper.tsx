@@ -61,16 +61,17 @@ export interface Filter {
 function flattenProperty(property: Property): Record<string, any> {
     const flattenedProperty: Record<string, any> = {};
 
-    for (const key in property) {
-        if (typeof property[key] === 'object' && property[key] !== null) {
-            const nestedObject = property[key];
-            for (const nestedKey in nestedObject) {
-                flattenedProperty[`${key}.${nestedKey}`] = nestedObject[nestedKey];
+    function flatten(obj: Record<string, any>, prefix = '') {
+        for (const key in obj) {
+            if (typeof obj[key] === 'object' && obj[key] !== null) {
+                flatten(obj[key], `${prefix}${key}.`);
+            } else {
+                flattenedProperty[`${prefix}${key}`] = obj[key];
             }
-        } else {
-            flattenedProperty[key] = property[key];
         }
     }
+
+    flatten(property);
 
     return flattenedProperty;
 }
