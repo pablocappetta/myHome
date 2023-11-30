@@ -62,10 +62,13 @@ class UserController {
       const existingUser = await UserService.getUserByEmail(user.email);
       if (!existingUser) {
         const newUser = await UserService.createUser(user);
-        const token = await AuthService.generateToken(newUser._id, "user");
+        const token = await AuthService.generateLoginToken(newUser._id, "user");
         return res.status(201).json({ token, user: newUser });
       }
-      const token = await AuthService.generateToken(existingUser._id, "user");
+      const token = await AuthService.generateLoginToken(
+        existingUser._id,
+        "user"
+      );
       return res.status(200).json({ token, user: existingUser });
     } catch (err) {
       console.error(err);

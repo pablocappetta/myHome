@@ -587,8 +587,12 @@ paths:
                 photoURL:
                   required: true
                   type: string
-                phone:
-                  type: string
+                providerData:
+                  required: true
+                  type: object
+                  properties:
+                    phoneNumber:
+                      type: string
                 stsTokenManager:
                   type: object
       responses:

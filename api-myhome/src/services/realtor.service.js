@@ -35,6 +35,17 @@ class RealtorService {
     }
   }
 
+  async getRealtorByLoginEmail(loginEmail) {
+    try {
+      const realtor = await RealtorModel.findOne({ loginEmail });
+      realtor.password = undefined;
+      return realtor;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en getRealtorByLoginEmail Service");
+    }
+  }
+
   async isRealtorRegistered(loginEmail) {
     try {
       const realtor = await RealtorModel.findOne({ loginEmail });
@@ -107,25 +118,10 @@ class RealtorService {
     }
   }
 
-  async updateRealtorPassword(realtorId, password) {
-    try {
-      const updatedRealtor = await RealtorModel.findOneAndUpdate(
-        { _id: realtorId },
-        { password },
-        { new: true }
-      );
-      updatedRealtor.password = undefined;
-      return updatedRealtor;
-    } catch (err) {
-      console.error(err);
-      throw new InternalServerError("Error en updateRealtorPassword Service");
-    }
-  }
-
   async changeRealtorLogo(realtorId, image) {
     const realtorFromDb = await this.getRealtorById(realtorId);
     const imageLink = image.link;
-  
+
     try {
       realtorFromDb.realtor.logo = imageLink;
       return await this.updateRealtor(realtorFromDb);
@@ -151,6 +147,22 @@ class RealtorService {
 
       realtor.password = undefined;
       return realtor;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  async passwordReset(loginEmail, password) {
+    try {
+      const realtor = await RealtorModel.findOne({ loginEmail });
+      if (!realtor) {
+        throw new UnauthorizedError(
+          "No existe realtore registrado con ese email"
+        );
+      }
+      realtor.password = await bcrypt.hash(password, 10);
+      realtor.save();
     } catch (err) {
       console.error(err);
       throw err;
@@ -230,14 +242,6 @@ class RealtorService {
       console.error(err);
       throw new InternalServerError("Error in addReview Service");
     }
-  }
-
-  async getRealtorByLoginEmail(loginEmail) {
-    const realtor = await RealtorModel.findOne({ loginEmail });
-    if (!realtor) {
-      throw new Error("Realtor not found");
-    }
-    return realtor;
   }
 }
 
