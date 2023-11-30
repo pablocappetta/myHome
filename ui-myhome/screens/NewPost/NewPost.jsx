@@ -87,9 +87,7 @@ const NewPost = ({ navigation }) => {
   };
 
   const handleAddProperty = async () => {
-    setIsLoading(true);
-
-    const requestBody = {
+    const body = {
       realtorId: user._id,
       title: encabezado,
       description: descripcion,
@@ -126,8 +124,8 @@ const NewPost = ({ navigation }) => {
         hasTerrace: terraza,
         hasBalcony: balcon,
         hasStorageUnit: false,
-        amenities: [],
         photos: [],
+        amenities: [],
         video: "",
         expensesPrice: {
           amount: parseInt(expensas),
@@ -141,36 +139,32 @@ const NewPost = ({ navigation }) => {
       },
     };
 
+    const formToSend = new FormData();
+
+    formToSend.append("realtorId", user._id);
+    formToSend.append("title", encabezado);
+    formToSend.append("description", descripcion);
+    formToSend.append("property", JSON.stringify(body.property));
+    formToSend.append("type", tipoOperacion.toLowerCase());
+    formToSend.append("price", JSON.stringify(body.price));
+
     images.forEach((image, index) => {
-      requestBody.append("images", {
+      formToSend.append("images", {
         name: `image-${index}.jpg`,
         type: "image/jpeg",
         uri: image.uri,
       });
     });
 
-    console.log(JSON.stringify(requestBody));
-
     try {
+      setIsLoading(true);
       const listingPost = await fetch("http://3.144.94.74:8000/api/listings", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      }).then((response) => response.json());
-
-      if (listingPost.ok) {
+        body: formToSend,
+      }).then(() => {
         setIsLoading(false);
         ToastAndroid.show("Propiedad agregada", ToastAndroid.LONG);
-        navigation.navigate("Home");
-      } else {
-        setIsLoading(false);
-        ToastAndroid.show(
-          "Se agregó la propiedad, pero las imágenes no pudieron ser adjuntadas. Intenta de nuevo más tarde.",
-          ToastAndroid.LONG
-        );
-      }
+      });
 
       setAmbientes("");
       setAntiguedad("");
@@ -196,6 +190,8 @@ const NewPost = ({ navigation }) => {
       setTipoPropiedad("");
       setValor("");
       setImages([]);
+
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error);
       setIsLoading(false);
