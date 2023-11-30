@@ -97,11 +97,24 @@ export const UserProvider = ({ children }) => {
     getUserData();
   }, [AsyncStorage]);
 
+  const [notificaciones, setNotificaciones] = useState();
   useEffect(() => {
     console.log(
       "Datos de usuario actualizados:",
       getUserDataFromAsyncStorage()
     );
+
+    fetch(`http://3.144.94.74:8000/api/realtors/${user._id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setNotificaciones(data.notifications);
+      })
+      .catch((error) => console.error(error));
   }, [user]);
 
   const store = {
@@ -113,6 +126,7 @@ export const UserProvider = ({ children }) => {
     getUserDataFromAsyncStorage,
     setUserDataToAsyncStorage,
     wipeUserData,
+    notificaciones,
   };
 
   return <UserContext.Provider value={store}>{children}</UserContext.Provider>;

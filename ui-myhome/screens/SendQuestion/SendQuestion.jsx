@@ -9,26 +9,41 @@ import {
 } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 import { Appbar } from "react-native-paper";
+import { useUserContext } from "../../contexts/UserContext";
 
-function SendQuestion({ navigation }) {
+function SendQuestion({ navigation, ...props }) {
   const [question, setQuestion] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarType, setSnackbarType] = useState("");
   const [dialogVisible, setDialogVisible] = useState(false);
 
+  const { user } = useUserContext();
+
   const handleQuestionChange = (text) => {
     setQuestion(text);
   };
 
+  const realtorId = props.route.params;
+  const listingId = props.route.params;
+
   const handleSendQuestion = async () => {
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts",
+        `http://3.144.94.74:8000/api/realtors/${realtorId.params.realtorId}/notifications`,
         {
           method: "POST",
           body: JSON.stringify({
-            question: question,
+            date: new Date().toISOString(),
+            message:
+              "Nuevo mensaje de " +
+              user.name +
+              "\nEmail: " +
+              user.email +
+              "\n" +
+              "\n" +
+              question,
+            listingId: listingId.params.listingId,
           }),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -80,7 +95,7 @@ function SendQuestion({ navigation }) {
           mode="outlined"
           label="Mensaje"
           value={question}
-          onChangeText={handleQuestionChange}
+          onChangeText={(e) => handleQuestionChange(e)}
           multiline={true}
         />
         <Button
