@@ -89,19 +89,8 @@ class ListingController {
     }
   }
 
-  async addImages(req, res, next) {
-    const { id } = req.params;
-    const images = req.files;
-    try {
-      const listing = await ListingService.addImages(id, images);
-      return res.status(200).json(listing);
-    } catch (err) {
-      console.error(err);
-      next(err);
-    }
-  }
-
   async updateListing(req, res, next) {
+    //TODO: imagenes
     const { id } = req.params;
 
     try {

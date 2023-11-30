@@ -61,15 +61,9 @@ router.put(
   ListingController.updateListing
 );
 
-//Agregar imagenes a un listing
-router.post(
-  "/:id/images",
-  upload.array("images", 10),
-  ListingController.addImages
-);
-
 //Actualiza un listing
 router.put(
+  //TODO: imagenes
   "/:id",
   [
     check("id", "El id de la publicación es obligatorio").not().isEmpty(),
