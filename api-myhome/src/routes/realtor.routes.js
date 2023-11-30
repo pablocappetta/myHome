@@ -69,10 +69,10 @@ router.put(
   RealtorController.updateRealtor
 );
 
-// ESTO LO COMENTO PORQUE NO ESTA ANDANDO. atte Mateo
-// //Cambia el logo del realtor
+//ESTO LO COMENTO PORQUE NO ESTA ANDANDO. atte Mateo
+//Cambia el logo del realtor
 // router.post(
-//   "/:realtorId/images",
+//   "/:realtorId/image",
 //   upload.array("image", 10),
 //   RealtorController.changeRealtorLogo
 // );

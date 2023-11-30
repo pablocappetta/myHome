@@ -1,6 +1,12 @@
 let instance = null;
 require("dotenv").config();
 const ListingService = require("../services/listings.service");
+const ImgurStorage = require("multer-storage-imgur");
+const multer = require("multer");
+
+const upload = multer({
+  storage: ImgurStorage({ clientId: process.env.IMGUR_CLIENT_ID }),
+});
 
 class ListingController {
   static getInstance() {
@@ -64,8 +70,25 @@ class ListingController {
 
   async createListing(req, res, next) {
     try {
-      const listing = await ListingService.createListing(req.body);
-      return res.status(201).json(listing);
+      const listing = req.body;
+      const images = req.files;
+      listing.property.photos = images.map((image) => image.link);
+      console.log(listing);
+      console.log(images);
+      const newListing = await ListingService.createListing(listing);
+      return res.status(201).json(newListing);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+
+  async addImages(req, res, next) {
+    const { id } = req.params;
+    const images = req.files;
+    try {
+      const listing = await ListingService.addImages(id, images);
+      return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
       next(err);
@@ -96,18 +119,6 @@ class ListingController {
 
       await ListingService.deleteListing(id);
       return res.status(204).json();
-    } catch (err) {
-      console.error(err);
-      next(err);
-    }
-  }
-
-  async addImages(req, res, next) {
-    const { id } = req.params;
-    const images = req.files;
-    try {
-      const listing = await ListingService.addImages(id, images);
-      return res.status(200).json(listing);
     } catch (err) {
       console.error(err);
       next(err);
