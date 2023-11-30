@@ -81,17 +81,21 @@ class RealtorService {
     try {
       // Use ListingService to delete listings
       const listings = await ListingService.getListingsByRealtorId(realtorId);
-      for (const listing of listings) {
-        await ListingService.deleteListing(listing._id);
+      if (listings.length > 0) {
+        for (const listing of listings) {
+          await ListingService.deleteListing(listing._id);
+        }
       }
 
       // Use ReservationService to delete reservations and corresponding listings
       const reservations = await ReservationService.getReservationsByRealtorId(
         realtorId
       );
-      for (const reservation of reservations) {
-        await ReservationService.deleteReservation(reservation._id);
-        await ListingService.deleteListing(reservation.listingId);
+      if (reservations.length > 0) {
+        for (const reservation of reservations) {
+          await ReservationService.deleteReservation(reservation._id);
+          await ListingService.deleteListing(reservation.listingId);
+        }
       }
 
       // Use RealtorService to delete the realtor
@@ -136,7 +140,7 @@ class RealtorService {
       const realtor = await RealtorModel.findOne({ loginEmail });
       if (!realtor) {
         throw new UnauthorizedError(
-          "No existe realtore registrado con ese email"
+          "No existe realtor registrado con ese email"
         );
       }
       const isPasswordOk = await bcrypt.compare(password, realtor.password);
