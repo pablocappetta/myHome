@@ -7,6 +7,8 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { upperCaseFirst } from "../../helpers/helpers";
 
 const ListingCard = ({ listing, type }) => {
+  const defaultImage =
+    "https://www.facoelche.com/images/placeholder-noimage.jpg";
   const sharedStyles = {
     position: "relative",
   };
@@ -59,7 +61,9 @@ const ListingCard = ({ listing, type }) => {
         </ListingTypeChip>
       </View>
       <Card.Cover
-        source={{ uri: listing?.image || listing?.property?.photos[0] }}
+        source={{
+          uri: listing?.image || listing?.property?.photos[0] || defaultImage,
+        }}
         style={styles.listingImage}
         defaultSource={
           theme.dark
