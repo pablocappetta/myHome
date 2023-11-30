@@ -74,6 +74,10 @@ class ListingController {
       const images = req.files;
       console.log("LISTING", listing);
       console.log("IMAGES", images);
+      if (typeof listing.property == "string")
+        listing.property = JSON.parse(listing.property);
+      if (typeof listing.price == "string")
+        listing.price = JSON.parse(listing.price);
       listing.property.photos = images.map((image) => image.link);
       console.log(listing);
       console.log(images);
