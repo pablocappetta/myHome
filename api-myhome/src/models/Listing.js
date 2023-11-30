@@ -53,7 +53,7 @@ const ListingSchema = new Schema(
       hasStorageUnit: Boolean,
       hasGarden: Boolean,
       amenities: [String],
-      photos: [String],
+      photos: { type: [String], validate: [validatePhotos, "2 fotos mínimo"] },
       video: String,
       expensesPrice: {
         amount: Number,
@@ -74,6 +74,10 @@ const ListingSchema = new Schema(
   },
   { versionKey: false }
 ).index({ "property.geoLocation": "2dsphere" });
+
+function validatePhotos(photos) {
+  return photos.length >= 2;
+}
 
 const Listings = mongoose.model("Listing", ListingSchema);
 

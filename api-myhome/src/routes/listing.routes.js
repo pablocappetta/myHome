@@ -58,17 +58,7 @@ router.put(
     check("id", "El id de la publicación es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ListingController.updateListing
-);
-
-//Actualiza un listing
-router.put(
-  //TODO: imagenes
-  "/:id",
-  [
-    check("id", "El id de la publicación es obligatorio").not().isEmpty(),
-    checkFields,
-  ],
+  upload.array("images", 10),
   ListingController.updateListing
 );
 

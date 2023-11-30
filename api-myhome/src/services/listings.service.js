@@ -19,6 +19,21 @@ class ListingService {
     }
   }
 
+  async updateListing(id, listing) {
+    try {
+      return await ListingModel.findOneAndUpdate({ _id: id }, listing, {
+        new: true,
+        runValidators: true,
+      });
+    } catch (err) {
+      console.error(err);
+      if (err instanceof ValidationError) {
+        throw new BadRequestError("Error en validaciones de Mongoose.");
+      }
+      throw new InternalServerError("Error en updateListing Service");
+    }
+  }
+
   async getListings() {
     try {
       const listings = await ListingModel.find();
@@ -92,20 +107,6 @@ class ListingService {
     } catch (err) {
       console.error(err);
       throw new InternalServerError("Error en getListingById Service");
-    }
-  }
-
-  async updateListing(id, listing) {
-    try {
-      return await ListingModel.findOneAndUpdate({ _id: id }, listing, {
-        new: true,
-      });
-    } catch (err) {
-      console.error(err);
-      if (err instanceof ValidationError) {
-        throw new BadRequestError("Error en validaciones de Mongoose.");
-      }
-      throw new InternalServerError("Error en createUser Service");
     }
   }
 
