@@ -3,10 +3,6 @@ const { check } = require("express-validator");
 const RealtorController = require("../controllers/realtor.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
-const RealtorService = require("../services/realtor.service");
-const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
-const bcrypt = require("bcrypt");
 
 const router = Router();
 
@@ -28,90 +24,22 @@ router.post(
 );
 
 //Restablece la contraseña de un usuario
-router.post("/password-reset", async (req, res) => {
-  const { email: loginEmail } = req.body;
-
-  const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
-
-  if (realtor) {
-    const token = jwt.sign({ loginEmail }, process.env.PRIVATE_KEY, {
-      expiresIn: "1h",
-    });
-
-    const transporter = nodemailer.createTransport({
-      service: "Outlook",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: loginEmail,
-      subject: "myHome - Solicitud de restablecimiento contraseña",
-      html: `
-      <p>¡Hola, ${realtor.name}!</p>
-      <p>Has solicitado restablecer tu contraseña. Para hacerlo, por favor copiá el siguiente código en la aplicación:</p>
-      <p><b>${token}</b></p>
-      <p>Si no solicitaste este restablecimiento de contraseña, podés ignorar este mensaje.</p>
-      <p>Saludos,</p>
-      <b>El equipo de myHome</b>
-      `,
-    };
-
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          message: "Error al enviar el email",
-        });
-      } else {
-        console.log(info);
-        return res.status(200).json({
-          message: "Se ha enviado un email para restablecer la contraseña",
-        });
-      }
-    });
-
-    res.status(200).json({
-      message: "Se ha enviado un email para restablecer la contraseña",
-    });
-  } else {
-    res.status(404).json({
-      message: "No se ha encontrado el usuario",
-    });
-  }
-});
+router.post(
+  "/password-reset",
+  [check("email").not().isEmpty(), checkFields],
+  RealtorController.passwordResetStart
+);
 
 //Restablece la contraseña de un usuario
-router.post("/password-reset/:token", async (req, res) => {
-  const { token } = req.params;
-  const { password } = req.body;
-
-  try {
-    const { loginEmail } = jwt.verify(token, process.env.PRIVATE_KEY);
-
-    const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
-
-    if (realtor) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await RealtorService.updateRealtorPassword(realtor, hashedPassword);
-      res.status(200).json({
-        message: "Contraseña actualizada correctamente",
-      });
-    } else {
-      res.status(404).json({
-        message: "No se ha encontrado el usuario",
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      message: "Error al actualizar la contraseña",
-    });
-  }
-});
+router.post(
+  "/password-reset/:token",
+  [
+    check("token").not().isEmpty(),
+    check("password").not().isEmpty(),
+    checkFields,
+  ],
+  RealtorController.passwordResetEnd
+);
 
 //agrega una notificacion de un realtor
 router.post(
@@ -141,12 +69,13 @@ router.put(
   RealtorController.updateRealtor
 );
 
-//Cambia el logo del realtor
-router.post(
-  "/:realtorId/images",
-  upload.array("image", 10),
-  RealtorController.changeRealtorLogo
-);
+// ESTO LO COMENTO PORQUE NO ESTA ANDANDO. atte Mateo
+// //Cambia el logo del realtor
+// router.post(
+//   "/:realtorId/images",
+//   upload.array("image", 10),
+//   RealtorController.changeRealtorLogo
+// );
 
 // Borra un realtor, listings y reservas
 router.delete(
