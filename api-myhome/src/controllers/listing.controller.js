@@ -72,7 +72,8 @@ class ListingController {
     try {
       const listing = req.body;
       const images = req.files;
-      console.log(images);
+      console.log("LISTING", listing);
+      console.log("IMAGES", images);
       listing.property.photos = images.map((image) => image.link);
       console.log(listing);
       console.log(images);
