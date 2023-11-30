@@ -89,12 +89,11 @@ const ListingCard = ({ listing, type }) => {
             }}
           >
             <Text variant="bodyLarge" style={{ fontWeight: 600 }}>
-              {listing?.currency || listing?.price?.currency}
+              {listing?.price?.currency}
             </Text>
             <Text variant="bodyLarge" style={{ fontWeight: 800 }}>
               $
-              {commaNumber(listing?.price?.amount) ||
-                commaNumber(listing?.price)}
+              {commaNumber(listing?.price?.amount) }
             </Text>
           </View>
         </View>

@@ -1,21 +1,30 @@
 import React, { useState } from 'react';
 import { Button, List, Divider, Modal, Text, useTheme } from 'react-native-paper';
 import  FilterRow  from './FilterRow/FilterRow';
-import { filters } from './FilterRow/filters';
+import { DisplayFilter, filters } from './FilterRow/filters';
 import { View, StyleSheet, ScrollView } from 'react-native';
+import { Filter } from '../../../helpers/filterHelper';
 
-export const FiltersModal = ({ isModalOpen, onClose, onCommitFilters }) => {
-    const [selectedFilters, setSelectedFilters] = useState(new Map(filters.map((filter) => [filter.title, filter.options.filter((f) => f.selected).map((f) => f.value)])));
+export const FiltersModal: React.FC<{ isModalOpen: boolean, onClose: () => void, onCommitFilters: (selectedFilters: Filter[]) => void }> = ({ isModalOpen, onClose, onCommitFilters }) => {
+    const [selectedFilters, setSelectedFilters] = useState<Filter[]>([])
 
-    const handleFilterChange = (filter, title) => {   
+    const handleFilterChange = (filter: Filter) => {   
         //get all values in filter that are true 
-        const values = Array.from(filter.keys()).filter((value) => filter.get(value) === true).map((value) => value.value);
-        const newSelectedFilters = new Map(selectedFilters);
-        newSelectedFilters.set(title, values);
+        // console.log(selectedFilters)
+        const newSelectedFilters = [...selectedFilters]        
+        // check if a filter with the same key already exists
+        const existingFilterIndex = newSelectedFilters.findIndex(f => f.key === filter.key);
+        if (existingFilterIndex === -1) {
+            // if it doesn't exist, add it
+            newSelectedFilters.push(filter);
+        } else {
+            // if it does exist, replace it
+            newSelectedFilters[existingFilterIndex] = filter;
+        }
         setSelectedFilters(newSelectedFilters);
     };
 
-    const [filterList, setFilters] = useState(filters);
+    const [filterList, setFilters] = useState<DisplayFilter[]>(filters);
 
     const handleApplyFilters = () => {
         // Handle applying filters logic here
@@ -24,7 +33,7 @@ export const FiltersModal = ({ isModalOpen, onClose, onCommitFilters }) => {
     };
 
     const handleClearFilters = () => {
-       setSelectedFilters(new Map(filters.map((filter) => [filter.title, filter.options.filter((f) => f.selected).map((f) => f.value)])))
+       setSelectedFilters([])
        onClose();
     };
 
@@ -46,8 +55,8 @@ export const FiltersModal = ({ isModalOpen, onClose, onCommitFilters }) => {
                     <List.Section>
                         {
                         filterList.map((filter) => (
-                            <React.Fragment key={filter.id}>
-                                <FilterRow headerText={filter.title} filter={filter} options={filter.options} onChange={handleFilterChange} />
+                            <React.Fragment key={filter.value}>
+                                <FilterRow headerText={filter.title} filterKey={filter.value} options={filter.options} onChange={handleFilterChange} value={filter.value} showSlider={filter.isSlider} sliderValue={undefined} onSliderValueChange={undefined} multiSelect={filter.isMultiselect} />
                             </React.Fragment>
                         ))}
                     </List.Section>

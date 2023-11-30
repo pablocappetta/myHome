@@ -1,44 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { Appbar, Searchbar, IconButton, List, Text, Chip } from 'react-native-paper';
 import { mockedListings } from '../mock/MockedHomeData';
 import ListingCard from '../../../components/ListingCard/ListingCard';
 import FiltersModal from '../Filters/Filters';
+import { Property, filterProperties, Filter } from '../../../helpers/filterHelper';
 
+interface SearchProps {
+    navigation: any;
+    route: any;
+}
 
-const Search = ({ navigation, searchText }) => {
-    const [searchQuery, setSearchQuery] = React.useState(searchText);
-    const [filteredPosts, setFilteredPosts] = React.useState(mockedListings);
-    const [isModalOpen, setIsDrawerOpen] = React.useState(false);
-    const [appliedFilters, setAppliedFilters] = React.useState({});
+const Search: React.FC<SearchProps> = ({ navigation, route }) => {
+    const initialProperties = {...route?.params?.listings};
+    const [searchQuery, setSearchQuery] = useState(route.params.searchText);
+    const [filteredPosts, setFilteredPosts] = useState<Property[]>(route?.params?.listings); // Set filteredPosts to be of type FilterProperty[]
+    const [isModalOpen, setIsDrawerOpen] = useState(false);
+    const [appliedFilters, setAppliedFilters] = useState<Filter[]>([]);
 
-    const onChangeSearch = query => setSearchQuery(query);
+    const onChangeSearch = (query: string) => setSearchQuery(query);
 
-    const onCommitFilters = (filters) => {
-        // Handle applying filters logic here
-        // create an object from the map of filters, the key is the title and the value is the filters selected
-        const filtersObject = Object.fromEntries(filters.entries());
+    const onCommitFilters = (filters: Filter[]) => {
+        // Filter out the filters where the values include "todas" or "todos"
+        console.log(filters)
+        const filteredFilters: Filter[] = [];
+        for (const filter of filters) {
+            const filteredValues = filter.values.filter(value => !value.toLowerCase().includes("todas") && !value.toLowerCase().includes("todos"));
+            if (filteredValues.length > 0) {
+                filteredFilters.push(filter);
+            }
+        }
+        const newProperties = filterProperties(filteredPosts, filteredFilters, true);
+        setFilteredPosts(newProperties);
         setIsDrawerOpen(false);
-        setAppliedFilters(filtersObject);
+        setAppliedFilters(filteredFilters);
     }
 
-    const onRemoveFilter = (filterTitle) => {
+    const onRemoveFilter = (filterTitle: string) => {
         const newFilters = { ...appliedFilters };
         delete newFilters[filterTitle];
+        const newProperties = filterProperties(filteredPosts, newFilters, true);
+        setFilteredPosts(newProperties);
         setAppliedFilters(newFilters);
     }
+    
 
     return (
         <View style={{ flex: 1 }}>
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => { navigation.goBack() }} />
                 <Searchbar
-                    placeholder="Search"
+                    placeholder="Buscar"
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                     style={{ flex: 1 }}
                 />
-                <IconButton icon="filter" onPress={() => { setIsDrawerOpen(true)}} style={{alignSelf: 'center'}} />
+                <IconButton icon="filter" onPress={() => { setIsDrawerOpen(true) }} style={{ alignSelf: 'center' }} />
             </Appbar.Header>
 
             <ScrollView>
@@ -57,20 +74,21 @@ const Search = ({ navigation, searchText }) => {
                             variant="titleLarge"
                             style={{ fontWeight: "bold", marginBottom: 8, marginRight: 8, alignSelf: "flex-start" }}
                         >
-                            {filteredPosts.length} resultados
+                            {filteredPosts?.length ? filteredPosts?.length : 0} resultados
                         </Text>
                         {
-                            Object.keys(appliedFilters).length > 0 && (
+                            appliedFilters?.length > 0 && (
                                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                                    {Object.keys(appliedFilters).map((filterTitle) => {
-                                        const capitalizedValues = appliedFilters[filterTitle].map(value => value.charAt(0).toUpperCase() + value.slice(1));
-                                        return(
-                                            <Chip 
-                                            icon={"close"}
-                                            onPress={() => onRemoveFilter(filterTitle)}
-                                            key={filterTitle} style={{ marginRight: 8 }}>
-                                                <Text style={{ textTransform: "capitalize" }}>{filterTitle}: </Text>
-                                                <Text>{capitalizedValues.join(", ")}</Text>
+                                    {appliedFilters?.map((filter) => {
+                                        console.log(filter)
+                                        const capitalizedValues = filter.values.map(value => value.charAt(0).toUpperCase() + value.slice(1));
+                                        return (
+                                            <Chip
+                                                icon={"close"}
+                                                onPress={() => onRemoveFilter(filter.key)}
+                                                key={filter.key} style={{ marginRight: 8 }}>
+                                                <Text style={{ textTransform: "capitalize" }}>{filter.title}: </Text>
+                                                <Text>{capitalizedValues?.join(", ")}</Text>
                                             </Chip>
                                         )
                                     })}
@@ -90,10 +108,10 @@ const Search = ({ navigation, searchText }) => {
                     }}
                 >
 
-                    {filteredPosts.map((post, index) => {
+                    {filteredPosts?.map((post: any, index: number) => {
                         return (
                             <TouchableOpacity
-                                key={index + post.id}
+                                key={index + post._id}
                                 onPress={() => navigation.navigate("Post", post)}
                                 style={{ width: "50%", marginBottom: 15 }}
                             >

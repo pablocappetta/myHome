@@ -55,7 +55,7 @@ const ListingFavoriteCard = ({ listing, handleRemoveFavorite }) => {
         />
       </View>
       <Card.Cover
-        source={{ uri: listing?.photos?.[0] }}
+        source={{ uri: listing?.property?.photos?.[0] }}
         style={styles.listingImage}
         defaultSource={
           theme?.dark
