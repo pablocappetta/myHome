@@ -49,9 +49,17 @@ const NewPost = ({ navigation }) => {
   const [images, setImages] = React.useState([]);
   const [listingId, setListingId] = React.useState(null);
 
-  const orientacionRelativaOptions = ['Frente', 'Contrafrente', 'Lateral'];
-  const orientacionAbsolutaOptions = ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'];
-
+  const orientacionRelativaOptions = ["Frente", "Contrafrente", "Lateral"];
+  const orientacionAbsolutaOptions = [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SO",
+    "O",
+    "NO",
+  ];
 
   useEffect(() => {
     (async () => {
@@ -133,6 +141,14 @@ const NewPost = ({ navigation }) => {
       },
     };
 
+    images.forEach((image, index) => {
+      requestBody.append("images", {
+        name: `image-${index}.jpg`,
+        type: "image/jpeg",
+        uri: image.uri,
+      });
+    });
+
     console.log(JSON.stringify(requestBody));
 
     try {
@@ -144,25 +160,7 @@ const NewPost = ({ navigation }) => {
         body: JSON.stringify(requestBody),
       }).then((response) => response.json());
 
-      const imageRequestBody = new FormData();
-
-      images.forEach((image, index) => {
-        imageRequestBody.append("images", {
-          name: `image-${index}.jpg`,
-          type: "image/jpeg",
-          uri: image.uri,
-        });
-      });
-
-      const imagePostResponse = await fetch(
-        `http://3.144.94.74:8000/api/listings/${listingPost._id}/images`,
-        {
-          method: "POST",
-          body: imageRequestBody,
-        }
-      );
-
-      if (imagePostResponse.ok) {
+      if (listingPost.ok) {
         setIsLoading(false);
         ToastAndroid.show("Propiedad agregada", ToastAndroid.LONG);
         navigation.navigate("Home");
@@ -428,8 +426,9 @@ const NewPost = ({ navigation }) => {
               ></TextInput>
             </View>
             <View className="flex flex-row gap-2">
-              <View className="flex flex-row gap-2"
-              style={{marginBottom: 10}}
+              <View
+                className="flex flex-row gap-2"
+                style={{ marginBottom: 10 }}
               >
                 <SelectDropdown
                   buttonStyle={{
@@ -445,7 +444,6 @@ const NewPost = ({ navigation }) => {
                     color: "#000000",
                     textAlign: "left",
                   }}
-
                   data={orientacionRelativaOptions}
                   defaultValue={"Seleccionar"}
                   onSelect={(selectedItem, index) => {
@@ -475,7 +473,6 @@ const NewPost = ({ navigation }) => {
                   color: "#000000",
                   textAlign: "left",
                 }}
-                
                 data={orientacionAbsolutaOptions}
                 defaultValue={"Seleccionar"}
                 onSelect={(selectedItem, index) => {
