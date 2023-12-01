@@ -122,7 +122,6 @@ export const ListingPost = ({ navigation, ...props }) => {
           console.error("Failed to remove favorite", error);
         });
     } else {
-      console.log(userId, postId);
       // Add favorite
       await fetch(
         `http://3.144.94.74:8000/api/users/${userId}/favorites/${postId}`,
@@ -625,10 +624,13 @@ export const ListingPost = ({ navigation, ...props }) => {
               )}
             </View>
             <View style={styles.containerPriceDetails}>
-              <Text variant="labelSmall" numberOfLines={1}>
+              <Text
+                variant="labelSmall"
+                style={{ color: theme.colors.secondary, marginRight: 16 }}
+                numberOfLines={1}
+              >
                 {listing?.price?.currency ?? ""}
               </Text>
-              <IconButton icon="currency-usd" />
               <View>
                 {edit ? (
                   <TextInput
@@ -1109,7 +1111,6 @@ const styles = StyleSheet.create({
   containerPriceDetails: {
     display: "flex",
     flexDirection: "row",
-
     alignItems: "center",
   },
   price: {
