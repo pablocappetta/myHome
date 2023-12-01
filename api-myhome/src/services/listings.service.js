@@ -1,6 +1,8 @@
 const {
   InternalServerError,
   BadRequestError,
+  NotFoundError,
+  CustomError,
 } = require("../middlewares/errorHandler");
 const ListingModel = require("../models/Listing");
 const mongoose = require("mongoose");
@@ -21,14 +23,24 @@ class ListingService {
 
   async updateListing(id, listing) {
     try {
-      return await ListingModel.findOneAndUpdate({ _id: id }, listing, {
-        new: true,
-        runValidators: true,
-      });
+      const updateListing = await ListingModel.findOneAndUpdate(
+        { _id: id, realtorId: listing.realtorId },
+        listing,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+      if (!updateListing) {
+        throw new NotFoundError("No se encontró la publicación");
+      }
     } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
         throw new BadRequestError("Error en validaciones de Mongoose.");
+      }
+      if (err instanceof CustomError) {
+        throw err;
       }
       throw new InternalServerError("Error en updateListing Service");
     }
