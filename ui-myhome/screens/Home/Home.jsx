@@ -69,13 +69,14 @@ const Home = ({ navigation }) => {
   };
 
   const handleSearchSubmitChange = ({ nativeEvent }) => {
+    navigation.navigate("Search", { searchText: nativeEvent.text, listings: recentListings });
     setSearchQuery(nativeEvent.text);
     setHighlightedListing(
       getFilteredListingByQuery(highlightedListings, nativeEvent.text)
     );
-    setRecentListings(
-      getFilteredListingByQuery(recentListings, nativeEvent.text)
-    );
+    // setRecentListings(
+    //   getFilteredListingByQuery(recentListings, nativeEvent.text)
+    // );
     setIsQueryActive(true);
   };
 

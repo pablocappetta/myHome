@@ -26,9 +26,9 @@ const Settings = ({ navigation }) => {
 
   const handleDeleteAccount = () => {
     // Call API to delete account
-    const userId = user.id;
+    const userId = user._id;
     // Replace `API_ENDPOINT` with the actual endpoint for deleting an account
-    fetch(`API_ENDPOINT/deleteAccount?userId=${userId}`, {
+    fetch(`http://3.144.94.74:8000/api/realtors/${userId}`, {
       method: "DELETE",
     })
       .then((response) => response.json())

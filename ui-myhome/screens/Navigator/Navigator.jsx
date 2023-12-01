@@ -190,7 +190,7 @@ const Navigator = () => {
             options={{
               tabBarLabel: "Notificaciones",
               tabBarIcon: "bell",
-              tabBarBadge: notificaciones.length,
+              tabBarBadge: notificaciones?.length,
             }}
           />
           <Tab.Screen
