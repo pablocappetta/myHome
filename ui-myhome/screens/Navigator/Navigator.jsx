@@ -63,6 +63,7 @@ const NotificationsScreenRoutes = () => {
     >
       <Stack.Screen name="Notificaciones" component={Notifications} />
       <Stack.Screen name="Notificacion" component={NotificationView} />
+      <Stack.Screen name="Post" component={ListingPost} />
     </Stack.Navigator>
   );
 };

@@ -152,7 +152,7 @@ export const ListingPost = ({ navigation, ...props }) => {
   const handleDelete = () => {
     Alert.alert(
       "Eliminar propiedad",
-      "La propiedad se eliminara permanentemente. Esta seguro que desea eliminarla?",
+      "La propiedad se eliminará permanentemente. ¿Está seguro de que desea eliminarla?",
       [
         { text: "Cancelar", onPress: () => console.log("Cancel Pressed") },
         {

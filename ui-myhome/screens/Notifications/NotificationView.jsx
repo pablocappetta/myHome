@@ -27,8 +27,8 @@ const NotificationView = ({ navigation, ...props }) => {
 
   function handleDelete() {
     Alert.alert(
-      "Eliminar notificacion",
-      "Se eliminara la notificacion. Esta seguro que desea eliminarla?",
+      "Eliminar notificación",
+      "Se eliminará la notificación. ¿Está seguro de que desea eliminarla?",
       [
         { text: "Cancelar", onPress: () => console.log("Cancel Pressed") },
         {
@@ -76,13 +76,17 @@ const NotificationView = ({ navigation, ...props }) => {
           </Text>
         </View>
         <View className="flex flex-row items-center justify-between">
-          <Text className="my-1 text-[18px] font-medium">
-            Consulta por: {listing?.title || "listing title"}
+          <Text
+            className="my-1 text-[18px] font-medium"
+            numberOfLines={1}
+            style={{ width: "50%" }}
+          >
+            {listing?.title || "listing title"}
           </Text>
           <Button
             icon="eye"
             onPress={() => navigation.navigate("Post", listing)}
-            mode="contained"
+            mode="text"
           >
             Ver propiedad
           </Button>
