@@ -28,8 +28,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 import { useUserContext } from "../../../contexts/UserContext";
 import { isStringALink, upperCaseFirst } from "../../../helpers/helpers";
-import Geocoder from "react-native-geocoding";
-//Es un work in progress. Tengo un quilombo de estilos y cosas por todos lados. No me juzguen :P
+// import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 export const ListingPost = ({ navigation, ...props }) => {
   const { user, isUserLogged } = useUserContext();
@@ -383,33 +382,33 @@ export const ListingPost = ({ navigation, ...props }) => {
     longitudeDelta: 0.1,
   });
 
-  const apiKey = process.env.GOOGLE_APIKEY;
+  // const apiKey = process.env.GOOGLE_APIKEY;
 
-  Geocoder.init(apiKey);
+  // Geocoder.init(apiKey);
 
-  const [address, setAddress] = useState("Buenos Aires");
+  // const [address, setAddress] = useState("Buenos Aires");
 
-  useEffect(() => {
-    Geocoder.from(address, apiKey).then((json) => {
-      var location = json.results[0].geometry.location;
-      console.log(address, location);
-      setRegion({
-        latitude: location.lat,
-        longitude: location.lng,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02,
-      });
-    });
-    setAddress(
-      `${listing?.property?.address?.street}, ${listing?.property?.address?.number}, ${listing?.property?.address?.city}, ${listing?.property?.address?.state}`
-    );
-  }, [address]);
+  // useEffect(() => {
+  //   Geocoder.from(address, apiKey).then((json) => {
+  //     var location = json.results[0].geometry.location;
+  //     console.log(address, location);
+  //     setRegion({
+  //       latitude: location.lat,
+  //       longitude: location.lng,
+  //       latitudeDelta: 0.02,
+  //       longitudeDelta: 0.02,
+  //     });
+  //   });
+  //   setAddress(
+  //     `${listing?.property?.address?.street}, ${listing?.property?.address?.number}, ${listing?.property?.address?.city}, ${listing?.property?.address?.state}`
+  //   );
+  // }, [address]);
 
   // const mapa = () => {
   //   return (
   //     <MapView
   //       style={styles.mapView}
-  //       provider={PROVIDER_GOOGLE}
+  //       // provider={PROVIDER_GOOGLE}
   //       region={region}
   //     >
   //       <Marker
@@ -980,7 +979,23 @@ export const ListingPost = ({ navigation, ...props }) => {
                 Vista satelital
               </List.Subheader>
 
-              <View style={styles.containerMapView}>{mapa()}</View>
+              <View style={styles.containerMapView}>
+                <MapView
+                  style={styles.mapView}
+                  provider={PROVIDER_GOOGLE}
+                  region={region}
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: region.latitude,
+                      longitude: region.longitude,
+                    }}
+                    title={"Ubicacion"}
+                    description={"Ubicacion"}
+                    draggable={false}
+                  />
+                </MapView>
+              </View>
             </View>
           )} */}
 
@@ -1011,7 +1026,14 @@ export const ListingPost = ({ navigation, ...props }) => {
               >
                 <Button
                   mode="outlined"
-                  onPress={() => navigation.navigate("SendQuestion")}
+                  onPress={() =>
+                    navigation.navigate("SendQuestion", {
+                      params: {
+                        realtorId: listing.realtorId,
+                        listingId: listing._id,
+                      },
+                    })
+                  }
                 >
                   Contactar
                 </Button>

@@ -14,7 +14,6 @@ import Notifications from "../Notifications/Notifications";
 import NewPost from "../NewPost/NewPost";
 import HomeOwner from "../Home/HomeOwner";
 import NotificationView from "../Notifications/NotificationView";
-import { notifications } from "../Notifications/mock/notificationsMock";
 import BookingDate from "../Booking/BookingDate/BookingDate";
 import BookingInfo from "../Booking/BookingInfo/BookingInfo";
 import BookingPayment from "../Booking/BookingPayment/BookingPayment";
@@ -165,6 +164,7 @@ const Navigator = () => {
   const { getUserType } = useUserContext();
   const owner = getUserType() === "realtor";
   const [isTransparent, setIsTransparent] = useState(false);
+  const { notificaciones } = useUserContext();
 
   if (owner) {
     return (
@@ -190,7 +190,7 @@ const Navigator = () => {
             options={{
               tabBarLabel: "Notificaciones",
               tabBarIcon: "bell",
-              tabBarBadge: notifications.length,
+              tabBarBadge: notificaciones.length,
             }}
           />
           <Tab.Screen

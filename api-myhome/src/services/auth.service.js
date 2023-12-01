@@ -1,7 +1,10 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const RealtorModel = require("../models/Realtor");
-const { InternalServerError } = require("../middlewares/errorHandler");
+const {
+  InternalServerError,
+  UnauthorizedError,
+} = require("../middlewares/errorHandler");
 const jwt = require("jsonwebtoken");
 
 class AuthService {
@@ -22,7 +25,7 @@ class AuthService {
     }
   }
 
-  async generateToken(id, type) {
+  async generateLoginToken(id, type) {
     try {
       const token = jwt.sign(
         {
@@ -36,6 +39,32 @@ class AuthService {
     } catch (err) {
       console.error(err);
       throw new InternalServerError("Error al generar token");
+    }
+  }
+
+  async generatePasswordResetToken(loginEmail) {
+    try {
+      const token = jwt.sign(
+        {
+          loginEmail: loginEmail,
+        },
+        process.env.PRIVATE_KEY,
+        { expiresIn: "1h" }
+      );
+      return token;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error al generar token");
+    }
+  }
+
+  async getLoginEmailFromPasswordResetToken(token) {
+    try {
+      const { loginEmail } = jwt.verify(token, process.env.PRIVATE_KEY);
+      return loginEmail;
+    } catch (err) {
+      console.error(err);
+      throw new UnauthorizedError("Error al obtener loginEmail");
     }
   }
 }

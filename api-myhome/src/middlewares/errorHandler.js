@@ -17,7 +17,7 @@ class BadRequestError extends CustomError {
 class UnauthorizedError extends CustomError {
   constructor(log) {
     console.error(log);
-    super(401, log);
+    super(401, "Unauthorized");
   }
 }
 

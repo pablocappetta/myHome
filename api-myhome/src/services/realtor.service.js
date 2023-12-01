@@ -35,6 +35,17 @@ class RealtorService {
     }
   }
 
+  async getRealtorByLoginEmail(loginEmail) {
+    try {
+      const realtor = await RealtorModel.findOne({ loginEmail });
+      realtor.password = undefined;
+      return realtor;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en getRealtorByLoginEmail Service");
+    }
+  }
+
   async isRealtorRegistered(loginEmail) {
     try {
       const realtor = await RealtorModel.findOne({ loginEmail });
@@ -70,17 +81,21 @@ class RealtorService {
     try {
       // Use ListingService to delete listings
       const listings = await ListingService.getListingsByRealtorId(realtorId);
-      for (const listing of listings) {
-        await ListingService.deleteListing(listing._id);
+      if (listings.length > 0) {
+        for (const listing of listings) {
+          await ListingService.deleteListing(listing._id);
+        }
       }
 
       // Use ReservationService to delete reservations and corresponding listings
       const reservations = await ReservationService.getReservationsByRealtorId(
         realtorId
       );
-      for (const reservation of reservations) {
-        await ReservationService.deleteReservation(reservation._id);
-        await ListingService.deleteListing(reservation.listingId);
+      if (reservations.length > 0) {
+        for (const reservation of reservations) {
+          await ReservationService.deleteReservation(reservation._id);
+          await ListingService.deleteListing(reservation.listingId);
+        }
       }
 
       // Use RealtorService to delete the realtor
@@ -107,25 +122,10 @@ class RealtorService {
     }
   }
 
-  async updateRealtorPassword(realtorId, password) {
-    try {
-      const updatedRealtor = await RealtorModel.findOneAndUpdate(
-        { _id: realtorId },
-        { password },
-        { new: true }
-      );
-      updatedRealtor.password = undefined;
-      return updatedRealtor;
-    } catch (err) {
-      console.error(err);
-      throw new InternalServerError("Error en updateRealtorPassword Service");
-    }
-  }
-
   async changeRealtorLogo(realtorId, image) {
     const realtorFromDb = await this.getRealtorById(realtorId);
     const imageLink = image.link;
-  
+
     try {
       realtorFromDb.realtor.logo = imageLink;
       return await this.updateRealtor(realtorFromDb);
@@ -140,7 +140,7 @@ class RealtorService {
       const realtor = await RealtorModel.findOne({ loginEmail });
       if (!realtor) {
         throw new UnauthorizedError(
-          "No existe realtore registrado con ese email"
+          "No existe realtor registrado con ese email"
         );
       }
       const isPasswordOk = await bcrypt.compare(password, realtor.password);
@@ -151,6 +151,22 @@ class RealtorService {
 
       realtor.password = undefined;
       return realtor;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  async passwordReset(loginEmail, password) {
+    try {
+      const realtor = await RealtorModel.findOne({ loginEmail });
+      if (!realtor) {
+        throw new UnauthorizedError(
+          "No existe realtore registrado con ese email"
+        );
+      }
+      realtor.password = await bcrypt.hash(password, 10);
+      realtor.save();
     } catch (err) {
       console.error(err);
       throw err;
@@ -230,14 +246,6 @@ class RealtorService {
       console.error(err);
       throw new InternalServerError("Error in addReview Service");
     }
-  }
-
-  async getRealtorByLoginEmail(loginEmail) {
-    const realtor = await RealtorModel.findOne({ loginEmail });
-    if (!realtor) {
-      throw new Error("Realtor not found");
-    }
-    return realtor;
   }
 }
 

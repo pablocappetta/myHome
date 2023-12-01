@@ -2,6 +2,7 @@ let instance = null;
 require("dotenv").config();
 const RealtorService = require("../services/realtor.service");
 const AuthService = require("../services/auth.service");
+const nodemailer = require("nodemailer");
 
 class RealtorController {
   static getInstance() {
@@ -28,6 +29,66 @@ class RealtorController {
       return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
+      next(err);
+    }
+  }
+
+  async passwordResetStart(req, res, next) {
+    const { email: loginEmail } = req.body;
+
+    const realtor = await RealtorService.getRealtorByLoginEmail(loginEmail);
+    if (!realtor) {
+      return res.status(200).json();
+    }
+    const token = await AuthService.generatePasswordResetToken(loginEmail);
+    const transporter = nodemailer.createTransport({
+      service: "Outlook",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: loginEmail,
+      subject: "myHome - Solicitud de restablecimiento contraseña",
+      html: `
+      <p>¡Hola, ${realtor.name}!</p>
+      <p>Has solicitado restablecer tu contraseña. Para hacerlo, por favor copiá el siguiente código en la aplicación:</p>
+      <p><b>${token}</b></p>
+      <p>Si no solicitaste este restablecimiento de contraseña, podés ignorar este mensaje.</p>
+      <p>Saludos,</p>
+      <b>El equipo de myHome</b>
+      `,
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(info);
+      }
+    });
+    return res.status(200).json(); //devuelve siempre 200, por seguridad
+  }
+
+  async passwordResetEnd(req, res, next) {
+    try {
+      const { token } = req.params;
+      const { password } = req.body;
+
+      const loginEmail = await AuthService.getLoginEmailFromPasswordResetToken(
+        token
+      );
+
+      if (!loginEmail) {
+        throw new UnauthorizedError("Token inválido");
+      }
+      await RealtorService.passwordReset(loginEmail, password);
+      return res.status(200).json();
+    } catch (err) {
+      console.log(err);
       next(err);
     }
   }
@@ -104,7 +165,10 @@ class RealtorController {
         req.body.email,
         req.body.password
       );
-      const token = await AuthService.generateToken(realtor._id, "realtor");
+      const token = await AuthService.generateLoginToken(
+        realtor._id,
+        "realtor"
+      );
       return res.status(200).json({ token: token, realtor: realtor });
     } catch (err) {
       console.error(err);

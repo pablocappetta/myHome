@@ -4,9 +4,15 @@ import React from "react";
 import { useTheme } from "../../contexts/ThemeContext";
 
 const Notification = ({ noti }) => {
+  console.debug("Notification", noti);
+
+  const dateObject = new Date(noti.date);
+  const date = dateObject.toLocaleDateString();
+  const time = dateObject.toLocaleTimeString();
+
   const { theme } = useTheme();
   return (
-    <View className="flex flex-row gap-6 px-4 py-6">
+    <View className="flex flex-row gap-6 px-4 py-6 justify-between">
       <View className="flex gap-1 items-center">
         <IconButton
           icon={noti.type === "Consulta" ? "message-badge" : "check-circle"}
@@ -14,7 +20,7 @@ const Notification = ({ noti }) => {
           style={{ padding: 0, margin: 0 }}
         />
       </View>
-      <View className="flex gap-1">
+      <View className="flex gap-1 w-[45%] ">
         <View className="flex flex-row">
           <Text
             className="font-bold text-[16px] mr-2"
@@ -22,12 +28,11 @@ const Notification = ({ noti }) => {
               color: theme.dark ? MD3Colors.primary80 : MD3Colors.primary20,
             }}
           >
-            {noti.type}:
+            {noti?.type || "Consulta"}
           </Text>
-          <Text className="font-bold text- text-[16px]">{noti.name}</Text>
         </View>
-        <Text className="cursor-vertical-text overflow-hidden line-clamp-1 ">
-          {noti.description}
+        <Text className="cursor-vertical-text overflow-hidden line-clamp-2 max-h-[35px]">
+          {noti?.message || "Mensaje"}
         </Text>
       </View>
       <View>
@@ -40,10 +45,11 @@ const Notification = ({ noti }) => {
             alignContent: "center",
             gap: 4,
             marginTop: 8,
+            paddingRight: 8,
           }}
         >
-          <Text style={{ fontSize: 14 }}>{noti.hour}</Text>
-          <Text style={{ fontSize: 9.5 }}>{noti.date}</Text>
+          <Text style={{ fontSize: 14 }}>{date}</Text>
+          <Text style={{ fontSize: 9.5 }}>{time}</Text>
         </View>
       </View>
     </View>
