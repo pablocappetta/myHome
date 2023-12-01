@@ -121,7 +121,6 @@ export function filterProperties(properties: Property[], filters: Filter[], isAn
         } else {
             for (const filter of filters) {
                 if (filter.type === 'range') {
-                    console.log("range");
                     const value = flattenedProperty[filter.key];
                     for (const filterValue of filter.values) {
                         if (filterValue.includes('-')) {
@@ -142,8 +141,6 @@ export function filterProperties(properties: Property[], filters: Filter[], isAn
                         }
                     }
                 } else {
-                    console.log("default");
-
                     if (filter.values.includes(flattenedProperty[filter.key])) {
                         return true;
                     }

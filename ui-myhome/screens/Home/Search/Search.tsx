@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { Appbar, Searchbar, IconButton, Text, Chip, ActivityIndicator } from 'react-native-paper';
 import ListingCard from '../../../components/ListingCard/ListingCard';
@@ -20,11 +20,18 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
     const [initialFilters, setInitialFilters] = useState<DisplayFilter[]>([...filters]);
     const [isFiltering, setIsFiltering] = useState(false); // Add state for filtering spinner
 
+    useEffect(() => {
+        // Filter the initial properties by the search query
+        const filteredProperties = initialProperties.filter(property =>
+            property.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setFilteredPosts(filteredProperties);
+    }, [searchQuery]);
+
     const onChangeSearch = (query: string) => setSearchQuery(query);
 
     const onCommitFilters = (filters: Filter[]) => {
         setIsFiltering(true); // Show filtering spinner
-        console.log(filters);
         // Filter out the filters where the values include "todas" or "todos"
         const filteredFilters: Filter[] = [];
         for (const filter of filters) {
@@ -42,11 +49,14 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
 
     const onRemoveFilter = (filterKey: string) => {
         setIsFiltering(true); // Show filtering spinner
+        let filteredProperties = initialProperties.filter(property =>
+            property.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
         const newFilters = [...appliedFilters];
         const filterIndex = newFilters.findIndex(filter => filter.key === filterKey);
         newFilters.splice(filterIndex, 1);
-        const newProperties = filterProperties(initialProperties, newFilters, true);
-        setFilteredPosts(newProperties);
+        filteredProperties = filterProperties(initialProperties, newFilters, true);
+        setFilteredPosts(filteredProperties);
         setAppliedFilters(newFilters);
         let newInitialFilters = [...filters];
         if(newFilters.length === 0) {
