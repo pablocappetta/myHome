@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   ToastAndroid,
+  RefreshControl,
 } from "react-native";
 import {
   TextInput,
@@ -52,21 +53,26 @@ const Login = ({ navigation }) => {
 
   const auth = getAuth(fireBaseApp);
 
+  const [loading, setLoading] = React.useState(false);
+
   React.useEffect(() => {
     if (response?.type === "success") {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
       signInWithCredential(auth, credential)
         .then((userCredential) => {
+          setLoading(true);
           console.log(userCredential.user);
           const requestBody = {
             name: userCredential?.user?.displayName,
             email: userCredential?.user?.email,
             photoURL: userCredential?.user?.photoURL,
-            phoneNumber: userCredential?.user?.phoneNumber ? userCredential?.user?.phoneNumber : '',
+            phoneNumber: userCredential?.user?.phoneNumber
+              ? userCredential?.user?.phoneNumber
+              : "",
             stsTokenManager: userCredential?.user?.stsTokenManager,
           };
-  
+
           fetch("http://3.144.94.74:8000/api/users/login", {
             method: "POST",
             headers: {
@@ -76,23 +82,34 @@ const Login = ({ navigation }) => {
           })
             .then((response) => response.json())
             .then((json) => {
+              setLoading(false);
               setUser({
                 ...json.user,
                 profilePicture: userCredential?.user?.photoURL,
                 isRealtor: false,
                 token: json.token,
               });
+              navigation.navigate("MiCuenta");
               navigation.navigate("Home", { screen: "Home" });
-              ToastAndroid.show("Usuario logeado con Google", ToastAndroid.SHORT);
+              ToastAndroid.show(
+                "Usuario logueado con Google",
+                ToastAndroid.SHORT
+              );
             })
             .catch((error) => {
               // Handle any errors that occurred during the API call
               console.log(error);
+              setLoading(false);
+              ToastAndroid.show(
+                "Error al setear el usuario local",
+                ToastAndroid.SHORT
+              );
             });
-
         })
         .catch((error) => {
           console.log(error);
+          setLoading(false);
+          ToastAndroid.show("Error al loguear con Google", ToastAndroid.SHORT);
         });
     }
   }, [response]);
@@ -148,7 +165,11 @@ const Login = ({ navigation }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
       </Appbar.Header>
-      <ScrollView vertical automaticallyAdjustKeyboardInsets={true}>
+      <ScrollView
+        vertical
+        automaticallyAdjustKeyboardInsets={true}
+        refreshControl={<RefreshControl refreshing={loading} />}
+      >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
