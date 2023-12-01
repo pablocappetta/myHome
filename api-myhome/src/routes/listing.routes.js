@@ -16,7 +16,7 @@ const router = Router();
 router.post("/jwt", checkJwt);
 
 //Crea una listing
-router.post("/", ListingController.createListing); //POST REALTORS
+router.post("/", upload.array("images", 10), ListingController.createListing); //POST REALTORS
 
 //Obtener todos los listing
 router.get(
@@ -55,30 +55,10 @@ router.get("/:id", ListingController.getListingById);
 router.put(
   "/:id",
   [
-    check("id", "El id de la publicación es obligatorio")
-      .not()
-      .isEmpty(),
+    check("id", "El id de la publicación es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  ListingController.updateListing
-);
-
-//Agregar imagenes a un listing
-router.post(
-  "/:id/images",
   upload.array("images", 10),
-  ListingController.addImages
-);
-
-//Actualiza un listing
-router.put(
-  "/:id",
-  [
-    check("id", "El id de la publicación es obligatorio")
-      .not()
-      .isEmpty(),
-    checkFields,
-  ],
   ListingController.updateListing
 );
 
@@ -86,12 +66,10 @@ router.put(
 router.delete(
   "/:id",
   [
-    check("id", "El id de la publicación es obligatorio")
-      .not()
-      .isEmpty(),
+    check("id", "El id de la publicación es obligatorio").not().isEmpty(),
     checkFields,
   ],
   ListingController.deleteListing
-)
+);
 
 module.exports = router;

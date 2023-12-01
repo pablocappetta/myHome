@@ -235,7 +235,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: "#/components/schemas/Listing"
       responses:
@@ -352,7 +352,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: "#/components/schemas/Listing"
       responses:
@@ -803,6 +803,12 @@ components:
         price:
           required: true
           $ref: "#/components/schemas/Price"
+        images:
+          required: true
+          writeOnly: true
+          type: array
+          items:
+            type: binary
     ListingType:
       type: string
       enum:
@@ -896,6 +902,7 @@ components:
             type: string
         photos:
           required: true
+          readOnly: true
           type: array
           items:
             type: string
