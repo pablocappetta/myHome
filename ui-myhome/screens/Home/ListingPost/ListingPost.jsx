@@ -625,6 +625,9 @@ export const ListingPost = ({ navigation, ...props }) => {
               )}
             </View>
             <View style={styles.containerPriceDetails}>
+              <Text variant="labelSmall" numberOfLines={1}>
+                {listing?.price?.currency}
+              </Text>
               <IconButton icon="currency-usd" />
               <View>
                 {edit ? (

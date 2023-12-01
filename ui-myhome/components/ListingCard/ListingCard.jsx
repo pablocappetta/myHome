@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Card, Text } from "react-native-paper";
+import { Button, Card, Text } from "react-native-paper";
 import ListingTypeChip from "../ListingTypeChip/ListingTypeChip";
 import commaNumber from "comma-number";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -34,13 +34,8 @@ const ListingCard = ({ listing, type }) => {
     },
     priceContainer: {
       display: "flex",
-      flexDirection: "row",
-      justifyContent: "flex-end",
       alignlistings: "center",
       marginTop: 12,
-      position: "absolute",
-      top: 56,
-      right: 16,
     },
     cardContentContainer: { display: "flex", flexDirection: "column" },
   });
@@ -51,7 +46,7 @@ const ListingCard = ({ listing, type }) => {
     <Card
       style={type === "highlighted" ? styles.highlighted : styles.recent}
       width={180}
-      height={type === "highlighted" ? 376 : 300}
+      height={type === "highlighted" ? 386 : 310}
     >
       <View style={styles.listingTypeChip}>
         <ListingTypeChip
@@ -75,14 +70,21 @@ const ListingCard = ({ listing, type }) => {
         <Text
           variant="titleSmall"
           style={{ marginTop: 6, fontSize: 16, fontWeight: "bold" }}
+          numberOfLines={1}
         >
-          {listing?.title}
+          {listing?.title || "N/A"}
         </Text>
-        <Text variant="titleSmall">
+        <Text
+          variant="titleSmall"
+          style={{ marginTop: 2, marginBottom: 2 }}
+          numberOfLines={1}
+        >
           {listing?.property?.type || listing?.type}
         </Text>
-        <Text variant="bodySmall" numberOfLines={2} style={{ width: "100%" }}>
-          {listing?.location || listing?.property?.address?.neighborhood}
+        <Text variant="bodySmall" numberOfLines={1} style={{ width: "100%" }}>
+          {listing?.location ||
+            listing?.property?.address?.neighborhood ||
+            "Sin descripción"}
         </Text>
         <View style={styles.priceContainer}>
           <View
@@ -92,13 +94,14 @@ const ListingCard = ({ listing, type }) => {
               gap: 4,
             }}
           >
-            <Text variant="bodyLarge" style={{ fontWeight: 600 }}>
-              {listing?.price?.currency}
+            <Text
+              variant="bodyLarge"
+              numberOfLines={1}
+              style={{ fontWeight: 800, width: "75%" }}
+            >
+              ${commaNumber(listing?.price?.amount)}
             </Text>
-            <Text variant="bodyLarge" style={{ fontWeight: 800 }}>
-              $
-              {commaNumber(listing?.price?.amount) }
-            </Text>
+            <Button icon={"cash"} contentStyle={{ height: 24 }} />
           </View>
         </View>
       </Card.Content>
