@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  ToastAndroid,
+} from "react-native";
 import {
   Appbar,
   Text,
@@ -64,7 +70,6 @@ export const BookingSummary = ({
   const bookingTitle = "Resumen de la reserva";
   const { user } = useUserContext();
 
-
   const handleConfirmReservation = async () => {
     setIsConfirming(true); // Show spinner while confirming the reservation
 
@@ -93,24 +98,18 @@ export const BookingSummary = ({
         const reservationId = responseData._id; // Add this line to extract the reservation ID
         setIsDialogVisible(true);
         setReservationId(reservationId);
+        ToastAndroid.show("Reserva confirmada", ToastAndroid.SHORT);
+        navigation.navigate("Home");
       } else {
         console.error("Failed to confirm reservation");
+        ToastAndroid.show("Error al confirmar la reserva", ToastAndroid.SHORT);
       }
     } catch (error) {
       console.error(error);
+      ToastAndroid.show("Error al confirmar la reserva", ToastAndroid.SHORT);
     } finally {
       setIsConfirming(false);
     }
-  };
-
-  const handleDialogDismiss = () => {
-    dismissDialog();
-    navigation.navigate("Home");
-  };
-
-  const navigateToReview = () => {
-    dismissDialog();
-    navigation.navigate("Review", { params: {realtorId: bookingInfo.realtorId} });
   };
 
   const dismissDialog = () => {
@@ -191,18 +190,7 @@ export const BookingSummary = ({
           </View>
         </View>
       </ScrollView>
-      <Portal>
-        <Dialog visible={isDialogVisible} onDismiss={dismissDialog}>
-          <Dialog.Title>Reserva confirmada</Dialog.Title>
-          <Dialog.Content>
-            <Text>Aguardá el contacto de la inmobiliaria</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={handleDialogDismiss}>Volver</Button>
-            <Button onPress={navigateToReview}>Dejar una reseña</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+
       {isConfirming && (
         <View style={styles.spinnerContainer}>
           <ActivityIndicator size="large" color="#0000ff" />

@@ -17,6 +17,8 @@ const Review = ({ navigation, route }) => {
   const [comment, setComment] = useState("");
   const [visible, setVisible] = useState(false);
 
+  console.log(route.params, "A VER");
+
   const { user } = useUserContext();
 
   const showDialog = () => setVisible(true);
@@ -26,12 +28,17 @@ const Review = ({ navigation, route }) => {
 
   const handleSendReview = async () => {
     try {
-      const {realtorId} = route.params.params;
+      const realtorId = route.params;
       const response = await fetch(
-        "http://3.144.94.74:8000/api/"  + "realtors/" + realtorId + "/reviews",
+        "http://3.144.94.74:8000/api/" + "realtors/" + realtorId + "/reviews",
         {
           method: "POST",
-          body: JSON.stringify({ rating: review, comment, userId: user._id, date: new Date().toISOString().split('T')[0] }),
+          body: JSON.stringify({
+            rating: review,
+            comment,
+            userId: user._id,
+            date: new Date().toISOString().split("T")[0],
+          }),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },

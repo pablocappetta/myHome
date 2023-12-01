@@ -99,6 +99,7 @@ const Reservations = ({ navigation }) => {
           {listings.length > 0 ? (
             listings.map((listing) => (
               <ListingReservationCard
+                navigation={navigation}
                 key={listing._id}
                 reservation={listing}
                 handleRemoveFavorite={handleRemoveReservation}

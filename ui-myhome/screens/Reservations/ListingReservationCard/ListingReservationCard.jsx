@@ -3,7 +3,6 @@ import { View, StyleSheet } from "react-native";
 import { Card, IconButton, Text, Dialog, Button } from "react-native-paper";
 import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
-import ListingTypeChip from "../../../components/ListingTypeChip/ListingTypeChip";
 import { upperCaseFirst } from "../../../helpers/helpers";
 
 const ListingReservationCard = ({
@@ -53,7 +52,12 @@ const ListingReservationCard = ({
               <IconButton
                 icon="star"
                 size={16}
-                onPress={() => navigation.navigate("Review")}
+                onPress={() =>
+                  navigation.navigate(
+                    "Review",
+                    reservation.listingDetails.realtorId
+                  )
+                }
                 mode="contained"
                 style={{ margin: 0, padding: 0 }}
               />
@@ -129,8 +133,15 @@ const ListingReservationCard = ({
           >
             Cancelar
           </Button>
-          <Button icon={"eye"} mode="contained" width="50%">
-            Ver reserva
+          <Button
+            icon={"eye"}
+            mode="contained"
+            width="50%"
+            onPress={() =>
+              navigation.navigate("Post", reservation.listingDetails)
+            }
+          >
+            Ver propiedad
           </Button>
         </View>
       </Card.Content>

@@ -129,8 +129,10 @@ const ReservationsScreenRoutes = () => {
       }}
     >
       <Stack.Screen name="MisReservas" component={Reservations} />
-      <Stack.Screen name="Post" component={ListingReservationCard} />
+      <Stack.Screen name="ReservationPost" component={ListingReservationCard} />
+      <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="Booking" component={BookingRoutes} />
+      <Stack.Screen name="Review" component={Review} />
     </Stack.Navigator>
   );
 };
