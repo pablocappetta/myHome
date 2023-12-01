@@ -5,6 +5,7 @@ import { mockedListings } from '../mock/MockedHomeData';
 import ListingCard from '../../../components/ListingCard/ListingCard';
 import FiltersModal from '../Filters/Filters';
 import { Property, filterProperties, Filter } from '../../../helpers/filterHelper';
+import { DisplayFilter, filters } from '../Filters/FilterRow/filters';
 
 interface SearchProps {
     navigation: any;
@@ -12,17 +13,17 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ navigation, route }) => {
-    const initialProperties = {...route?.params?.listings};
+    const initialProperties = [...route?.params?.listings];
     const [searchQuery, setSearchQuery] = useState(route.params.searchText);
     const [filteredPosts, setFilteredPosts] = useState<Property[]>(route?.params?.listings); // Set filteredPosts to be of type FilterProperty[]
     const [isModalOpen, setIsDrawerOpen] = useState(false);
     const [appliedFilters, setAppliedFilters] = useState<Filter[]>([]);
+    const [initialFilters, setInitialFilters] = useState<DisplayFilter[]>([...filters]);
 
     const onChangeSearch = (query: string) => setSearchQuery(query);
 
     const onCommitFilters = (filters: Filter[]) => {
         // Filter out the filters where the values include "todas" or "todos"
-        console.log(filters)
         const filteredFilters: Filter[] = [];
         for (const filter of filters) {
             const filteredValues = filter.values.filter(value => !value.toLowerCase().includes("todas") && !value.toLowerCase().includes("todos"));
@@ -36,12 +37,29 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
         setAppliedFilters(filteredFilters);
     }
 
-    const onRemoveFilter = (filterTitle: string) => {
-        const newFilters = { ...appliedFilters };
-        delete newFilters[filterTitle];
-        const newProperties = filterProperties(filteredPosts, newFilters, true);
+    const onRemoveFilter = (filterKey: string) => {
+        const newFilters = [...appliedFilters];
+        const filterIndex = newFilters.findIndex(filter => filter.key === filterKey);
+        newFilters.splice(filterIndex, 1);
+        const newProperties = filterProperties(initialProperties, newFilters, true);
         setFilteredPosts(newProperties);
         setAppliedFilters(newFilters);
+        let newInitialFilters = [...filters];
+        if(newFilters.length === 0) {
+            newInitialFilters = newInitialFilters.map(filter => {
+                return {
+                    ...filter,
+                    options: filter.options.map(option => {
+                        return {
+                            ...option,
+                            selected: false
+                        }
+                    })
+                }
+            });
+        }
+        console.log(JSON.stringify(newInitialFilters));
+        setInitialFilters(newInitialFilters);
     }
     
 
@@ -80,7 +98,6 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
                             appliedFilters?.length > 0 && (
                                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                                     {appliedFilters?.map((filter) => {
-                                        console.log(filter)
                                         const capitalizedValues = filter.values.map(value => value.charAt(0).toUpperCase() + value.slice(1));
                                         return (
                                             <Chip
@@ -125,6 +142,7 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
                 isModalOpen={isModalOpen}
                 onClose={() => setIsDrawerOpen(false)}
                 onCommitFilters={onCommitFilters}
+                initialFilters={initialFilters}
             />
         </View>
     );

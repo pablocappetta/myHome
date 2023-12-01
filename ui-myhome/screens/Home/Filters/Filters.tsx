@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
-import { Button, List, Divider, Modal, Text, useTheme } from 'react-native-paper';
-import  FilterRow  from './FilterRow/FilterRow';
-import { DisplayFilter, filters } from './FilterRow/filters';
+import React, { useState, useEffect } from 'react';
+import { Button, List, Modal, Text, useTheme } from 'react-native-paper';
+import FilterRow from './FilterRow/FilterRow';
+import { DisplayFilter } from './FilterRow/filters';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Filter } from '../../../helpers/filterHelper';
 
-export const FiltersModal: React.FC<{ isModalOpen: boolean, onClose: () => void, onCommitFilters: (selectedFilters: Filter[]) => void }> = ({ isModalOpen, onClose, onCommitFilters }) => {
-    const [selectedFilters, setSelectedFilters] = useState<Filter[]>([])
+export const FiltersModal: React.FC<{ isModalOpen: boolean, onClose: () => void, onCommitFilters: (selectedFilters: Filter[]) => void, initialFilters: DisplayFilter[] }> = ({ isModalOpen, onClose, onCommitFilters, initialFilters }) => {
+    const [selectedFilters, setSelectedFilters] = useState<Filter[]>([]);
+    const [filterList, setFilterList] = useState<DisplayFilter[]>(initialFilters);
 
-    const handleFilterChange = (filter: Filter) => {   
+    useEffect(() => {
+        setSelectedFilters([]);
+        setFilterList(initialFilters);
+    }, [initialFilters]);
+
+    const handleFilterChange = (filter: Filter) => {
         //get all values in filter that are true 
-        // console.log(selectedFilters)
-        const newSelectedFilters = [...selectedFilters]        
+        const newSelectedFilters = [...selectedFilters];
         // check if a filter with the same key already exists
         const existingFilterIndex = newSelectedFilters.findIndex(f => f.key === filter.key);
         if (existingFilterIndex === -1) {
@@ -24,8 +29,6 @@ export const FiltersModal: React.FC<{ isModalOpen: boolean, onClose: () => void,
         setSelectedFilters(newSelectedFilters);
     };
 
-    const [filterList, setFilters] = useState<DisplayFilter[]>(filters);
-
     const handleApplyFilters = () => {
         // Handle applying filters logic here
         onCommitFilters(selectedFilters);
@@ -33,18 +36,18 @@ export const FiltersModal: React.FC<{ isModalOpen: boolean, onClose: () => void,
     };
 
     const handleClearFilters = () => {
-       setSelectedFilters([])
-       onClose();
+        setSelectedFilters([]);
+        onCommitFilters([]);
+        onClose();
     };
-
 
     const theme = useTheme();
 
     return (
         <Modal visible={isModalOpen} onDismiss={onClose} contentContainerStyle={[styles.modal, { backgroundColor: theme.colors.background }]}>
-            <Text 
-            variant='titleLarge'
-            style={{ fontWeight: 'bold', marginBottom: 8, width: '100%', textAlign: 'center' }}
+            <Text
+                variant='titleLarge'
+                style={{ fontWeight: 'bold', marginBottom: 8, width: '100%', textAlign: 'center' }}
             >Filtros</Text>
             <View style={styles.header}>
                 <Button onPress={onClose}>Cerrar</Button>
@@ -54,11 +57,11 @@ export const FiltersModal: React.FC<{ isModalOpen: boolean, onClose: () => void,
                 <ScrollView style={{ maxHeight: 'calc(100vh - 200px)' }}>
                     <List.Section>
                         {
-                        filterList.map((filter) => (
-                            <React.Fragment key={filter.value}>
-                                <FilterRow headerText={filter.title} filterKey={filter.value} options={filter.options} onChange={handleFilterChange} value={filter.value} showSlider={filter.isSlider} sliderValue={undefined} onSliderValueChange={undefined} multiSelect={filter.isMultiselect} />
-                            </React.Fragment>
-                        ))}
+                            filterList.map((filter) => (
+                                <React.Fragment key={filter.value}>
+                                    <FilterRow headerText={filter.title} filterKey={filter.value} options={filter.options} onChange={handleFilterChange} value={filter.value} showSlider={filter.isSlider} sliderValue={undefined} onSliderValueChange={undefined} multiSelect={filter.isMultiselect} />
+                                </React.Fragment>
+                            ))}
                     </List.Section>
                 </ScrollView>
             </View>
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         padding: 16,
         height: '80%',
-        bottom:0,
+        bottom: 0,
         position: 'absolute',
     },
     header: {

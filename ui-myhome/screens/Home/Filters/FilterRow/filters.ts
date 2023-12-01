@@ -18,7 +18,6 @@ export const filters: DisplayFilter[] = [
         title: "Operacion",
         value: "type",
         options: [
-            { label: "Todas", filterValue:"type", value: "todas", selected: true },
             { label: "Venta", filterValue:"type", value: "venta", selected: false },
             { label: "Alquiler", filterValue:"type", value: "alquiler", selected: false }
         ],
@@ -29,7 +28,6 @@ export const filters: DisplayFilter[] = [
         title: "Categoria",
         value: "property.type",
         options: [
-            { label: "Todas", filterValue:"property.type", value: "todas", selected: true },
             { label: "Casa", filterValue:"property.type", value: "casa", selected: false },
             { label: "Departamento", filterValue:"property.type", value: "departamento", selected: false },
             { label: "Oficina", filterValue:"property.type", value: "oficina", selected: false },
@@ -43,7 +41,7 @@ export const filters: DisplayFilter[] = [
         title: "Precio",
         value: "price.currency",
         options: [
-            { label: "USD", filterValue:"price.currency", value: "usd", selected: true },
+            { label: "USD", filterValue:"price.currency", value: "usd", selected: false },
             { label: "Pesos", filterValue:"price.currency", value: "pesos", selected: false }
         ],
         isSlider: true,
@@ -68,7 +66,6 @@ export const filters: DisplayFilter[] = [
         title: "Cantidad de Ambientes",
         value: "ambientes",
         options: [
-            { label: "Todas", filterValue:"ambientes",  value: "todas", selected: true },
             { label: "1", filterValue:"ambientes", value: "1", selected: false },
             { label: "2", filterValue:"ambientes", value: "2", selected: false },
             { label: "3", filterValue:"ambientes", value: "3", selected: false },
@@ -81,7 +78,6 @@ export const filters: DisplayFilter[] = [
         title: "Cantidad de Habitaciones",
         value: "property.rooms",
         options: [
-            { label: "Todas", filterValue:"property.rooms", value: "todas", selected: true },
             { label: "1", filterValue:"property.rooms", value: "1", selected: false },
             { label: "2", filterValue:"property.rooms", value: "2", selected: false },
             { label: "3", filterValue:"property.rooms", value: "3", selected: false },
@@ -94,7 +90,6 @@ export const filters: DisplayFilter[] = [
         title: "Cantidad de Baños",
         value: "property.bathrooms",
         options: [
-            { label: "Todas", filterValue:"property.bathrooms", value: "todas", selected: true },
             { label: "1", filterValue:"property.bathrooms", value: "1", selected: false },
             { label: "2", filterValue:"property.bathrooms", value: "2", selected: false },
             { label: "3", filterValue:"property.bathrooms", value: "3", selected: false },
@@ -107,7 +102,6 @@ export const filters: DisplayFilter[] = [
         title: "Antigüedad",
         value: "property.age",
         options: [
-            { label: "Todas", filterValue:"property.age", value: "todas", selected: true },
             { label: "1-5", filterValue:"property.age", value: "1-5", selected: false },
             { label: "5-10", filterValue:"property.age", value: "5-10", selected: false },
             { label: "10+", filterValue:"property.age", value: "10+", selected: false }
