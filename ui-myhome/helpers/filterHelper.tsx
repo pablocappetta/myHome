@@ -49,6 +49,7 @@ export interface Filter {
     key: string;
     title: string;
     values: string[];
+    type?: string;
 }
 
 
@@ -89,15 +90,63 @@ export function filterProperties(properties: Property[], filters: Filter[], isAn
         const flattenedProperty = flattenProperty(property);
         if (isAndFilter) {
             for (const filter of filters) {
-                if (!filter.values.includes(flattenedProperty[filter.key])) {
-                    return false;
+                const value = flattenedProperty[filter.key];
+
+                if (filter.type === 'range') {
+                    for (const filterValue of filter.values) {
+                        if (filterValue.includes('-')) {
+                            const [min, max] = filterValue.split('-');
+                            if (min && max && !(value >= Number(min) && value <= Number(max))) {
+                                return false;
+                            }
+                        } else if (filterValue.includes('+')) {
+                            const min = Number(filterValue.replace('+', ''));
+                            if (min && !(value >= min)) {
+                                return false;
+                            }
+                        } else {
+                            const num = Number(filterValue);
+                            if (num && !(value === num)) {
+                                return false;
+                            }
+                        }
+                    }
+                } else {
+                    if (!filter.values.includes(value)) {
+                        return false;
+                    }
                 }
             }
             return true;
         } else {
             for (const filter of filters) {
-                if (filter.values.includes(flattenedProperty[filter.key])) {
-                    return true;
+                if (filter.type === 'range') {
+                    console.log("range");
+                    const value = flattenedProperty[filter.key];
+                    for (const filterValue of filter.values) {
+                        if (filterValue.includes('-')) {
+                            const [min, max] = filterValue.split('-');
+                            if (min && max && value >= Number(min) && value <= Number(max)) {
+                                return true;
+                            }
+                        } else if (filterValue.includes('+')) {
+                            const min = filterValue.replace('+', '');
+                            if (min && value >= Number(min)) {
+                                return true;
+                            }
+                        } else {
+                            const num = Number(filterValue);
+                            if (num && value === num) {
+                                return true;
+                            }
+                        }
+                    }
+                } else {
+                    console.log("default");
+
+                    if (filter.values.includes(flattenedProperty[filter.key])) {
+                        return true;
+                    }
                 }
             }
             return false;

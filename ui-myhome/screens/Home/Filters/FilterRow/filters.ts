@@ -11,6 +11,7 @@ export type DisplayFilter = {
     options: FilterOption[];
     isSlider: boolean;
     isMultiselect: boolean;
+    type: string;
 };
 
 export const filters: DisplayFilter[] = [
@@ -22,45 +23,49 @@ export const filters: DisplayFilter[] = [
             { label: "Alquiler", filterValue:"type", value: "alquiler", selected: false }
         ],
         isSlider: false,
-        isMultiselect: false
+        isMultiselect: false,
+        type: 'default'
     },
     {
         title: "Categoria",
         value: "property.type",
         options: [
-            { label: "Casa", filterValue:"property.type", value: "casa", selected: false },
-            { label: "Departamento", filterValue:"property.type", value: "departamento", selected: false },
-            { label: "Oficina", filterValue:"property.type", value: "oficina", selected: false },
-            { label: "Local", filterValue:"property.type", value: "local", selected: false },
-            { label: "Terreno", filterValue:"property.type", value: "terreno", selected: false }
+            { label: "Casa", filterValue:"property.type", value: "Casa", selected: false },
+            { label: "Departamento", filterValue:"property.type", value: "Departamento", selected: false },
+            { label: "Oficina", filterValue:"property.type", value: "Oficina", selected: false },
+            { label: "Local", filterValue:"property.type", value: "Local", selected: false },
+            { label: "Terreno", filterValue:"property.type", value: "Terreno", selected: false }
         ],
         isSlider: false,
-        isMultiselect: false
+        isMultiselect: true,
+        type: 'default'
     },
     {
         title: "Precio",
         value: "price.currency",
         options: [
-            { label: "USD", filterValue:"price.currency", value: "usd", selected: false },
-            { label: "Pesos", filterValue:"price.currency", value: "pesos", selected: false }
+            { label: "USD", filterValue:"price.currency", value: "USD", selected: false },
+            { label: "Pesos", filterValue:"price.currency", value: "ARS", selected: false }
         ],
         isSlider: true,
-        isMultiselect: false
+        isMultiselect: false,
+        type: 'default'
     },
     {
         title: "Amenities",
         value: "property.amenities",
         options: [
-            { label: "Pileta", filterValue:"property.amenities",  value: "pileta", selected: false },
-            { label: "Gimnasio", filterValue:"property.amenities",  value: "gimnasio", selected: false },
-            { label: "SUM", filterValue:"property.amenities",  value: "sum", selected: false },
-            { label: "Seguridad", filterValue:"property.amenities",  value: "seguridad", selected: false },
-            { label: "Cochera", filterValue:"property.amenities",  value: "cochera", selected: false },
-            { label: "Balcón", filterValue:"property.amenities",  value: "balcon", selected: false },
-            { label: "Terraza", filterValue:"property.amenities",  value: "terraza", selected: false }
+            { label: "Pileta", filterValue:"property.hasPool",  value: "Pileta", selected: false },
+            { label: "Gimnasio", filterValue:"property.hasGym",  value: "Gimnasio", selected: false },
+            { label: "SUM", filterValue:"property.hasSUM",  value: "SUM", selected: false },
+            { label: "Seguridad", filterValue:"property.hasSecurity",  value: "Seguridad", selected: false },
+            { label: "Cochera", filterValue:"property.has",  value: "Cochera", selected: false },
+            { label: "Balcón", filterValue:"property.hasBalcony",  value: "Balcon", selected: false },
+            { label: "Terraza", filterValue:"property.hasTerrace",  value: "Terraza", selected: false }
         ],
         isSlider: false,
-        isMultiselect: true
+        isMultiselect: true,
+        type: 'default'
     },
     {
         title: "Cantidad de Ambientes",
@@ -72,7 +77,8 @@ export const filters: DisplayFilter[] = [
             { label: "4+", filterValue:"ambientes", value: "4+", selected: false }
         ],
         isSlider: false,
-        isMultiselect: false
+        isMultiselect: false,
+        type: 'range'
     },
     {
         title: "Cantidad de Habitaciones",
@@ -84,7 +90,8 @@ export const filters: DisplayFilter[] = [
             { label: "4+", filterValue:"property.rooms", value: "4+", selected: false }
         ],
         isSlider: false,
-        isMultiselect: false
+        isMultiselect: false,
+        type: 'range'
     },
     {
         title: "Cantidad de Baños",
@@ -96,7 +103,8 @@ export const filters: DisplayFilter[] = [
             { label: "4+", filterValue:"property.bathrooms", value: "4+", selected: false }
         ],
         isSlider: false,
-        isMultiselect: false
+        isMultiselect: false,
+        type: 'range'
     },
     {
         title: "Antigüedad",
@@ -107,20 +115,43 @@ export const filters: DisplayFilter[] = [
             { label: "10+", filterValue:"property.age", value: "10+", selected: false }
         ],
         isSlider: false,
-        isMultiselect: false
+        isMultiselect: false,
+        type: 'range'
     },
     {
         title:"Localidad",
-        value: "localidad",
+        value: "property.address.neighborhood",
         options: [
-            { label: "Avellaneda", filterValue:"localidad", value: "avellaneda", selected: false },
-            { label: "Lanus", filterValue:"localidad", value: "lanus", selected: false },
-            { label: "Lomas de Zamora", filterValue:"localidad", value: "lomas de zamora", selected: false },
-            { label: "Palermo Soho", filterValue:"localidad", value: "palermo soho", selected: false },
-            { label: "Chascomus", filterValue:"localidad", value: "chascomus", selected: false },
-            { label: "Bariloche", filterValue:"localidad", value: "bariloche", selected: false }
+            { label: "Avellaneda", filterValue:"property.address.neighborhood", value: "Avellaneda", selected: false },
+            { label: "Lanus", filterValue:"property.address.neighborhood", value: "Lanus", selected: false },
+            { label: "Lomas de Zamora", filterValue:"property.address.neighborhood", value: "Lomas de Zamora", selected: false },
+            { label: "Palermo", filterValue:"property.address.neighborhood", value: "Palermo", selected: false },
+            { label: "Chascomus", filterValue:"property.address.neighborhood", value: "Chascomus", selected: false },
+            { label: "Bariloche", filterValue:"property.address.neighborhood", value: "Bariloche", selected: false },
+            { label: "Cordoba", filterValue:"property.address.neighborhood", value: "Cordoba", selected: false },
+            { label: "Rosario", filterValue:"property.address.neighborhood", value: "Rosario", selected: false },
+            { label: "Mendoza", filterValue:"property.address.neighborhood", value: "Mendoza", selected: false },
+            { label: "Mar del Plata", filterValue:"property.address.neighborhood", value: "Mar del Plata", selected: false },
+            { label: "Tigre", filterValue:"property.address.neighborhood", value: "Tigre", selected: false },
+            { label: "San Isidro", filterValue:"property.address.neighborhood", value: "San Isidro", selected: false },
+            { label: "San Miguel", filterValue:"property.address.neighborhood", value: "San Miguel", selected: false },
+            { label: "San Martin", filterValue:"property.address.neighborhood", value: "San Martin", selected: false },
+            { label: "San Fernando", filterValue:"property.address.neighborhood", value: "San Fernando", selected: false },
+            { label: "San Telmo", filterValue:"property.address.neighborhood", value: "San Telmo", selected: false },
+            { label: "San Cristobal", filterValue:"property.address.neighborhood", value: "San Cristobal", selected: false },
+            { label: "San Justo", filterValue:"property.address.neighborhood", value: "San Justo", selected: false },
+            { label: "San Bernardo", filterValue:"property.address.neighborhood", value: "San Bernardo", selected: false },
+            { label: "San Carlos de Bariloche", filterValue:"property.address.neighborhood", value: "San Carlos de Bariloche", selected: false },
+            { label: "San Rafael", filterValue:"property.address.neighborhood", value: "San Rafael", selected: false },
+            { label: "Recoleta", filterValue:"property.address.neighborhood", value: "Recoleta", selected: false },
+            { label: "Retiro", filterValue:"property.address.neighborhood", value: "Retiro", selected: false },
+            { label: "Villa Crespo", filterValue:"property.address.neighborhood", value: "Villa Crespo", selected: false },
+            { label: "Villa Urquiza", filterValue:"property.address.neighborhood", value: "Villa Urquiza", selected: false },
+            { label: "Villa Devoto", filterValue:"property.address.neighborhood", value: "Villa Devoto", selected: false },
+            { label: "Villa del Parque", filterValue:"property.address.neighborhood", value: "Villa del Parque", selected: false },
         ],
         isSlider: false,
-        isMultiselect: true
+        isMultiselect: true,
+        type: 'default'
     }
 ];

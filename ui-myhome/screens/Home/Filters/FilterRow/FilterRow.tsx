@@ -15,6 +15,7 @@ interface FilterRowProps {
         selectedOptions: Filter,
     ) => void;
     value: any;
+    type: string;
 }
 
 const FilterRow: React.FC<FilterRowProps> = ({
@@ -27,6 +28,7 @@ const FilterRow: React.FC<FilterRowProps> = ({
     multiSelect,
     onChange,
     value,
+    type
 }) => {
     const [selected, setSelected] = useState<Filter>({ key: '', title: '', values: [] });
     const [viewOptions, setOptions] = useState<{ filterValue: string; value: string; label: string; selected: boolean }[]>(options);
@@ -35,15 +37,16 @@ const FilterRow: React.FC<FilterRowProps> = ({
         const newSelected: Filter = {
             key: filterKey,
             title: headerText,
-            values: options.filter((value) => value.selected).map((value) => value.value),
+            values: viewOptions.filter((value) => value.selected).map((value) => value.value),
+            type: type
         };
         setSelected(newSelected);
         onChange(newSelected);
-    }, [options]);
+    }, [viewOptions]);
 
     const onSelect = useCallback(
         (id: string) => {
-            const newOptions = options.map((option) => {
+            const newOptions = viewOptions.map((option) => {
                 if (option.value === id) {
                     return {
                         ...option,
@@ -61,13 +64,16 @@ const FilterRow: React.FC<FilterRowProps> = ({
                 key: filterKey,
                 title: headerText,
                 values: newOptions.filter((value) => value.selected).map((value) => value.value),
+                type: type
             };
             setOptions(newOptions);
             setSelected(newSelected);
             onChange(newSelected);
         },
-        [filterKey, headerText, options, multiSelect, onChange]
+        [filterKey, headerText, viewOptions, multiSelect, onChange]
     );
+
+
 
     return (
         <View>

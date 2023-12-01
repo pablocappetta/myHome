@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, FlatList } from 'react-native';
-import { Appbar, Searchbar, IconButton, List, Text, Chip } from 'react-native-paper';
-import { mockedListings } from '../mock/MockedHomeData';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { Appbar, Searchbar, IconButton, Text, Chip, ActivityIndicator } from 'react-native-paper';
 import ListingCard from '../../../components/ListingCard/ListingCard';
 import FiltersModal from '../Filters/Filters';
 import { Property, filterProperties, Filter } from '../../../helpers/filterHelper';
@@ -19,10 +18,13 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
     const [isModalOpen, setIsDrawerOpen] = useState(false);
     const [appliedFilters, setAppliedFilters] = useState<Filter[]>([]);
     const [initialFilters, setInitialFilters] = useState<DisplayFilter[]>([...filters]);
+    const [isFiltering, setIsFiltering] = useState(false); // Add state for filtering spinner
 
     const onChangeSearch = (query: string) => setSearchQuery(query);
 
     const onCommitFilters = (filters: Filter[]) => {
+        setIsFiltering(true); // Show filtering spinner
+        console.log(filters);
         // Filter out the filters where the values include "todas" or "todos"
         const filteredFilters: Filter[] = [];
         for (const filter of filters) {
@@ -35,9 +37,11 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
         setFilteredPosts(newProperties);
         setIsDrawerOpen(false);
         setAppliedFilters(filteredFilters);
+        setIsFiltering(false); // Hide filtering spinner
     }
 
     const onRemoveFilter = (filterKey: string) => {
+        setIsFiltering(true); // Show filtering spinner
         const newFilters = [...appliedFilters];
         const filterIndex = newFilters.findIndex(filter => filter.key === filterKey);
         newFilters.splice(filterIndex, 1);
@@ -58,8 +62,8 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
                 }
             });
         }
-        console.log(JSON.stringify(newInitialFilters));
         setInitialFilters(newInitialFilters);
+        setIsFiltering(false); // Hide filtering spinner
     }
     
 
@@ -125,17 +129,21 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
                     }}
                 >
 
-                    {filteredPosts?.map((post: any, index: number) => {
-                        return (
-                            <TouchableOpacity
-                                key={index + post._id}
-                                onPress={() => navigation.navigate("Post", post)}
-                                style={{ width: "50%", marginBottom: 15 }}
-                            >
-                                <ListingCard listing={post} type={"highlighted"} />
-                            </TouchableOpacity>
-                        )
-                    })}
+                    {isFiltering ? ( // Show spinner while filtering
+                        <ActivityIndicator animating={true} />
+                    ) : (
+                        filteredPosts?.map((post: any, index: number) => {
+                            return (
+                                <TouchableOpacity
+                                    key={index + post._id}
+                                    onPress={() => navigation.navigate("Post", post)}
+                                    style={{ width: "50%", marginBottom: 15 }}
+                                >
+                                    <ListingCard listing={post} type={"highlighted"} />
+                                </TouchableOpacity>
+                            )
+                        })
+                    )}
                 </View>
             </ScrollView>
             <FiltersModal

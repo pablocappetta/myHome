@@ -59,7 +59,9 @@ export const FiltersModal: React.FC<{ isModalOpen: boolean, onClose: () => void,
                         {
                             filterList.map((filter) => (
                                 <React.Fragment key={filter.value}>
-                                    <FilterRow headerText={filter.title} filterKey={filter.value} options={filter.options} onChange={handleFilterChange} value={filter.value} showSlider={filter.isSlider} sliderValue={undefined} onSliderValueChange={undefined} multiSelect={filter.isMultiselect} />
+                                    <FilterRow headerText={filter.title} filterKey={filter.value} options={filter.options} onChange={handleFilterChange} value={filter.value} showSlider={filter.isSlider} sliderValue={undefined} onSliderValueChange={undefined} multiSelect={filter.isMultiselect} 
+                                    type={filter.type}
+                                    />
                                 </React.Fragment>
                             ))}
                     </List.Section>
