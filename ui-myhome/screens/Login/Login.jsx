@@ -78,12 +78,7 @@ const Login = ({ navigation }) => {
                 token: json.token,
               }
               setUser(user);
-              try {
               setUserDataToAsyncStorage(user);
-                
-              } catch (error) {
-                console.log(error);
-              }
               navigation.navigate("MiCuenta");
               navigation.navigate("Home", { screen: "Home" });
               ToastAndroid.show(
