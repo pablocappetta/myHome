@@ -62,17 +62,6 @@ const Login = ({ navigation }) => {
       signInWithCredential(auth, credential)
         .then((userCredential) => {
           setLoading(true);
-          console.log(userCredential.user);
-          const requestBody = {
-            name: userCredential?.user?.displayName,
-            email: userCredential?.user?.email,
-            photoURL: userCredential?.user?.photoURL,
-            phoneNumber: userCredential?.user?.phoneNumber
-              ? userCredential?.user?.phoneNumber
-              : "",
-            stsTokenManager: userCredential?.user?.stsTokenManager,
-          };
-
           fetch("http://3.144.94.74:8000/api/users/login", {
             method: "POST",
             headers: {
@@ -83,12 +72,18 @@ const Login = ({ navigation }) => {
             .then((response) => response.json())
             .then((json) => {
               setLoading(false);
-              setUser({
-                ...json.user,
+              const user = {...json.user,
                 profilePicture: userCredential?.user?.photoURL,
                 isRealtor: false,
                 token: json.token,
-              });
+              }
+              setUser(user);
+              try {
+              setUserDataToAsyncStorage(user);
+                
+              } catch (error) {
+                console.log(error);
+              }
               navigation.navigate("MiCuenta");
               navigation.navigate("Home", { screen: "Home" });
               ToastAndroid.show(
@@ -125,7 +120,7 @@ const Login = ({ navigation }) => {
     return () => unsub();
   }, []);
 
-  const { setUser } = useUserContext();
+  const { setUser, setUserDataToAsyncStorage } = useUserContext();
   const { theme } = useTheme();
 
   const handleLogin = (values) => {
@@ -144,11 +139,12 @@ const Login = ({ navigation }) => {
       .then((response) => response.json())
       .then((json) => {
         if (json.realtor) {
-          setUser({
-            ...json.realtor,
+          const user = {...json.realtor,
             isRealtor: true,
             token: json.token,
-          });
+          }
+          setUser(user);
+          setUserDataToAsyncStorage(user);
           navigation.navigate("MiCuenta");
           navigation.navigate("tabHome");
         } else {
