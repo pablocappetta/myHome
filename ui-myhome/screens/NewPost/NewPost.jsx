@@ -389,7 +389,7 @@ const NewPost = ({ navigation }) => {
           <View className="flex mb-4">
             <TextInput
               className="rounded-t-md mb-2"
-              label={"Provicia"}
+              label={"Provincia"}
               value={provincia}
               onChangeText={(provincia) => setProvincia(provincia)}
               mode="outlined"
