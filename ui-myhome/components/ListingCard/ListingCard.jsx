@@ -8,7 +8,7 @@ import { upperCaseFirst } from "../../helpers/helpers";
 
 const ListingCard = ({ listing, type }) => {
   const defaultImage =
-    "https://www.facoelche.com/images/placeholder-noimage.jpg";
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
   const sharedStyles = {
     position: "relative",
   };

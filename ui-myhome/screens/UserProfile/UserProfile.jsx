@@ -130,7 +130,11 @@ const UserProfile = ({ navigation }) => {
               <Avatar.Image
                 size={180}
                 source={{
-                  uri: image[0]?.uri || user?.logo || user?.profilePicture,
+                  uri:
+                    image[0]?.uri ||
+                    user?.logo ||
+                    user?.profilePicture ||
+                    "https://api-private.atlassian.com/users/50b335ba706e5610e24fdea2b4af98f8/avatar",
                 }}
                 style={styles.avatar}
               />

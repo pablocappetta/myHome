@@ -82,7 +82,12 @@ const Settings = ({ navigation }) => {
           <View style={styles.containerUserDetails}>
             <Avatar.Image
               size={48}
-              source={{ uri: user?.logo || user?.profilePicture }}
+              source={{
+                uri:
+                  user?.logo ||
+                  user?.profilePicture ||
+                  "https://api-private.atlassian.com/users/50b335ba706e5610e24fdea2b4af98f8/avatar",
+              }}
             />
 
             <View style={{ display: "flex", flexDirection: "column" }}>

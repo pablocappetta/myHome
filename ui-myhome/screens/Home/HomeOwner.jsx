@@ -70,7 +70,12 @@ const HomeOwner = ({ navigation }) => {
               {isUserLogged ? (
                 <Avatar.Image
                   size={48}
-                  source={{ uri: user?.profilePicture || user?.logo }}
+                  source={{
+                    uri:
+                      user?.profilePicture ||
+                      user?.logo ||
+                      "https://api-private.atlassian.com/users/50b335ba706e5610e24fdea2b4af98f8/avatar",
+                  }}
                 />
               ) : (
                 <Avatar.Icon size={36} icon="account" />
