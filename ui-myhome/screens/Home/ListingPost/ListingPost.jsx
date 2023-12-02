@@ -648,8 +648,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 {edit ? (
                   <TextInput
                     defaultValue={
-                      commaNumber(listing?.property?.expensesPrice?.amount) ||
-                      "Sin expensas"
+                      commaNumber(listing?.property?.expensesPrice?.amount) || 0
                     }
                     className="rounded-t-md w-[100px] mt-2"
                     label={"Expensas"}
@@ -661,8 +660,9 @@ export const ListingPost = ({ navigation, ...props }) => {
                     variant="labelSmall"
                     style={{ color: theme.colors.secondary }}
                   >
-                    {commaNumber(listing?.property?.expensesPrice?.amount) ||
-                      "Sin expensas"}
+                    {Number(listing?.property?.expensesPrice?.amount) !== 0
+                      ? commaNumber(listing?.property?.expensesPrice?.amount)
+                      : "Sin expensas"}
                   </Text>
                 )}
               </View>

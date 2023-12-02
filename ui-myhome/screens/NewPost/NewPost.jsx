@@ -19,7 +19,7 @@ const NewPost = ({ navigation }) => {
   const [valor, setValor] = React.useState("");
   const [moneda, setMoneda] = React.useState("");
   const [tipoOperacion, setTipoOperacion] = React.useState("");
-  const [expensas, setExpensas] = React.useState("Sin expensas");
+  const [expensas, setExpensas] = React.useState(0);
   const [tipoPropiedad, setTipoPropiedad] = React.useState("");
 
   const [provincia, setProvincia] = React.useState("");
