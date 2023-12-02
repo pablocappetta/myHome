@@ -245,6 +245,7 @@ const NewPost = ({ navigation }) => {
               }}
               data={["Alquiler", "Venta"]}
               defaultButtonText="Operación"
+              dropdownStyle={{ borderRadius: 4 }}
               renderCustomizedButtonChild={() => (
                 <View
                   style={{
@@ -294,6 +295,7 @@ const NewPost = ({ navigation }) => {
                 marginTop: 6,
               }}
               data={["USD", "ARS"]}
+              dropdownStyle={{ borderRadius: 4 }}
               defaultButtonText="Moneda"
               renderCustomizedButtonChild={() => (
                 <View
@@ -352,6 +354,7 @@ const NewPost = ({ navigation }) => {
                 "Duplex",
               ]}
               defaultButtonText="Tipo de Propiedad"
+              dropdownStyle={{ borderRadius: 4 }}
               renderCustomizedButtonChild={() => (
                 <View
                   style={{
@@ -415,7 +418,7 @@ const NewPost = ({ navigation }) => {
             <View className="flex flex-row gap-2">
               <TextInput
                 className="rounded-t-md w-[170px]"
-                label={"Numero"}
+                label={"Número"}
                 value={numero}
                 onChangeText={(numero) => setNumero(numero)}
                 mode="outlined"
@@ -480,7 +483,7 @@ const NewPost = ({ navigation }) => {
               ></TextInput>
               <TextInput
                 className="rounded-t-md w-[170px] mb-2"
-                label={"Antiguedad"}
+                label={"Antigüedad"}
                 value={antiguedad}
                 onChangeText={(antiguedad) => setAntiguedad(antiguedad)}
                 mode="outlined"
@@ -502,6 +505,7 @@ const NewPost = ({ navigation }) => {
                     color: "#000000",
                     textAlign: "left",
                   }}
+                  dropdownStyle={{ borderRadius: 4 }}
                   data={orientacionRelativaOptions}
                   onSelect={(selectedItem, index) => {
                     setOrientacionRelativa(selectedItem);
@@ -554,6 +558,7 @@ const NewPost = ({ navigation }) => {
                 }}
                 data={orientacionAbsolutaOptions}
                 defaultButtonText="Orientación absoluta"
+                dropdownStyle={{ borderRadius: 4 }}
                 renderCustomizedButtonChild={() => (
                   <View
                     style={{
