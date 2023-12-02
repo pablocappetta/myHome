@@ -227,7 +227,7 @@ const NewPost = ({ navigation }) => {
           ></TextInput>
           <TextInput
             className="rounded-t-md "
-            label={"Descripcion"}
+            label={"Descripción"}
             value={descripcion}
             onChangeText={(descripcion) => setDescripcion(descripcion)}
             mode="outlined"
