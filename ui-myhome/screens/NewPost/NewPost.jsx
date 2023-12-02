@@ -6,7 +6,15 @@ import {
   ToastAndroid,
 } from "react-native";
 import React, { useEffect } from "react";
-import { Appbar, Text, Switch, TextInput, Button } from "react-native-paper";
+import {
+  Appbar,
+  Text,
+  Switch,
+  TextInput,
+  Button,
+  Icon,
+  IconButton,
+} from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import * as ImagePicker from "expo-image-picker";
 import { useUserContext } from "../../contexts/UserContext";
@@ -19,7 +27,7 @@ const NewPost = ({ navigation }) => {
   const [valor, setValor] = React.useState("");
   const [moneda, setMoneda] = React.useState("");
   const [tipoOperacion, setTipoOperacion] = React.useState("");
-  const [expensas, setExpensas] = React.useState(0);
+  const [expensas, setExpensas] = React.useState("0");
   const [tipoPropiedad, setTipoPropiedad] = React.useState("");
 
   const [provincia, setProvincia] = React.useState("");
@@ -225,27 +233,39 @@ const NewPost = ({ navigation }) => {
             mode="outlined"
           ></TextInput>
           <View className="flex flex-row justify-between">
-            <TextInput
-              className="rounded-t-md w-56"
-              label={"Valor"}
-              value={valor}
-              onChangeText={(valor) => setValor(valor)}
-              mode="outlined"
-            ></TextInput>
             <SelectDropdown
               buttonStyle={{
                 backgroundColor: "#e7e0ec",
                 borderRadius: 4,
-                width: 120,
+                width: 170,
                 height: 50,
                 justifyContent: "center",
                 alignItems: "center",
                 marginTop: 6,
               }}
-              data={["USD", "ARS"]}
-              defaultValue={"Seleccionar"}
+              data={["Alquiler", "Venta"]}
+              defaultButtonText="Operación"
+              renderCustomizedButtonChild={() => (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    paddingLeft: 16,
+                  }}
+                >
+                  <Text style={{ fontSize: 16, color: "#000000" }}>
+                    {tipoOperacion !== "" ? tipoOperacion : "Operación"}
+                  </Text>
+                  <IconButton icon="chevron-down" size={24} />
+                </View>
+              )}
               onSelect={(selectedItem, index) => {
-                setMoneda(selectedItem);
+                setTipoOperacion(selectedItem);
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem;
@@ -254,6 +274,13 @@ const NewPost = ({ navigation }) => {
                 return item;
               }}
             />
+            <TextInput
+              className="rounded-t-md w-[170px]"
+              label={"Valor"}
+              value={valor}
+              onChangeText={(valor) => setValor(valor)}
+              mode="outlined"
+            ></TextInput>
           </View>
           <View className="flex flex-row justify-between">
             <SelectDropdown
@@ -266,10 +293,29 @@ const NewPost = ({ navigation }) => {
                 alignItems: "center",
                 marginTop: 6,
               }}
-              data={["Alquiler", "Venta"]}
-              defaultValue={"Seleccionar"}
+              data={["USD", "ARS"]}
+              defaultButtonText="Moneda"
+              renderCustomizedButtonChild={() => (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    paddingLeft: 16,
+                  }}
+                >
+                  <Text style={{ fontSize: 16, color: "#000000" }}>
+                    {moneda !== "" ? moneda : "Moneda"}
+                  </Text>
+                  <IconButton icon="chevron-down" size={24} />
+                </View>
+              )}
               onSelect={(selectedItem, index) => {
-                setTipoOperacion(selectedItem);
+                setMoneda(selectedItem);
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem;
@@ -291,7 +337,7 @@ const NewPost = ({ navigation }) => {
               buttonStyle={{
                 backgroundColor: "#e7e0ec",
                 borderRadius: 4,
-                width: 170,
+                width: "100%",
                 height: 50,
                 justifyContent: "center",
                 alignItems: "center",
@@ -305,7 +351,26 @@ const NewPost = ({ navigation }) => {
                 "Oficina",
                 "Duplex",
               ]}
-              defaultValue={"Seleccionar"}
+              defaultButtonText="Tipo de Propiedad"
+              renderCustomizedButtonChild={() => (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    paddingLeft: 16,
+                  }}
+                >
+                  <Text style={{ fontSize: 16, color: "#000000" }}>
+                    {tipoPropiedad !== "" ? tipoPropiedad : "Tipo de Propiedad"}
+                  </Text>
+                  <IconButton icon="chevron-down" size={24} />
+                </View>
+              )}
               onSelect={(selectedItem, index) => {
                 setTipoPropiedad(selectedItem);
               }}
@@ -422,15 +487,12 @@ const NewPost = ({ navigation }) => {
               ></TextInput>
             </View>
             <View className="flex flex-row gap-2">
-              <View
-                className="flex flex-row gap-2"
-                style={{ marginBottom: 10 }}
-              >
+              <View className="flex flex-row " style={{ marginBottom: 10 }}>
                 <SelectDropdown
                   buttonStyle={{
                     backgroundColor: "#e7e0ec",
                     borderRadius: 4,
-                    width: 390,
+                    width: "99.5%",
                     height: 50,
                     marginTop: 6,
                     alignItems: "center",
@@ -441,27 +503,48 @@ const NewPost = ({ navigation }) => {
                     textAlign: "left",
                   }}
                   data={orientacionRelativaOptions}
-                  defaultValue={"Seleccionar"}
                   onSelect={(selectedItem, index) => {
                     setOrientacionRelativa(selectedItem);
                   }}
+                  defaultButtonText="Orientación relativa"
                   buttonTextAfterSelection={(selectedItem, index) => {
                     return selectedItem;
                   }}
                   rowTextForSelection={(item, index) => {
                     return item;
                   }}
+                  renderCustomizedButtonChild={() => (
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignContent: "center",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                        height: "100%",
+                        paddingLeft: 16,
+                      }}
+                    >
+                      <Text style={{ fontSize: 16, color: "#000000" }}>
+                        {orientacionRelativa !== ""
+                          ? orientacionRelativa
+                          : "Orientación relativa"}
+                      </Text>
+                      <IconButton icon="chevron-down" size={24} />
+                    </View>
+                  )}
                 />
               </View>
             </View>
-            <View className="flex flex-row gap-2">
+            <View className="flex flex-row ">
               <SelectDropdown
                 buttonStyle={{
                   backgroundColor: "#e7e0ec",
                   borderRadius: 4,
-                  width: 390,
+                  width: "99.5%",
                   height: 50,
-                  marginTop: 0,
+                  marginTop: 6,
                   alignItems: "center",
                 }}
                 buttonTextStyle={{
@@ -470,7 +553,28 @@ const NewPost = ({ navigation }) => {
                   textAlign: "left",
                 }}
                 data={orientacionAbsolutaOptions}
-                defaultValue={"Seleccionar"}
+                defaultButtonText="Orientación absoluta"
+                renderCustomizedButtonChild={() => (
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignContent: "center",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "100%",
+                      height: "100%",
+                      paddingLeft: 16,
+                    }}
+                  >
+                    <Text style={{ fontSize: 16, color: "#000000" }}>
+                      {orientacionAbsoluta !== ""
+                        ? orientacionAbsoluta
+                        : "Orientación absoluta"}
+                    </Text>
+                    <IconButton icon="chevron-down" size={24} />
+                  </View>
+                )}
                 onSelect={(selectedItem, index) => {
                   setOrientacionAbsoluta(selectedItem);
                 }}
@@ -482,7 +586,7 @@ const NewPost = ({ navigation }) => {
                 }}
               />
             </View>
-            <View className="flex flex-row gap-4 px-4">
+            <View className="flex flex-row gap-4 px-4 mt-2 mb-2">
               <View className="flex flex-row items-center w-[45%] justify-between">
                 <Text className="pb-[5px] text-[16px]">Cochera</Text>
                 <Switch
@@ -502,7 +606,7 @@ const NewPost = ({ navigation }) => {
                 ></Switch>
               </View>
             </View>
-            <View className="flex flex-row gap-4 px-4">
+            <View className="flex flex-row gap-4 px-4 mb-2">
               <View className="flex flex-row items-center w-[45%] justify-between">
                 <Text className="pb-[5px] text-[16px]">Balcon</Text>
                 <Switch
