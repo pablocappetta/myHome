@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Image,
   ToastAndroid,
+  Alert,
 } from "react-native";
 import React, { useEffect } from "react";
 import {
@@ -204,6 +205,38 @@ const NewPost = ({ navigation }) => {
       console.error(error);
       setIsLoading(false);
       ToastAndroid.show("Error al agregar propiedad", ToastAndroid.LONG);
+    }
+  };
+
+  const validations = () => {
+    if (
+      encabezado === "" ||
+      descripcion === "" ||
+      valor === "" ||
+      moneda === "" ||
+      tipoOperacion === "" ||
+      tipoPropiedad === "" ||
+      provincia === "" ||
+      ciudad === "" ||
+      calle === "" ||
+      numero === "" ||
+      CP === "" ||
+      metrosCubiertos === "" ||
+      metrosDescubiertos === "" ||
+      ambientes === "" ||
+      baños === "" ||
+      antiguedad === "" ||
+      dormitorios === "" ||
+      orientacionRelativa === "" ||
+      orientacionAbsoluta === ""
+    ) {
+      Alert.alert("Error", "Debe completar todos los campos");
+    } else {
+      if (images.length < 2) {
+        Alert.alert("Error", "Debe subir al menos dos imagen");
+      } else {
+        handleAddProperty();
+      }
     }
   };
 
@@ -657,7 +690,7 @@ const NewPost = ({ navigation }) => {
             </Button>
             <Button
               mode="contained"
-              onPress={handleAddProperty}
+              onPress={validations}
               icon={"home"}
               loading={isLoading}
               disabled={isLoading}
