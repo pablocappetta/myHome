@@ -10,20 +10,21 @@ class VisitController {
         return instance;
     }
 
-    async createVisit(req, res) {
+    async createVisit(req, res, next) {
         try {
-            const visit = await VisitService.createVisit(req.body);
-            res.status(201).json(visit);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-            next(error);
+          const { body } = req;
+          const visit = await VisitService.createVisit(body);
+          return res.status(201).json(visit);
+        } catch (err) {
+          console.error(err);
+          next(err);
         }
-    }
+      }
 
-    async getVisitById(req, res) {
+    async getVisitById(req, res, next) {
         try {
             const { id } = req.params;
-            const visit = await VisitService.getVisit(id);
+            const visit = await VisitService.getVisitById(id);
             if (!visit) {
                 res.status(404).json({ error: "Visit not found" });
             } else {
