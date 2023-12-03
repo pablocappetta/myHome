@@ -16,12 +16,14 @@ const Review = ({ navigation, route }) => {
   const [review, setReview] = useState("");
   const [comment, setComment] = useState("");
   const [visible, setVisible] = useState(false);
-
+  const [errorDialogVisible, setErrorDialogVisible] = useState(false); // Added state for error dialog
 
   const { user } = useUserContext();
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+  const showErrorDialog = () => setErrorDialogVisible(true); // Function to show error dialog
+  const hideErrorDialog = () => setErrorDialogVisible(false); // Function to hide error dialog
 
   const handleCommentChange = (text) => setComment(text);
 
@@ -49,6 +51,8 @@ const Review = ({ navigation, route }) => {
       showDialog();
     } catch (error) {
       console.error("There was an error:", error);
+      // Show error dialog
+      showErrorDialog();
     }
   };
 
@@ -98,6 +102,15 @@ const Review = ({ navigation, route }) => {
             </Dialog.Content>
             <Dialog.Actions>
               <Button onPress={hideDialog}>Volver</Button>
+            </Dialog.Actions>
+          </Dialog>
+          <Dialog visible={errorDialogVisible} onDismiss={hideErrorDialog}>
+            <Dialog.Title>Error</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>Error al enviar la reseña</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={hideErrorDialog}>Volver</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>

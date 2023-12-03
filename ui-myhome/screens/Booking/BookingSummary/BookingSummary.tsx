@@ -63,7 +63,7 @@ export const BookingSummary = ({
     },
   },
 }: any) => {
-  const { bookingInfo } = route?.params;
+  const { bookingInfo, listing } = route?.params;
   const [isConfirming, setIsConfirming] = useState(false);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   const [reservationId, setReservationId] = useState("");
@@ -78,7 +78,7 @@ export const BookingSummary = ({
         listingId: bookingInfo.listingId,
         realtorId: bookingInfo.realtorId,
         userId: user?._id,
-        date: new Date().toLocaleDateString("es-AR"),
+        date: new Date().toISOString().split('T')[0],
         time: Math.floor(Date.now() / 1000),
         status: "Pendiente",
         phone: bookingInfo.phone,
@@ -128,19 +128,14 @@ export const BookingSummary = ({
             <Image
               style={styles.image}
               source={{
-                uri: propertyProps.property.propertyImage,
+                uri: listing.property.photos[0] ?? propertyProps.property.propertyImage,
               }}
             />
             <Text variant="titleMedium" style={{ marginTop: 6 }}>
-              {propertyProps.property.propertyName}
+              {listing.title ?? propertyProps.property.propertyName}
             </Text>
             <Text variant="bodySmall" style={{ marginTop: 6 }}>
-              {propertyProps.property.propertyAddress}
-            </Text>
-            <Text variant="bodyMedium" style={{ marginTop: 6 }}>
-              {propertyProps.property.propertyPrice}{" "}
-              {propertyProps.property.propertyCurrency}{" "}
-              {propertyProps.property.frequency}
+              {listing.property.address.street ?? propertyProps.property.propertyAddress}
             </Text>
           </View>
           <View style={styles.section}>
@@ -148,28 +143,18 @@ export const BookingSummary = ({
               Precio
             </Text>
             <Text variant="bodyMedium" style={{ marginTop: 6 }}>
-              ${propertyProps.priceInfo.subtotal}
-            </Text>
-            <Text variant="titleMedium" style={{ marginTop: 6 }}>
-              Impuestos
-            </Text>
-            <Text variant="bodyMedium" style={{ marginTop: 6 }}>
-              ${propertyProps.priceInfo.tax}
-            </Text>
-            <Text variant="titleMedium" style={{ marginTop: 6 }}>
-              Total
-            </Text>
-            <Text variant="bodyMedium" style={{ marginTop: 6 }}>
-              ${propertyProps.priceInfo.total}
+            {listing.price.currency ?? propertyProps.property.propertyCurrency}{" "}{listing.price.amount ?? propertyProps.priceInfo.subtotal}
             </Text>
           </View>
           <View style={styles.section}>
             <Text variant="titleMedium" style={{ marginTop: 6 }}>
               Método de pago
             </Text>
-            <Text variant="bodyMedium" style={{ marginTop: 6 }}>
-              {bookingInfo?.paymentMethod}
-            </Text>
+              <Text variant="bodyMedium" style={{ marginTop: 6 }}>
+                {bookingInfo?.paymentMethod === "credit-card" ? "Tarjeta de Crédito/Débito (Termina en 1234)" :
+                 bookingInfo?.paymentMethod === "efectivo-transferencia" ? "Transferencia/Efectivo" :
+                 bookingInfo?.paymentMethod === "mercado-pago" ? "MercadoPago" : ""}
+              </Text>
             <Button
               onPress={() => navigation.navigate("Review")}
               accessibilityLabel="Cambiar el método de pago"

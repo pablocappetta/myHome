@@ -17,7 +17,7 @@ export const BookingPayment: React.FC<any> = ({
   navigation,
   route
 }) => {
-  const { realtorId, listingId, name, phone, email } = route?.params;
+  const { realtorId, listingId, name, phone, email, listing } = route?.params;
   
   const [checked, setChecked] = React.useState("first");
   const [paymentMethod, setPaymentMethod] = React.useState("");
@@ -36,7 +36,7 @@ export const BookingPayment: React.FC<any> = ({
       email,
       paymentMethod,
     };
-    navigation.navigate("Booking", { screen: "Summary", params: {bookingInfo} });
+    navigation.navigate("Booking", { screen: "Summary", params: {bookingInfo, listing} });
   };
 
   return (
