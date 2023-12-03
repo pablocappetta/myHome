@@ -83,13 +83,13 @@ const ListingReservationCard = ({
             flexDirection: "row",
             justifyContent: "space-around",
             marginBottom: 8,
+            marginTop: 8,
           }}
         >
           <View
             style={{
               display: "flex",
               flexDirection: "row",
-              alignContent: "center",
               alignItems: "center",
             }}
           >
@@ -103,7 +103,6 @@ const ListingReservationCard = ({
             style={{
               display: "flex",
               flexDirection: "row",
-              alignContent: "center",
               alignItems: "center",
             }}
           >
