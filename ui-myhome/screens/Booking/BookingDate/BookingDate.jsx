@@ -14,6 +14,7 @@ import {
 } from "react-native-paper";
 import { DatePickerInput } from "react-native-paper-dates";
 import { es, en, enGB, registerTranslation } from "react-native-paper-dates";
+import { useUserContext } from "../../../contexts/UserContext";
 
 const languageMap = {
   "en-GB": enGB,
@@ -27,21 +28,47 @@ for (const language in languageMap) {
 
 const bookingTitle = "Reservar propiedad";
 
-export const BookingDate = ({ navigation }) => {
+export const BookingDate = ({ navigation, route }) => {
   const [date, onChangeDate] = useState(undefined);
   const [selectedTime, setSelectedTime] = useState("Mañana");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+
+  const {user} = useUserContext();
 
   const onTimeChange = useCallback((value) => {
     setSelectedTime(value);
   }, []);
-
   const handleAgendar = () => {
-    setShowSuccessDialog(true);
+    try {
+      const request = {
+        listingId: route?.params?.listingId,
+        date: date.toISOString().split("T")[0],
+        userId: user?._id,
+        time: selectedTime,
+      };
+      console.log(request);
+      fetch(`http://3.144.94.74:8000/api/realtors/${route?.params?.listingId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      }).then((response) => {
+        if (response.status === 200) {
+          setShowSuccessDialog(true);
+        } else {
+          setShowErrorDialog(true);
+        }
+      });
+    } catch (error) {
+      setShowErrorDialog(true);
+    }
   };
 
   const handleReturn = () => {
     setShowSuccessDialog(false);
+    setShowErrorDialog(false);
   };
 
   return (
@@ -62,6 +89,7 @@ export const BookingDate = ({ navigation }) => {
             onChange={(d) => onChangeDate(d)}
             inputMode="start"
             mode="outlined"
+            style={{ marginTop: 50 }}
           />
           <View style={{ flexDirection: "column", marginTop: 48 }}>
             <Text
@@ -86,16 +114,28 @@ export const BookingDate = ({ navigation }) => {
             onPress={handleAgendar}
             accessibilityLabel="Continuar a la siguiente pantalla para editar datos de contacto"
             mode="contained"
+            disabled={!date} // Disable the button if no date is selected
           >
-            Agendar
+            Agendar Visita
           </Button>
         </View>
       </View>
       <Portal>
         <Dialog visible={showSuccessDialog} onDismiss={handleReturn}>
-          <Dialog.Title>¡Reserva agendada!</Dialog.Title>
+          <Dialog.Title>¡Visita agendada!</Dialog.Title>
           <Dialog.Content>
-            <Text>La reserva ha sido agendada exitosamente.</Text>
+            <Text>La visita ha sido agendada exitosamente. La inmobiliaria te contactara con mas detalles.</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={handleReturn}>Volver</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      <Portal>
+        <Dialog visible={showErrorDialog} onDismiss={handleReturn}>
+          <Dialog.Title>Error inesperado</Dialog.Title>
+          <Dialog.Content>
+            <Text>Hubo un error al agendar la visita, intente nuevamente</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={handleReturn}>Volver</Button>

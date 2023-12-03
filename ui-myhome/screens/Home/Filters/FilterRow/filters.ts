@@ -52,6 +52,17 @@ export const filters: DisplayFilter[] = [
         type: 'default'
     },
     {
+        title: "Rango de precio",
+        value: "price.value",
+        options: [
+            { label: "Minimo", filterValue:"price.value", value: "0", selected: false },
+            { label: "Maximo", filterValue:"price.value", value: "100000000", selected: false}
+        ],
+        isSlider: false,
+        isMultiselect: false,
+        type: 'rangeInput'
+    },
+    {
         title: "Amenities",
         value: "property.amenities",
         options: [

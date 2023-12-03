@@ -22,9 +22,17 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
 
     useEffect(() => {
         // Filter the initial properties by the search query
-        const filteredProperties = initialProperties.filter(property =>
+        let filteredProperties = initialProperties.filter(property =>
             property.title.toLowerCase().includes(searchQuery.toLowerCase())
         );
+        const filteredFilters: Filter[] = [];
+        for (const filter of appliedFilters) {
+            const filteredValues = filter.values.filter(value => !value?.toLowerCase()?.includes("todas") && !value?.toLowerCase()?.includes("todos"));
+            if (filteredValues.length > 0) {
+                filteredFilters?.push(filter);
+            }
+        }
+        filteredProperties = filterProperties(filteredProperties, filteredFilters, true);
         setFilteredPosts(filteredProperties);
     }, [searchQuery]);
 
@@ -40,7 +48,10 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
                 filteredFilters.push(filter);
             }
         }
-        const newProperties = filterProperties(filteredPosts, filteredFilters, true);
+        let newProperties = filterProperties(filteredPosts, filteredFilters, true);
+        newProperties = newProperties.filter(property =>
+            property?.title?.toLowerCase()?.includes(searchQuery.toLowerCase())
+        );
         setFilteredPosts(newProperties);
         setIsDrawerOpen(false);
         setAppliedFilters(filteredFilters);
@@ -49,14 +60,14 @@ const Search: React.FC<SearchProps> = ({ navigation, route }) => {
 
     const onRemoveFilter = (filterKey: string) => {
         setIsFiltering(true); // Show filtering spinner
-        let filteredProperties = initialProperties.filter(property =>
-            property.title.toLowerCase().includes(searchQuery.toLowerCase())
-        );
         const newFilters = [...appliedFilters];
         const filterIndex = newFilters.findIndex(filter => filter.key === filterKey);
         newFilters.splice(filterIndex, 1);
-        filteredProperties = filterProperties(initialProperties, newFilters, true);
-        setFilteredPosts(filteredProperties);
+        let newProperties = filterProperties(initialProperties, newFilters, true);
+        newProperties = newProperties.filter(property =>
+            property?.title?.toLowerCase()?.includes(searchQuery.toLowerCase())
+        );
+        setFilteredPosts(newProperties);
         setAppliedFilters(newFilters);
         let newInitialFilters = [...filters];
         if(newFilters.length === 0) {

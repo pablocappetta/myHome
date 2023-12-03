@@ -57,7 +57,8 @@
     "expo-web-browser": "~12.3.2",
     "expo-auth-session": "~5.0.2",
     "expo-crypto": "~12.4.1",
-    "expo-random": "~13.2.0"
+    "expo-random": "~13.2.0",
+    "expo-sharing": "~11.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

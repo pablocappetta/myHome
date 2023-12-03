@@ -79,7 +79,6 @@ const Login = ({ navigation }) => {
               }
               setUser(user);
               setUserDataToAsyncStorage(user);
-              navigation.navigate("MiCuenta");
               navigation.navigate("Home", { screen: "Home" });
               ToastAndroid.show(
                 "Usuario logueado con Google",
