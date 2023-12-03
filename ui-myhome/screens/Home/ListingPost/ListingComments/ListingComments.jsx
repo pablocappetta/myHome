@@ -60,8 +60,8 @@ const ListingComments = ({ isModalOpen, onClose, comments }) => {
               }} key={index}>
                 <View style={styles.userContainer}>
                   {/* User image URL */}
-                  <Avatar.Image source={{ uri: comment.userImage || defaultImage }} size={40} />
-                  <Text>  {comment.userName ?? "Usuario"}</Text>
+                  <Avatar.Image source={{ uri: comment?.user?.avatar || defaultImage }} size={40} />
+                  <Text>  {comment?.user?.name ?? "Usuario"}</Text>
                 </View>
 
                 <View style={{

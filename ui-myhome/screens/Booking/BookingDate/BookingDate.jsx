@@ -54,7 +54,7 @@ export const BookingDate = ({ navigation, route }) => {
         },
         body: JSON.stringify(request),
       }).then((response) => {
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201 || response.status === 204 ) {
           setShowSuccessDialog(true);
         } else {
           setShowErrorDialog(true);

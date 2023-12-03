@@ -55,7 +55,7 @@ const ListingReservationCard = ({
                 onPress={() =>
                   navigation.navigate(
                     "Review",
-                    reservation.listingDetails.realtorId
+                    reservation._id
                   )
                 }
                 mode="contained"
