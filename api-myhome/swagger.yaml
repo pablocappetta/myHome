@@ -420,36 +420,6 @@ paths:
           description: Visit scheduled successfully
         "400":
           description: Invalid input data or time slot not available  
-  /listings/{listingId}/images:
-    post:
-      summary: Upload images for a listing
-      tags:
-        - Listings
-      parameters:
-        - in: path
-          name: listingId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                images:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-      responses:
-        "201":
-          description: Images uploaded successfully
-        "400":
-          description: Invalid input data
-        "404":
-          description: Listing not found
   /listings/realtor/{realtorId}:
     get:
       summary: Get list of listings for a realtor
@@ -565,6 +535,10 @@ paths:
       responses:
         "201":
           description: Review added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
         "400":
           description: Invalid input data
   /users/login:
@@ -719,7 +693,16 @@ components:
           type: string
         userId:
           required: true
-          type: integer
+          writeOnly: true
+          type: string
+        user:
+          readOnly: true
+          type: object
+          properties:
+            name:
+              type: string
+            avatar:
+              type: string
     User:
       type: object
       properties:
