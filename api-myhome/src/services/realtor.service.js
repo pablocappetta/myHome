@@ -248,30 +248,6 @@ class RealtorService {
     }
   }
 
-  async getRealtorAverageRatingById(realtorId) {
-    try {
-      const realtor = await RealtorModel.findById(realtorId);
-      if (!realtor) {
-        throw new Error("Realtor not found");
-      }
-
-      const totalReviews = realtor.reviews.length;
-      if (totalReviews === 0) {
-        return 0;
-      }
-
-      let totalRating = 0;
-      for (const review of realtor.reviews) {
-        totalRating += review.rating;
-      }
-
-      const averageRating = totalRating / totalReviews;
-      return averageRating;
-    } catch (err) {
-      console.error(err);
-      throw new InternalServerError("Error en getRealtorAverageRatingById Service");
-    }
-  }
 }
 
 module.exports = new RealtorService();

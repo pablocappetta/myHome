@@ -131,17 +131,6 @@ class ListingController {
       throw err;
     }
   }
-
-  async getRealtorAverageRatingById(req, res, next) {
-    const realtorId = req.params.realtorId;
-    try {
-      const averageRating = await ListingService.getRealtorAverageRatingById(realtorId);
-      return res.status(200).json(averageRating);
-    } catch (err) {
-      console.error(err);
-      next(err);
-    }
-  }
 }
 
 
