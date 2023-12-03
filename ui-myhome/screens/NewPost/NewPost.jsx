@@ -100,14 +100,17 @@ const NewPost = ({ navigation }) => {
 
   const getGeoLocation = async () => {
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(
-          `${ciudad}, ${provincia}`
-        )}`,
-        {
-          method: "GET",
-        }
-      );
+      const params = {
+        city: ciudad,
+        state: provincia,
+        street: calle + " " + numero,
+        country: "Argentina",
+        format: "json",
+        limit: 1,
+      }
+      const baseUrl = "https://nominatim.openstreetmap.org/search";
+      const url = `${baseUrl}?${new URLSearchParams(params).toString()}`;
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error("Error al obtener coordenadas");
@@ -115,8 +118,8 @@ const NewPost = ({ navigation }) => {
 
       const data = await response.json();
 
-      setLatitude(data[0].lat);
-      setLongitude(data[0].lon);
+      setLatitude(data[0]?.lat);
+      setLongitude(data[0]?.lon);
     } catch (error) {
       console.error(error);
     }
