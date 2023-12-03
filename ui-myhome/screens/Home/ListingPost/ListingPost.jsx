@@ -482,14 +482,15 @@ export const ListingPost = ({ navigation, ...props }) => {
             <View className="pt-4 pl-4 flex flex-row items-center gap-4">
               {console.log(listing)}
               <View
-                className={`rounded-full h-2 w-2 ${
+                className={`rounded-full h-2 w-2 bg-gray-500 ${
                   listing?.status == "disponible" && "bg-green-500"
                 }
                 ${listing?.status == "reservada" && "bg-yellow-500"}
                 ${listing?.status == "vendida" && "bg-red-500"}
-                ${listing?.status == "cancelada" && "bg-gray-500"}`}
+                ${listing?.status == "cancelada" && "bg-gray-500"}
+`}
               ></View>
-              <Text>{listing?.status || "Sin estado"}</Text>
+              <Text>{listing?.status || "Cancelada"}</Text>
             </View>
           ) : null}
           <View style={styles.topListingDetailsContainer}>

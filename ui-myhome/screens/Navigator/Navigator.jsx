@@ -30,7 +30,6 @@ import { useUserContext } from "../../contexts/UserContext";
 import ForgotPassword from "../Login/ForgotPassword/ForgotPassword";
 import PasswordRecovery from "../Login/PasswordRecovery/PasswordRecovery";
 import EditProfile from "../UserProfile/EditProfile";
-import ProfileEdit from "../ProfileEdit/ProfileEdit";
 import TermsAndConditions from "../Settings/TermsAndConditions/TermsAndConditions";
 
 const Tab = createMaterialBottomTabNavigator();
