@@ -14,12 +14,21 @@ router.post(
     check("listingId", "El id de la propiedad es obligatorio").not().isEmpty(),
     check("realtorId", "El id del agente es obligatorio").not().isEmpty(),
     check("userId", "El id del usuario es obligatorio").not().isEmpty(),
-    check("date", "La fecha de la reserva es obligatoria").not().isEmpty(),
-    check("time", "La hora de la reserva es obligatoria").not().isEmpty(),
-    check("status", "El estado de la reserva es obligatorio").not().isEmpty(),
     checkFields,
   ],
   ReservationController.createReservation
+);
+
+//Obtiene una reserva por id
+router.get(
+  "/:reservationId",
+  [
+    check("reservationId", "El id de la reserva es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  ReservationController.getReservationById
 );
 
 //Obtiene las reservas de un usuario
@@ -74,6 +83,18 @@ router.delete(
     checkFields,
   ],
   ReservationController.deleteReservation
+);
+
+//Agrega la review de una reserva
+router.post(
+  "/:reservationId/review",
+  [
+    check("reservationId", "El id de la reserva es obligatorio")
+      .not()
+      .isEmpty(),
+    checkFields,
+  ],
+  ReservationController.reviewReservation
 );
 
 module.exports = router;

@@ -18,12 +18,7 @@ const ReservationSchema = new mongoose.Schema(
       ref: "Realtor",
       required: true,
     },
-    reservationStartDate: {
-      type: Date,
-      default: Date.now,
-      required: true,
-    },
-    reservationEndDate: {
+    reservationDate: {
       type: Date,
       default: Date.now,
       required: true,
@@ -33,6 +28,10 @@ const ReservationSchema = new mongoose.Schema(
       enum: ["Pendiente", "Pagada", "Cancelada"],
       default: "Pendiente",
       required: true,
+    },
+    wasReviewed: {
+      type: Boolean,
+      default: false,
     },
   },
   { versionKey: false }

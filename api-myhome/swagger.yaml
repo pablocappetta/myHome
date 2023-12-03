@@ -477,6 +477,26 @@ paths:
                 $ref: "#/components/schemas/Reservation"
         "404":
           description: Listing not found
+  /reservations/{reservationId}:
+    get:
+      summary: Get reservation details
+      tags:
+        - Reservations
+      parameters:
+        - in: path
+          name: reservationId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Reservation details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "404":
+          description: Reservation not found
   /reservations/{reservationId}/payment:
     post:
       summary: Make a payment for a reservation
@@ -535,10 +555,6 @@ paths:
       responses:
         "201":
           description: Review added successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Review"
         "400":
           description: Invalid input data
   /users/login:
@@ -690,10 +706,6 @@ components:
           type: number
         comment:
           required: true
-          type: string
-        userId:
-          required: true
-          writeOnly: true
           type: string
         user:
           readOnly: true
@@ -939,7 +951,11 @@ components:
         userId:
           required: true
           type: integer
-          format: int64
+          format: string
+        realtorId:
+          required: true
+          type: integer
+          format: string
         reservationDate:
           readOnly: true
           type: string

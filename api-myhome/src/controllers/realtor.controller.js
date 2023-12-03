@@ -176,18 +176,6 @@ class RealtorController {
     }
   }
 
-  async addReview(req, res, next) {
-    try {
-      const { realtorId } = req.params;
-      const review = req.body;
-      const updatedRealtor = await RealtorService.addReview(realtorId, review);
-      return res.status(200).json(updatedRealtor);
-    } catch (err) {
-      console.error(err);
-      next(err);
-    }
-  }
-  
   async getRealtorByLoginEmail(req, res, next) {
     const { loginEmail } = req.params;
     try {
@@ -198,7 +186,7 @@ class RealtorController {
       next(err);
     }
   }
-  
+
   async addNotification(req, res, next) {
     try {
       const { realtorId } = req.params;
