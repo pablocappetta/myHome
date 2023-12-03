@@ -228,29 +228,25 @@ export const ListingPost = ({ navigation, ...props }) => {
         { text: "Cancelar", onPress: () => console.log("Cancel Pressed") },
         {
           text: "Eliminar",
-          onPress: () => (
+          onPress: () =>
             fetch(`http://3.144.94.74:8000/api/listings/${listing._id}`, {
               method: "DELETE",
-            }),
-            ToastAndroid.show("Propiedad eliminada", ToastAndroid.LONG),
-            console.log(listing._id),
-            navigation.navigate("Home")
-          ),
+            })
+              .then(() => {
+                ToastAndroid.show("Propiedad eliminada", ToastAndroid.LONG);
+                navigation.navigate("Home");
+              })
+              .catch((err) => {
+                console.log(err);
+                ToastAndroid.show(
+                  "Lo sentimos, no pudimos eliminar la propiedad. Intentelo más tarde.",
+                  ToastAndroid.LONG
+                );
+              }),
         },
       ]
     );
   };
-
-  const data = [
-    { label: "Item 1", value: "1" },
-    { label: "Item 2", value: "2" },
-    { label: "Item 3", value: "3" },
-    { label: "Item 4", value: "4" },
-    { label: "Item 5", value: "5" },
-    { label: "Item 6", value: "6" },
-    { label: "Item 7", value: "7" },
-    { label: "Item 8", value: "8" },
-  ];
 
   const [encabezado, setEncabezado] = useState(listing?.title);
   const [type, setType] = useState(listing?.type);
@@ -433,7 +429,6 @@ export const ListingPost = ({ navigation, ...props }) => {
       .then((data) => {
         console.log("data:", data);
         ToastAndroid.show("Propiedad actualizada", ToastAndroid.LONG);
-        refresh;
       })
       .catch((err) => {
         console.log(err);
@@ -443,56 +438,6 @@ export const ListingPost = ({ navigation, ...props }) => {
         );
       });
   }
-
-  // Map View
-  const [region, setRegion] = useState({
-    latitude: -34.6036844,
-    longitude: -58.3815591,
-    latitudeDelta: 0.1,
-    longitudeDelta: 0.1,
-  });
-
-  // const apiKey = process.env.GOOGLE_APIKEY;
-
-  // Geocoder.init(apiKey);
-
-  // const [address, setAddress] = useState("Buenos Aires");
-
-  // useEffect(() => {
-  //   Geocoder.from(address, apiKey).then((json) => {
-  //     var location = json.results[0].geometry.location;
-  //     console.log(address, location);
-  //     setRegion({
-  //       latitude: location.lat,
-  //       longitude: location.lng,
-  //       latitudeDelta: 0.02,
-  //       longitudeDelta: 0.02,
-  //     });
-  //   });
-  //   setAddress(
-  //     `${listing?.property?.address?.street}, ${listing?.property?.address?.number}, ${listing?.property?.address?.city}, ${listing?.property?.address?.state}`
-  //   );
-  // }, [address]);
-
-  // const mapa = () => {
-  //   return (
-  //     <MapView
-  //       style={styles.mapView}
-  //       // provider={PROVIDER_GOOGLE}
-  //       region={region}
-  //     >
-  //       <Marker
-  //         coordinate={{
-  //           latitude: region.latitude,
-  //           longitude: region.longitude,
-  //         }}
-  //         title={"Ubicacion"}
-  //         description={"Ubicacion"}
-  //         draggable={false}
-  //       />
-  //     </MapView>
-  //   );
-  // };
 
   return (
     <View style={styles.container}>

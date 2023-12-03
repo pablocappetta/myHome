@@ -27,6 +27,7 @@ import {
 } from "./mock/MockedHomeData";
 import { useUserContext } from "../../contexts/UserContext";
 import { useScrollToTop } from "@react-navigation/native";
+import * as Location from "expo-location";
 
 const Home = ({ navigation }) => {
   const { user, isUserLogged } = useUserContext();
@@ -53,6 +54,13 @@ const Home = ({ navigation }) => {
 
   useScrollToTop(ref);
 
+  Location.requestForegroundPermissionsAsync();
+  Location.getLastKnownPositionAsync({
+    accuracy: Location.Accuracy.BestForNavigation,
+  }).then((location) => {
+    console.log(location);
+  });
+
   const handleButtonFilterChange = (listingType) => {
     setFilterSelection(listingType);
     setHighlightedListing(
@@ -69,7 +77,10 @@ const Home = ({ navigation }) => {
   };
 
   const handleSearchSubmitChange = ({ nativeEvent }) => {
-    navigation.navigate("Search", { searchText: nativeEvent.text, listings: recentListings });
+    navigation.navigate("Search", {
+      searchText: nativeEvent.text,
+      listings: recentListings,
+    });
     setSearchQuery(nativeEvent.text);
     setHighlightedListing(
       getFilteredListingByQuery(highlightedListings, nativeEvent.text)

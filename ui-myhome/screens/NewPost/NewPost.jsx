@@ -38,6 +38,9 @@ const NewPost = ({ navigation }) => {
   const [numero, setNumero] = React.useState("");
   const [CP, setCP] = React.useState("");
 
+  const [latitude, setLatitude] = React.useState(0);
+  const [longitude, setLongitude] = React.useState(0);
+
   const [metrosCubiertos, setMetrosCubiertos] = React.useState("");
   const [metrosDescubiertos, setMetrosDescubiertos] = React.useState("");
   const [ambientes, setAmbientes] = React.useState("");
@@ -95,7 +98,32 @@ const NewPost = ({ navigation }) => {
     }
   };
 
+  const getGeoLocation = async () => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(
+          `${ciudad}, ${provincia}`
+        )}`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al obtener coordenadas");
+      }
+
+      const data = await response.json();
+
+      setLatitude(data[0].lat);
+      setLongitude(data[0].lon);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleAddProperty = async () => {
+    await getGeoLocation();
     const body = {
       realtorId: user._id,
       title: encabezado,
@@ -112,9 +140,9 @@ const NewPost = ({ navigation }) => {
           floor: "",
           apartment: "",
         },
-        // geoLocation: {
-        //   coordinates: [0, 0]
-        // },
+        geoLocation: {
+          coordinates: [latitude, longitude],
+        },
         type:
           tipoPropiedad.charAt(0).toUpperCase() +
           tipoPropiedad.slice(1).toLowerCase(),
@@ -147,6 +175,8 @@ const NewPost = ({ navigation }) => {
         currency: moneda.toUpperCase(),
       },
     };
+
+    console.log(body);
 
     const formToSend = new FormData();
 
@@ -467,6 +497,8 @@ const NewPost = ({ navigation }) => {
               ></TextInput>
             </View>
           </View>
+
+          <Button onPress={() => getGeoLocation()}>Obtener coordenadas</Button>
 
           <Text className="text-[25px] mt-4 font-bold my-4">
             Características
