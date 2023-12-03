@@ -164,7 +164,6 @@ const NewPost = ({ navigation }) => {
         uri: image.uri,
       });
     });
-    debugger
     console.log(JSON.stringify(formToSend));
 
     try {
