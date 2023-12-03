@@ -34,10 +34,9 @@ class VisitService {
           }
     }
 
-    async getVisitById(visitId) {
+    async getVisitsByListingId(listingId) {
         try {
-            const visit = await VisitModel.findById(visitId);
-            return visit;
+            return await VisitModel.find({ listingId });
         } catch (err) {
             console.error(err);
             throw new InternalServerError("Error en getVisitById Service");
@@ -46,7 +45,7 @@ class VisitService {
 
     async deleteVisit(visitId) {
         try {
-            await VisitModel.findByIdAndDelete(visitId);
+            return await VisitModel.findByIdAndDelete(visitId);
         } catch (err) {
             console.error(err);
             throw new InternalServerError("Error en deleteVisit Service");

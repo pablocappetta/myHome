@@ -378,48 +378,97 @@ paths:
         "404":
           description: Listing not found
   /listings/{listingId}/visits:
-    get:
-      summary: Get list of visits for a listing
-      tags:
-        - Listings
-      parameters:
-        - in: path
-          name: listingId
+      get:
+        summary: Get list of visits for a listing
+        tags:
+          - Listings
+        parameters:
+          - in: path
+            name: listingId
+            required: true
+            schema:
+              type: string
+        responses:
+          "200":
+            description: List of visits retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Visit"
+          "404":
+            description: Listing not found
+      post:
+        summary: Schedule a visit for a listing
+        tags:
+          - Listings
+        parameters:
+          - in: path
+            name: listingId
+            required: true
+            schema:
+              type: string
+        requestBody:
           required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List of visits retrieved successfully
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Visit"
-        "404":
-          description: Listing not found
-    post:
-      summary: Schedule a visit for a listing
-      tags:
-        - Listings
-      parameters:
-        - in: path
-          name: listingId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
+                $ref: "#/components/schemas/Visit"
+        responses:
+          "201":
+            description: Visit scheduled successfully
+          "400":
+            description: Invalid input data or time slot not available
+  /listings/{listingId}/visits/{visitId}:
+      put:
+        summary: Edit visit details
+        tags:
+          - Listings
+        parameters:
+          - in: path
+            name: listingId
+            required: true
             schema:
-              $ref: "#/components/schemas/Visit"
-      responses:
-        "201":
-          description: Visit scheduled successfully
-        "400":
-          description: Invalid input data or time slot not available  
+              type: string
+          - in: path
+            name: visitId
+            required: true
+            schema:
+              type: string
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Visit"
+        responses:
+          "200":
+            description: Visit details updated successfully
+          "400":
+            description: Invalid input data
+          "404":
+            description: Visit not found
+      delete:
+        summary: Delete a visit
+        tags:
+          - Listings
+        parameters:
+          - in: path
+            name: listingId
+            required: true
+            schema:
+              type: string
+          - in: path
+            name: visitId
+            required: true
+            schema:
+              type: string
+        responses:
+          "204":
+            description: Visit deleted successfully
+          "404":
+            description: Visit not found
   /listings/{listingId}/images:
     post:
       summary: Upload images for a listing

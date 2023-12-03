@@ -21,10 +21,10 @@ class VisitController {
         }
       }
 
-    async getVisitById(req, res, next) {
+    async getVisitsByListingId(req, res) {
         try {
-            const { id } = req.params;
-            const visit = await VisitService.getVisitById(id);
+            const { listingId } = req.params;
+            const visit = await VisitService.getVisitsByListingId(listingId);
             if (!visit) {
                 res.status(404).json({ error: "Visit not found" });
             } else {
@@ -37,8 +37,8 @@ class VisitController {
 
     async updateVisit(req, res) {
         try {
-            const { id } = req.params;
-            const visit = await VisitService.updateVisit(id, req.body);
+            const visitId  = req.params.visitId;
+            const visit = await VisitService.updateVisit(visitId, req.body);
             if (!visit) {
                 res.status(404).json({ error: "Visit not found" });
             } else {
@@ -51,8 +51,9 @@ class VisitController {
 
     async deleteVisit(req, res) {
         try {
-            const { id } = req.params;
-            const visit = await VisitService.deleteVisit(id);
+            const visitId = req.params.visitId;
+            console.log(visitId)
+            const visit = await VisitService.deleteVisit(visitId);
             if (!visit) {
                 res.status(404).json({ error: "Visit not found" });
             } else {

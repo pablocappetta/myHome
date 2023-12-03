@@ -45,9 +45,6 @@ app.use("/api/users", require("./src/routes/user.routes"));
 //Reservas endpoint
 app.use("/api/reservations", require("./src/routes/reservation.routes"));
 
-//Visitas endpoint
-app.use("/api/visits", require("./src/routes/visit.routes"));
-
 //Swagger endpoint
 app.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
