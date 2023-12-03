@@ -250,6 +250,7 @@ class RealtorService {
       throw new InternalServerError("Error in addReview Service");
     }
   }
+
 }
 
 module.exports = new RealtorService();

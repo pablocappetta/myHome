@@ -7,13 +7,18 @@ const visitSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    listingId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Listing",
+        required: true,
+      },
     date: {
       type: Date,
       required: true,
     },
     time: {
       type: String,
-      enum: ["mañana", "tarde"],
+      enum: ["Mañana", "Tarde"],
       required: true,
     },
     creationDate: {
