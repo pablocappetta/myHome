@@ -65,6 +65,7 @@ const ListingSchema = new Schema(
     status: {
       type: String,
       enum: ["disponible", "reservada", "vendida", "cancelada"],
+      default: "disponible",
     },
     price: {
       amount: Number,

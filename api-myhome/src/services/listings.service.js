@@ -66,7 +66,6 @@ class ListingService {
       query["property.address.neighborhood"] = neighborhood;
     }
     try {
-
       const listings = await ListingModel.find(query);
       return listings;
     } catch (err) {
@@ -141,6 +140,17 @@ class ListingService {
     } catch (err) {
       console.error(err);
       throw new Error("Error en addImagesToListing Service");
+    }
+  }
+
+  async markAsReserved(listingId) {
+    try {
+      const listing = await this.getListingById(listingId);
+      listing.status = "reservada";
+      listing.save();
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en markAsReserved Service");
     }
   }
 }
