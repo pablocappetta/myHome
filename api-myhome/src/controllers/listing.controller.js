@@ -42,8 +42,6 @@ class ListingController {
   }
 
   async getListingsNear(req, res, next) {
-    console.log("entre al controller bro!!");
-    console.log(req.query);
     try {
       const listings = await ListingService.getListingsNear(
         req.query.latitude,
@@ -72,15 +70,11 @@ class ListingController {
     try {
       const listing = req.body;
       const images = req.files;
-      console.log("LISTING", listing);
-      console.log("IMAGES", images);
       if (typeof listing.property == "string")
         listing.property = JSON.parse(listing.property);
       if (typeof listing.price == "string")
         listing.price = JSON.parse(listing.price);
       listing.property.photos = images.map((image) => image.link);
-      console.log(listing);
-      console.log(images);
       const newListing = await ListingService.createListing(listing);
       return res.status(201).json(newListing);
     } catch (err) {
@@ -94,15 +88,13 @@ class ListingController {
       const { id } = req.params;
       const listing = req.body;
       const images = req.files;
-      console.log("LISTING", listing);
-      console.log("IMAGES", images);
+
       if (typeof listing.property == "string")
         listing.property = JSON.parse(listing.property);
       if (typeof listing.price == "string")
         listing.price = JSON.parse(listing.price);
       listing.property.photos = images.map((image) => image.link);
-      console.log(listing);
-      console.log(images);
+
       const updatedListing = await ListingService.updateListing(id, listing);
       return res.status(200).json(updatedListing);
     } catch (err) {
@@ -140,5 +132,6 @@ class ListingController {
     }
   }
 }
+
 
 module.exports = ListingController.getInstance();

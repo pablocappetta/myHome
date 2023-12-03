@@ -66,7 +66,7 @@ class ListingService {
       query["property.address.neighborhood"] = neighborhood;
     }
     try {
-      console.log(query);
+
       const listings = await ListingModel.find(query);
       return listings;
     } catch (err) {
