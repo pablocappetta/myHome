@@ -83,7 +83,7 @@ export const ListingPost = ({ navigation, ...props }) => {
 
   useEffect(() => {
     const getListingRealtorData = async () => {
-      console.log(listing?.realtorId);
+      console.log(listing._id);
       if (listing?.realtorId === undefined) return;
       const realtorName = await getNameFromId(listing.realtorId);
       setListingRealtorName(realtorName.name);
@@ -373,56 +373,6 @@ export const ListingPost = ({ navigation, ...props }) => {
       });
   }
 
-  // Map View
-  const [region, setRegion] = useState({
-    latitude: -34.6036844,
-    longitude: -58.3815591,
-    latitudeDelta: 0.1,
-    longitudeDelta: 0.1,
-  });
-
-  // const apiKey = process.env.GOOGLE_APIKEY;
-
-  // Geocoder.init(apiKey);
-
-  // const [address, setAddress] = useState("Buenos Aires");
-
-  // useEffect(() => {
-  //   Geocoder.from(address, apiKey).then((json) => {
-  //     var location = json.results[0].geometry.location;
-  //     console.log(address, location);
-  //     setRegion({
-  //       latitude: location.lat,
-  //       longitude: location.lng,
-  //       latitudeDelta: 0.02,
-  //       longitudeDelta: 0.02,
-  //     });
-  //   });
-  //   setAddress(
-  //     `${listing?.property?.address?.street}, ${listing?.property?.address?.number}, ${listing?.property?.address?.city}, ${listing?.property?.address?.state}`
-  //   );
-  // }, [address]);
-
-  // const mapa = () => {
-  //   return (
-  //     <MapView
-  //       style={styles.mapView}
-  //       // provider={PROVIDER_GOOGLE}
-  //       region={region}
-  //     >
-  //       <Marker
-  //         coordinate={{
-  //           latitude: region.latitude,
-  //           longitude: region.longitude,
-  //         }}
-  //         title={"Ubicacion"}
-  //         description={"Ubicacion"}
-  //         draggable={false}
-  //       />
-  //     </MapView>
-  //   );
-  // };
-
   return (
     <View style={styles.container}>
       <Appbar.Header>
@@ -462,6 +412,20 @@ export const ListingPost = ({ navigation, ...props }) => {
         </View>
 
         <View style={styles.listingDetailsContainer}>
+          {!edit ? (
+            <View className="pt-4 pl-4 flex flex-row items-center gap-4">
+              {console.log(listing)}
+              <View
+                className={`rounded-full h-2 w-2 ${
+                  listing?.status == "disponible" && "bg-green-500"
+                }
+                ${listing?.status == "reservada" && "bg-yellow-500"}
+                ${listing?.status == "vendida" && "bg-red-500"}
+                ${listing?.status == "cancelada" && "bg-gray-500"}`}
+              ></View>
+              <Text>{listing?.status || "Sin estado"}</Text>
+            </View>
+          ) : null}
           <View style={styles.topListingDetailsContainer}>
             {edit ? (
               <SelectDropdown

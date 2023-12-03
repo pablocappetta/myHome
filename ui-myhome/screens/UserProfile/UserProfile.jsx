@@ -167,14 +167,24 @@ const UserProfile = ({ navigation }) => {
 
         <View style={styles.actions}>
           {!user.isRealtor ? (
-            <Button
-              icon="heart"
-              mode="contained-tonal"
-              style={styles.actionButton}
-              onPress={() => navigation.navigate("Favoritos")}
-            >
-              Ver Favoritos
-            </Button>
+            <View style={styles.actions}>
+              <Button
+                mode="outlined"
+                style={styles.actionButton}
+                onPress={() => navigation.navigate("EditProf")}
+                icon={"account-edit"}
+              >
+                Editar mi perfil
+              </Button>
+              <Button
+                icon="heart"
+                mode="contained-tonal"
+                style={styles.actionButton}
+                onPress={() => navigation.navigate("Favoritos")}
+              >
+                Ver Favoritos
+              </Button>
+            </View>
           ) : (
             <Button
               mode="outlined"

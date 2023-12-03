@@ -72,7 +72,46 @@ export default function EditProfile({ navigation }) {
   const [contactEmail, setContactEmail] = useState();
   const [phone, setPhone] = useState();
 
-  function handleChanges() {
+  function handleChangesUser() {
+    const requestBody = {
+      name: name || user.name,
+      phone: phone || user.phone,
+      avatar: image[0]?.uri || user.avatar,
+    };
+
+    fetch("http://3.144.94.74:8000/api/" + "users/" + user._id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((res) => {
+        console.log("json", res.json());
+        let token = user.token;
+        setUser({
+          name: name || user.name,
+          email: user.email,
+          profilePicture:
+            image[0]?.uri || user?.avatar || user?.profilePicture || user?.logo,
+          isVerified: user.isVerified || null,
+          isRealtor: false,
+          token: token,
+          _id: user._id,
+        });
+        ToastAndroid.show("Usuario actualizada", ToastAndroid.LONG);
+        navigation.navigate("Perfil");
+      })
+      .catch((err) => {
+        console.log(err);
+        ToastAndroid.show(
+          "Lo sentimos, no pudimos actualizar la tu usuario. Intentelo más tarde.",
+          ToastAndroid.LONG
+        );
+      });
+  }
+
+  function handleChangesRealtor() {
     const requestBody = {
       name: name || user.name,
       contactEmail: contactEmail || user.contactEmail,
@@ -80,7 +119,7 @@ export default function EditProfile({ navigation }) {
       logo: image[0]?.uri || user.logo,
     };
 
-    fetch("http://3.144.94.74:8000/api/realtors/" + user._id, {
+    fetch("http://3.144.94.74:8000/api/" + "realtors/" + user._id, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -142,19 +181,20 @@ export default function EditProfile({ navigation }) {
                 mode="outlined"
               />
             </View>
-            {/* <Text>loginEmail</Text> */}
-            {/* <TextInput value={user.loginEmail} placeholder="Email"/> */}
-            <View style={{ gap: 5 }}>
-              <Text style={{ paddingHorizontal: 5 }}>Email de contacto</Text>
-              <TextInput
-                textContentType="emailAddress"
-                defaultValue={user.contactEmail}
-                placeholder="Sin especificar"
-                style={styles.input}
-                onChangeText={(e) => setContactEmail(e)}
-                mode="outlined"
-              />
-            </View>
+            {user.isRealtor ? (
+              <View style={{ gap: 5 }}>
+                <Text style={{ paddingHorizontal: 5 }}>Email de contacto</Text>
+                <TextInput
+                  textContentType="emailAddress"
+                  defaultValue={user.contactEmail}
+                  placeholder="Sin especificar"
+                  style={styles.input}
+                  onChangeText={(e) => setContactEmail(e)}
+                  mode="outlined"
+                />
+              </View>
+            ) : null}
+
             <View style={{ gap: 5 }}>
               <Text style={{ paddingHorizontal: 5 }}>Telefono</Text>
               <TextInput
@@ -181,7 +221,7 @@ export default function EditProfile({ navigation }) {
               icon="check"
               mode="contained"
               onPress={() => {
-                handleChanges();
+                user.isRealtor ? handleChangesRealtor() : handleChangesUser();
               }}
               style={{ width: 250, marginBottom: 60 }}
             >
