@@ -7,7 +7,7 @@ import {
   StyleSheet,
   ToastAndroid,
   View,
-  Share
+  Share,
 } from "react-native";
 import {
   ActivityIndicator,
@@ -67,9 +67,9 @@ export const ListingPost = ({ navigation, ...props }) => {
   const [listingRealtorName, setListingRealtorName] = useState(null);
   const [listingRealtorAvatar, setListingRealtorAvatar] = useState(null);
   const [listingRealtorComments, setListingRealtorComments] = useState(null);
-  const [listingRealtorReviewScore, setListingRealtorReviewScore] = useState(null);
+  const [listingRealtorReviewScore, setListingRealtorReviewScore] =
+    useState(null);
   const [isModalOpen, setIsDrawerOpen] = useState(false);
-
 
   const getNameFromId = async (id) => {
     try {
@@ -96,7 +96,9 @@ export const ListingPost = ({ navigation, ...props }) => {
       setListingRealtorName(realtorName?.name);
       setListingRealtorAvatar(realtorName?.logo);
       setListingRealtorComments(realtorName?.reviews);
-      const reviewScore = realtorName?.reviews?.reduce((acc, review) => acc + review.rating, 0) / realtorName?.reviews?.length;
+      const reviewScore =
+        realtorName?.reviews?.reduce((acc, review) => acc + review.rating, 0) /
+        realtorName?.reviews?.length;
       setListingRealtorReviewScore(reviewScore);
     };
     getListingRealtorData();
@@ -123,7 +125,9 @@ export const ListingPost = ({ navigation, ...props }) => {
           if (response.ok) {
             const newUser = {
               ...user,
-              favoriteListings: user?.favoriteListings.filter((id) => id !== postId),
+              favoriteListings: user?.favoriteListings.filter(
+                (id) => id !== postId
+              ),
             };
             setUser(newUser);
             setUserDataToAsyncStorage(newUser);
@@ -183,7 +187,7 @@ export const ListingPost = ({ navigation, ...props }) => {
         Dormitorios: ${listing?.property?.rooms}.
         Orientación absoluta: ${listing?.property?.cardinalOrientation}.
         Orientación relativa: ${listing?.property?.relativeOrientation}.
-        Expensas: ${listing?.property?.expensesPrice?.amount ?? 'Sin Expensas'}.
+        Expensas: ${listing?.property?.expensesPrice?.amount ?? "Sin Expensas"}.
         Antigüedad: ${listing?.property?.age}.
         `,
         url: listing?.property?.photos[0],
@@ -214,7 +218,6 @@ export const ListingPost = ({ navigation, ...props }) => {
     setIsDrawerOpen(true);
   };
 
-
   const width = Dimensions.get("window").width;
 
   const handleDelete = () => {
@@ -226,7 +229,7 @@ export const ListingPost = ({ navigation, ...props }) => {
         {
           text: "Eliminar",
           onPress: () => (
-            fetch(`http://3.144.94.74:8000/api/listings/visit/${listing._id}`, {
+            fetch(`http://3.144.94.74:8000/api/listings/${listing._id}`, {
               method: "DELETE",
             }),
             ToastAndroid.show("Propiedad eliminada", ToastAndroid.LONG),
@@ -592,7 +595,11 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <View style={styles.actionButtonsContainer}>
                 <IconButton
-                  icon={user?.favoriteListings?.includes(listing._id) ? "heart" : "heart-outline"}
+                  icon={
+                    user?.favoriteListings?.includes(listing._id)
+                      ? "heart"
+                      : "heart-outline"
+                  }
                   mode={like && "contained"}
                   onPress={handleLikePress}
                 />
@@ -600,8 +607,10 @@ export const ListingPost = ({ navigation, ...props }) => {
                   icon="share-variant"
                   onPress={() => handleSharePress()}
                 />
-                <IconButton icon="calendar-month" onPress={() => handleSchedulePress()} />
-
+                <IconButton
+                  icon="calendar-month"
+                  onPress={() => handleSchedulePress()}
+                />
               </View>
             )}
           </View>
@@ -812,16 +821,13 @@ export const ListingPost = ({ navigation, ...props }) => {
                   {listingRealtorName || "Realtor name"}
                 </Text>
                 {listingRealtorReviewScore ? (
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <IconButton
-                      icon="star"
-                      onPress={() => { }}
-                    />
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <IconButton icon="star" onPress={() => {}} />
                     <Text variant="labelLarge">
                       {listingRealtorReviewScore.toFixed(1)}{" "}
                     </Text>
                     <IconButton
-                    style={{ marginLeft: 38}}
+                      style={{ marginLeft: 38 }}
                       icon="comment"
                       onPress={() => handleCommentsPress()}
                     />
