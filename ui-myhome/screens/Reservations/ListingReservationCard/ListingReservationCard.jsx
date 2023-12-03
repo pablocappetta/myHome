@@ -55,7 +55,7 @@ const ListingReservationCard = ({
                 onPress={() =>
                   navigation.navigate(
                     "Review",
-                    reservation.listingDetails.realtorId
+                    reservation._id
                   )
                 }
                 mode="contained"
@@ -83,19 +83,19 @@ const ListingReservationCard = ({
             flexDirection: "row",
             justifyContent: "space-around",
             marginBottom: 8,
+            marginTop: 8,
           }}
         >
           <View
             style={{
               display: "flex",
               flexDirection: "row",
-              alignContent: "center",
               alignItems: "center",
             }}
           >
             <IconButton icon={"cash"} size={18} />
             <Text variant="bodySmall">
-              ${commaNumber(reservation.listingDetails.price.amount / 2)}
+              ${commaNumber(reservation?.listingDetails?.price?.amount / 2)}
             </Text>
           </View>
 
@@ -103,7 +103,6 @@ const ListingReservationCard = ({
             style={{
               display: "flex",
               flexDirection: "row",
-              alignContent: "center",
               alignItems: "center",
             }}
           >

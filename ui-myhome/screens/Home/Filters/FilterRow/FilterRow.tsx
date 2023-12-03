@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { Text, Chip } from 'react-native-paper';
+import { Text, Chip, TextInput } from 'react-native-paper';
 import { Filter } from '../../../../helpers/filterHelper';
 
 interface FilterRowProps {
@@ -32,7 +32,7 @@ const FilterRow: React.FC<FilterRowProps> = ({
 }) => {
     const [selected, setSelected] = useState<Filter>({ key: '', title: '', values: [] });
     const [viewOptions, setOptions] = useState<{ filterValue: string; value: string; label: string; selected: boolean }[]>(options);
-
+    const [rangeInput, setRangeInput] = useState<{ from: number; to: number }>({ from: 0, to: 100 });
     useEffect(() => {
         const newSelected: Filter = {
             key: filterKey,
@@ -89,17 +89,55 @@ const FilterRow: React.FC<FilterRowProps> = ({
                 {headerText}
             </Text>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {viewOptions?.map((option) => (
-                    <Chip
-                        key={option.value}
-                        onPress={() => onSelect(option.value)}
-                        selected={option.selected}
-                        style={styles.chip}
-                        selectedColor="white"
-                    >
-                        {option.label}
-                    </Chip>
-                ))}
+                {
+                type === 'rangeInput' ? (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                        <Text style={{ marginRight: 8 }}>Desde</Text>
+                        <TextInput
+                            value={rangeInput.from.toString()}
+                            onChangeText={(text) => {
+                                const newRangeInput = { ...rangeInput, from: Number.isNaN(parseInt(text)) ? 0 : parseInt(text) };
+                                setRangeInput(newRangeInput);
+                                const newSelected: Filter = {
+                                    key: filterKey,
+                                    title: headerText,
+                                    values: [newRangeInput.from.toString(), newRangeInput.to.toString()],
+                                    type: type
+                                };
+                                setSelected(newSelected);
+                                onChange(newSelected);
+                            }}
+                            style={styles.input}
+                        />
+                        <TextInput
+                            value={rangeInput.to.toString()}
+                            onChangeText={(text) => {
+                                const newRangeInput = { ...rangeInput, to: Number.isNaN(parseInt(text)) ? 0 : parseInt(text) };
+                                setRangeInput(newRangeInput);
+                                const newSelected: Filter = {
+                                    key: filterKey,
+                                    title: headerText,
+                                    values: [newRangeInput.from.toString(), newRangeInput.to.toString()],
+                                    type: type
+                                };
+                                setSelected(newSelected);
+                                onChange(newSelected);
+                            }}
+                            style={styles.input}
+                        />
+                        <Text style={{ marginRight: 8 }}>Hasta</Text>
+                    </View>
+                ) : viewOptions?.map((option) => (
+                        <Chip
+                            key={option.value}
+                            onPress={() => onSelect(option.value)}
+                            selected={option.selected}
+                            style={styles.chip}
+                            selectedColor="white"
+                        >
+                            {option.label}
+                        </Chip>
+                    ))}
             </ScrollView>
             {/* {showSlider && (
                 <Slider
@@ -118,6 +156,14 @@ const styles = StyleSheet.create({
     chip: {
         margin: 4,
         minWidth: 50,
+    },
+    input: {
+        width: 120,
+        height: 20,
+        marginRight: 8,
+        backgroundColor: 'white',
+        borderRadius: 4,
+        padding: 8,
     },
 });
 
