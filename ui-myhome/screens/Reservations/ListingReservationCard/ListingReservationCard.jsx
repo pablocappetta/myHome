@@ -95,7 +95,7 @@ const ListingReservationCard = ({
           >
             <IconButton icon={"cash"} size={18} />
             <Text variant="bodySmall">
-              ${commaNumber(reservation.listingDetails.price.amount / 2)}
+              ${commaNumber(reservation?.listingDetails?.price?.amount / 2)}
             </Text>
           </View>
 

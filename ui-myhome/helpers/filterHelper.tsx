@@ -87,31 +87,51 @@ function flattenProperty(property: Property): Record<string, any> {
  */
 export function filterProperties(properties: Property[], filters: Filter[], isAndFilter: boolean = false): Property[] {
     return properties?.filter(property => {
-        const flattenedProperty = flattenProperty(property);
+        const flattenedProperty = {...flattenProperty(property)};
         if (isAndFilter) {
             for (const filter of filters) {
                 const value = flattenedProperty[filter.key];
-
                 if (filter.type === 'range') {
+                    let isRangeValid = false;
                     for (const filterValue of filter.values) {
                         if (filterValue.includes('-')) {
                             const [min, max] = filterValue.split('-');
-                            if (min && max && !(value >= Number(min) && value <= Number(max))) {
-                                return false;
+                            if (min && max && value >= Number(min) && value <= Number(max)) {
+                                isRangeValid = true;
+                                break;
                             }
                         } else if (filterValue.includes('+')) {
                             const min = Number(filterValue.replace('+', ''));
-                            if (min && !(value >= min)) {
-                                return false;
+                            if (min && value >= min) {
+                                isRangeValid = true;
+                                break;
                             }
                         } else {
                             const num = Number(filterValue);
-                            if (num && !(value === num)) {
-                                return false;
+                            if (num && value === num) {
+                                isRangeValid = true;
+                                break;
                             }
                         }
                     }
-                } else {
+                    if (!isRangeValid) {
+                        return false;
+                    }
+                }
+                else if (filter.type === 'rangeInput') {
+                    const min = Number(filter.values[0]);
+                    const max = Number(filter.values[1]);
+                    if (min && max) {
+                        if (value >= min && value <= max) {
+                            return false;
+                        }
+                    } else if (min && value >= min) {
+                        return false;
+                    } else if (max && value <= max) {
+                        return false;
+                    }
+                }
+                else {
                     if (!filter.values.includes(value)) {
                         return false;
                     }
@@ -140,7 +160,16 @@ export function filterProperties(properties: Property[], filters: Filter[], isAn
                             }
                         }
                     }
-                } else {
+                } 
+                else if (filter.type === 'rangeInput') {
+                    const value = flattenedProperty[filter.key];
+                    const min = Number(filter.values[0]);
+                    const max = Number(filter.values[1]);
+                    if (min && max && value >= min && value <= max) {
+                        return true;
+                    }
+                }
+                else {
                     if (filter.values.includes(flattenedProperty[filter.key])) {
                         return true;
                     }
