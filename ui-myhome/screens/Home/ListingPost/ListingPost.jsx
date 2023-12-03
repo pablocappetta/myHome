@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ToastAndroid,
   View,
+  Share,
 } from "react-native";
 import {
   ActivityIndicator,
@@ -28,10 +29,11 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import SelectDropdown from "react-native-select-dropdown";
 import { useUserContext } from "../../../contexts/UserContext";
 import { isStringALink, upperCaseFirst } from "../../../helpers/helpers";
+import ListingComments from "./ListingComments/ListingComments";
 // import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 export const ListingPost = ({ navigation, ...props }) => {
-  const { user, isUserLogged } = useUserContext();
+  const { user, setUser, setUserDataToAsyncStorage } = useUserContext();
 
   // Si es owner
   const [isOwner, setIsOwner] = useState(user?.isRealtor || false);
@@ -64,6 +66,10 @@ export const ListingPost = ({ navigation, ...props }) => {
   const listing = props.route.params;
   const [listingRealtorName, setListingRealtorName] = useState(null);
   const [listingRealtorAvatar, setListingRealtorAvatar] = useState(null);
+  const [listingRealtorComments, setListingRealtorComments] = useState(null);
+  const [listingRealtorReviewScore, setListingRealtorReviewScore] =
+    useState(null);
+  const [isModalOpen, setIsDrawerOpen] = useState(false);
 
   const getNameFromId = async (id) => {
     try {
@@ -86,8 +92,14 @@ export const ListingPost = ({ navigation, ...props }) => {
       console.log(listing._id);
       if (listing?.realtorId === undefined) return;
       const realtorName = await getNameFromId(listing.realtorId);
-      setListingRealtorName(realtorName.name);
-      setListingRealtorAvatar(realtorName.logo);
+      console.log(realtorName);
+      setListingRealtorName(realtorName?.name);
+      setListingRealtorAvatar(realtorName?.logo);
+      setListingRealtorComments(realtorName?.reviews);
+      const reviewScore =
+        realtorName?.reviews?.reduce((acc, review) => acc + review.rating, 0) /
+        realtorName?.reviews?.length;
+      setListingRealtorReviewScore(reviewScore);
     };
     getListingRealtorData();
   }, [listing?.realtorId]);
@@ -111,6 +123,14 @@ export const ListingPost = ({ navigation, ...props }) => {
         .then((response) => {
           console.log(response);
           if (response.ok) {
+            const newUser = {
+              ...user,
+              favoriteListings: user?.favoriteListings.filter(
+                (id) => id !== postId
+              ),
+            };
+            setUser(newUser);
+            setUserDataToAsyncStorage(newUser);
             setLike(false);
           } else {
             // Handle error
@@ -134,6 +154,12 @@ export const ListingPost = ({ navigation, ...props }) => {
       )
         .then((response) => {
           if (response.ok) {
+            const newUser = {
+              ...user,
+              favoriteListings: [...user?.favoriteListings, postId],
+            };
+            setUser(newUser);
+            setUserDataToAsyncStorage(newUser);
             setLike(true);
           } else {
             // Handle error
@@ -147,6 +173,51 @@ export const ListingPost = ({ navigation, ...props }) => {
     }
   };
 
+  const handleSharePress = async () => {
+    try {
+      const result = await Share.share({
+        message: `¡Hola! Te comparto esta propiedad que encontré en MyHome
+
+        Titulo: ${listing?.title}. 
+        Precio: ${listing?.price?.amount}.
+        Descripción: ${listing?.description}.
+        Tipo: ${listing?.type}.
+        Ambientes: ${listing?.property?.rooms}.
+        Baños: ${listing?.property?.bathrooms}.
+        Dormitorios: ${listing?.property?.rooms}.
+        Orientación absoluta: ${listing?.property?.cardinalOrientation}.
+        Orientación relativa: ${listing?.property?.relativeOrientation}.
+        Expensas: ${listing?.property?.expensesPrice?.amount ?? "Sin Expensas"}.
+        Antigüedad: ${listing?.property?.age}.
+        `,
+        url: listing?.property?.photos[0],
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+          console.log("shared with activity type of result.activityType");
+        } else {
+          // shared
+          console.log("shared");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+        console.log("dismissed");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleSchedulePress = () => {
+    const listingId = listing?._id;
+    navigation.navigate("Booking", { screen: "Date", params: { listingId } });
+  };
+
+  const handleCommentsPress = () => {
+    setIsDrawerOpen(true);
+  };
+
   const width = Dimensions.get("window").width;
 
   const handleDelete = () => {
@@ -157,29 +228,25 @@ export const ListingPost = ({ navigation, ...props }) => {
         { text: "Cancelar", onPress: () => console.log("Cancel Pressed") },
         {
           text: "Eliminar",
-          onPress: () => (
+          onPress: () =>
             fetch(`http://3.144.94.74:8000/api/listings/${listing._id}`, {
               method: "DELETE",
-            }),
-            ToastAndroid.show("Propiedad eliminada", ToastAndroid.LONG),
-            console.log(listing._id),
-            navigation.navigate("Home")
-          ),
+            })
+              .then(() => {
+                ToastAndroid.show("Propiedad eliminada", ToastAndroid.LONG);
+                navigation.navigate("Home");
+              })
+              .catch((err) => {
+                console.log(err);
+                ToastAndroid.show(
+                  "Lo sentimos, no pudimos eliminar la propiedad. Intentelo más tarde.",
+                  ToastAndroid.LONG
+                );
+              }),
         },
       ]
     );
   };
-
-  const data = [
-    { label: "Item 1", value: "1" },
-    { label: "Item 2", value: "2" },
-    { label: "Item 3", value: "3" },
-    { label: "Item 4", value: "4" },
-    { label: "Item 5", value: "5" },
-    { label: "Item 6", value: "6" },
-    { label: "Item 7", value: "7" },
-    { label: "Item 8", value: "8" },
-  ];
 
   const [encabezado, setEncabezado] = useState(listing?.title);
   const [type, setType] = useState(listing?.type);
@@ -362,7 +429,6 @@ export const ListingPost = ({ navigation, ...props }) => {
       .then((data) => {
         console.log("data:", data);
         ToastAndroid.show("Propiedad actualizada", ToastAndroid.LONG);
-        refresh;
       })
       .catch((err) => {
         console.log(err);
@@ -488,13 +554,21 @@ export const ListingPost = ({ navigation, ...props }) => {
             ) : (
               <View style={styles.actionButtonsContainer}>
                 <IconButton
-                  icon={like ? "heart" : "heart-outline"}
+                  icon={
+                    user?.favoriteListings?.includes(listing._id)
+                      ? "heart"
+                      : "heart-outline"
+                  }
                   mode={like && "contained"}
                   onPress={handleLikePress}
                 />
                 <IconButton
                   icon="share-variant"
-                  onPress={() => console.debug("Share TBD")}
+                  onPress={() => handleSharePress()}
+                />
+                <IconButton
+                  icon="calendar-month"
+                  onPress={() => handleSchedulePress()}
                 />
               </View>
             )}
@@ -705,6 +779,21 @@ export const ListingPost = ({ navigation, ...props }) => {
                 <Text variant="titleMedium">
                   {listingRealtorName || "Realtor name"}
                 </Text>
+                {listingRealtorReviewScore ? (
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <IconButton icon="star" onPress={() => {}} />
+                    <Text variant="labelLarge">
+                      {listingRealtorReviewScore.toFixed(1)}{" "}
+                    </Text>
+                    <IconButton
+                      style={{ marginLeft: 38 }}
+                      icon="comment"
+                      onPress={() => handleCommentsPress()}
+                    />
+                  </View>
+                ) : (
+                  <Text variant="labelLarge">Sin reseñas</Text>
+                )}
               </View>
               <Divider />
             </View>
@@ -1027,6 +1116,11 @@ export const ListingPost = ({ navigation, ...props }) => {
           </View>
         </View>
       </ScrollView>
+      <ListingComments
+        isModalOpen={isModalOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        comments={listingRealtorComments}
+      />
     </View>
   );
 };

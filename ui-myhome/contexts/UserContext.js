@@ -26,6 +26,7 @@ export const UserProvider = ({ children }) => {
     try {
       await AsyncStorage.setItem("user", stringifiedCredentials);
       console.log("Datos de login guardados correctamente");
+      
     } catch (error) {
       console.error("Error al guardar los datos de login:", error);
     }
@@ -82,7 +83,6 @@ export const UserProvider = ({ children }) => {
       user.token !== null &&
       AsyncStorage.getItem("user") === null
     ) {
-      console.log("HOLA PIPI");
       setUserDataToAsyncStorage(user);
     }
   }, [isUserLogged]);

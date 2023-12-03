@@ -28,7 +28,7 @@ const NewPost = ({ navigation }) => {
   const [valor, setValor] = React.useState("");
   const [moneda, setMoneda] = React.useState("");
   const [tipoOperacion, setTipoOperacion] = React.useState("");
-  const [expensas, setExpensas] = React.useState("0");
+  const [expensas, setExpensas] = React.useState("");
   const [tipoPropiedad, setTipoPropiedad] = React.useState("");
 
   const [provincia, setProvincia] = React.useState("");
@@ -37,6 +37,9 @@ const NewPost = ({ navigation }) => {
   const [calle, setCalle] = React.useState("");
   const [numero, setNumero] = React.useState("");
   const [CP, setCP] = React.useState("");
+
+  const [latitude, setLatitude] = React.useState(0);
+  const [longitude, setLongitude] = React.useState(0);
 
   const [metrosCubiertos, setMetrosCubiertos] = React.useState("");
   const [metrosDescubiertos, setMetrosDescubiertos] = React.useState("");
@@ -95,7 +98,35 @@ const NewPost = ({ navigation }) => {
     }
   };
 
+  const getGeoLocation = async () => {
+    try {
+      const params = {
+        city: ciudad,
+        state: provincia,
+        street: calle + " " + numero,
+        country: "Argentina",
+        format: "json",
+        limit: 1,
+      }
+      const baseUrl = "https://nominatim.openstreetmap.org/search";
+      const url = `${baseUrl}?${new URLSearchParams(params).toString()}`;
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error("Error al obtener coordenadas");
+      }
+
+      const data = await response.json();
+
+      setLatitude(data[0]?.lat);
+      setLongitude(data[0]?.lon);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleAddProperty = async () => {
+    await getGeoLocation();
     const body = {
       realtorId: user._id,
       title: encabezado,
@@ -112,9 +143,9 @@ const NewPost = ({ navigation }) => {
           floor: "",
           apartment: "",
         },
-        // geoLocation: {
-        //   coordinates: [0, 0]
-        // },
+        geoLocation: {
+          coordinates: [latitude, longitude],
+        },
         type:
           tipoPropiedad.charAt(0).toUpperCase() +
           tipoPropiedad.slice(1).toLowerCase(),
@@ -148,6 +179,8 @@ const NewPost = ({ navigation }) => {
       },
     };
 
+    console.log(body);
+
     const formToSend = new FormData();
 
     formToSend.append("realtorId", user._id);
@@ -164,6 +197,8 @@ const NewPost = ({ navigation }) => {
         uri: image.uri,
       });
     });
+
+    console.log(JSON.stringify(formToSend));
 
     try {
       setIsLoading(true);
@@ -465,6 +500,8 @@ const NewPost = ({ navigation }) => {
               ></TextInput>
             </View>
           </View>
+
+          <Button onPress={() => getGeoLocation()}>Obtener coordenadas</Button>
 
           <Text className="text-[25px] mt-4 font-bold my-4">
             Características

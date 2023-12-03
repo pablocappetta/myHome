@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   RefreshControl,
   FlatList,
+  ToastAndroid,
 } from "react-native";
 import {
   Avatar,
@@ -27,6 +28,9 @@ import {
 } from "./mock/MockedHomeData";
 import { useUserContext } from "../../contexts/UserContext";
 import { useScrollToTop } from "@react-navigation/native";
+import * as Location from "expo-location";
+
+Location.requestForegroundPermissionsAsync();
 
 const Home = ({ navigation }) => {
   const { user, isUserLogged } = useUserContext();
@@ -43,15 +47,37 @@ const Home = ({ navigation }) => {
     [].concat(mockedRecentListings)
   );
 
+  const [nearListings, setNearListings] = useState([]);
+
+  const [location, setLocation] = useState(null);
+
+  const radioInMeters = 5000;
+
   const [filterSelection, setFilterSelection] = useState("todos");
 
   const [refreshing, setRefreshing] = useState(false);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const [loadingRecent, setLoadingRecent] = useState(false);
 
   const ref = useRef(null);
 
   useScrollToTop(ref);
+
+  const hasItLocationEnabled = async () =>
+    await Location.hasServicesEnabledAsync();
+
+  useEffect(() => {
+    if (location === null) {
+      Location.getCurrentPositionAsync().then((location) => {
+        console.log(location);
+        setLocation(location);
+      });
+    } else {
+      getNearbyListings();
+    }
+  }, []);
 
   const handleButtonFilterChange = (listingType) => {
     setFilterSelection(listingType);
@@ -68,8 +94,54 @@ const Home = ({ navigation }) => {
     setSearchQuery(text);
   };
 
+  const getNearbyListings = async () => {
+    console.log(location);
+    if (!location?.coords?.latitude || !location?.coords?.longitude) {
+      ToastAndroid.show("No se pudo obtener tu ubicación", ToastAndroid.LONG);
+      return;
+    }
+    setLoadingRecent(true);
+    await fetch(
+      "http://3.144.94.74:8000/api/listings/nearby?" +
+        `${
+          location?.coords?.longitude
+            ? `longitude=${location?.coords?.longitude}`
+            : ""
+        }&${
+          location?.coords?.latitude
+            ? `latitude=${location?.coords?.latitude}`
+            : ""
+        }&${
+          location?.coords?.latitude && location?.coords?.longitude
+            ? `radius=${radioInMeters}`
+            : ""
+        }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then(async (response) => {
+        const data = await response.json();
+        setNearListings(data);
+      })
+      .catch((error) => {
+        console.error(error);
+        ToastAndroid.show(
+          "Error al obtener publicaciones cercanas",
+          ToastAndroid.LONG
+        );
+      })
+      .finally(() => setLoadingRecent(false));
+  };
+
   const handleSearchSubmitChange = ({ nativeEvent }) => {
-    navigation.navigate("Search", { searchText: nativeEvent.text, listings: recentListings });
+    navigation.navigate("Search", {
+      searchText: nativeEvent.text,
+      listings: recentListings,
+    });
     setSearchQuery(nativeEvent.text);
     setHighlightedListing(
       getFilteredListingByQuery(highlightedListings, nativeEvent.text)
@@ -173,7 +245,7 @@ const Home = ({ navigation }) => {
                 />
               </View>
 
-              {highlightedListings.length > 0 && !isQueryActive && (
+              {hasItLocationEnabled && !isQueryActive && (
                 <View>
                   <View style={styles.listingHeader}>
                     <Text
@@ -184,17 +256,35 @@ const Home = ({ navigation }) => {
                     >
                       Cerca tuyo
                     </Text>
+                    <TouchableOpacity>
+                      <Button
+                        icon="refresh"
+                        animated
+                        selected
+                        onPress={getNearbyListings}
+                        loading={loadingRecent}
+                      >
+                        {loadingRecent ? "Actualizando" : "Actualizar"}
+                      </Button>
+                    </TouchableOpacity>
                   </View>
+
                   <ScrollView horizontal style={{ paddingHorizontal: 8 }}>
                     <View style={styles.listingCardsContainer}>
-                      {highlightedListings.map((item, index) => (
-                        <TouchableOpacity
-                          key={Math.random()}
-                          onPress={() => navigation.navigate("Post", item)}
-                        >
-                          <ListingCard listing={item} type={"highlighted"} />
-                        </TouchableOpacity>
-                      ))}
+                      {nearListings.length > 0 ? (
+                        nearListings.map((item, index) => (
+                          <TouchableOpacity
+                            key={Math.random()}
+                            onPress={() => navigation.navigate("Post", item)}
+                          >
+                            <ListingCard listing={item} type={"highlighted"} />
+                          </TouchableOpacity>
+                        ))
+                      ) : (
+                        <View style={styles.noNearResultsContainer}>
+                          <Text variant="labelLarge">No hay publicaciones</Text>
+                        </View>
+                      )}
                     </View>
                   </ScrollView>
                 </View>
@@ -323,6 +413,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 64,
+  },
+  noNearResultsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 16,
   },
 });
 
