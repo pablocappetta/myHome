@@ -1081,22 +1081,25 @@ export const ListingPost = ({ navigation, ...props }) => {
                 >
                   Contactar
                 </Button>
-                <Button
-                  mode="contained"
-                  onPress={() => {
-                    navigation.navigate("Booking", {
-                      screen: "Info",
-                      params: {
-                        realtorId: listing.realtorId,
-                        listingId: listing._id,
-                      },
-                    });
-                  }}
-                  icon={"calendar-clock"}
-                  width={width / 2 - 16}
-                >
-                  Reservar
-                </Button>
+                {listing.type === "alquiler" && (
+                  <Button
+                    mode="contained"
+                    onPress={() => {
+                      navigation.navigate("Booking", {
+                        screen: "Info",
+                        params: {
+                          realtorId: listing.realtorId,
+                          listingId: listing._id,
+                          listing: listing,
+                        },
+                      });
+                    }}
+                    icon={"calendar-clock"}
+                    width={width / 2 - 16}
+                  >
+                    Reservar
+                  </Button>
+                )}
               </View>
             )}
           </View>

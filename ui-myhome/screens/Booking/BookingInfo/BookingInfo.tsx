@@ -37,7 +37,7 @@ const BookingInfo: React.FC<BookingInfoProps> = ({
   navigation,
   route
 }) => {
-  const { realtorId, listingId } = route?.params;
+  const { realtorId, listingId, listing } = route?.params;
   const handleNavigateToPayment = (values) => {
     const { nombre, email, telefono } = values;
     navigation.navigate("Booking", {
@@ -48,6 +48,7 @@ const BookingInfo: React.FC<BookingInfoProps> = ({
         name: nombre,
         phone: telefono,
         email: email,
+        listing: listing,
       },
     });
   };
