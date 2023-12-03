@@ -51,7 +51,7 @@ const Home = ({ navigation }) => {
 
   const [location, setLocation] = useState(null);
 
-  const radioInMeters = 100000;
+  const radioInMeters = 5000;
 
   const [filterSelection, setFilterSelection] = useState("todos");
 
@@ -95,16 +95,21 @@ const Home = ({ navigation }) => {
   };
 
   const getNearbyListings = async () => {
+    console.log(location);
+    if (!location?.coords?.latitude || !location?.coords?.longitude) {
+      ToastAndroid.show("No se pudo obtener tu ubicación", ToastAndroid.LONG);
+      return;
+    }
     setLoadingRecent(true);
     await fetch(
       "http://3.144.94.74:8000/api/listings/nearby?" +
         `${
           location?.coords?.longitude
-            ? `longitude=${location?.coords?.latitude}`
+            ? `longitude=${location?.coords?.longitude}`
             : ""
         }&${
           location?.coords?.latitude
-            ? `latitude=${location?.coords?.longitude}`
+            ? `latitude=${location?.coords?.latitude}`
             : ""
         }&${
           location?.coords?.latitude && location?.coords?.longitude
