@@ -42,13 +42,12 @@ export const BookingDate = ({ navigation, route }) => {
   const handleAgendar = () => {
     try {
       const request = {
-        listingId: route?.params?.listingId,
         date: date.toISOString().split("T")[0],
         userId: user?._id,
         time: selectedTime,
       };
       console.log(request);
-      fetch(`http://3.144.94.74:8000/api/realtors/${route?.params?.listingId}`, {
+      fetch(`http://3.144.94.74:8000/api/listings/${route?.params?.listingId}/visits`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

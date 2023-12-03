@@ -96,14 +96,32 @@ const FilterRow: React.FC<FilterRowProps> = ({
                         <TextInput
                             value={rangeInput.from.toString()}
                             onChangeText={(text) => {
-                                setRangeInput({ ...rangeInput, from: parseInt(text) });
+                                const newRangeInput = { ...rangeInput, from: Number.isNaN(parseInt(text)) ? 0 : parseInt(text) };
+                                setRangeInput(newRangeInput);
+                                const newSelected: Filter = {
+                                    key: filterKey,
+                                    title: headerText,
+                                    values: [newRangeInput.from.toString(), newRangeInput.to.toString()],
+                                    type: type
+                                };
+                                setSelected(newSelected);
+                                onChange(newSelected);
                             }}
                             style={styles.input}
                         />
                         <TextInput
                             value={rangeInput.to.toString()}
                             onChangeText={(text) => {
-                                setRangeInput({ ...rangeInput, to: parseInt(text) });
+                                const newRangeInput = { ...rangeInput, to: Number.isNaN(parseInt(text)) ? 0 : parseInt(text) };
+                                setRangeInput(newRangeInput);
+                                const newSelected: Filter = {
+                                    key: filterKey,
+                                    title: headerText,
+                                    values: [newRangeInput.from.toString(), newRangeInput.to.toString()],
+                                    type: type
+                                };
+                                setSelected(newSelected);
+                                onChange(newSelected);
                             }}
                             style={styles.input}
                         />
@@ -140,7 +158,7 @@ const styles = StyleSheet.create({
         minWidth: 50,
     },
     input: {
-        width: 100,
+        width: 120,
         height: 20,
         marginRight: 8,
         backgroundColor: 'white',

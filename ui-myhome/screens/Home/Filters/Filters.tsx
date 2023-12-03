@@ -57,8 +57,8 @@ export const FiltersModal: React.FC<{ isModalOpen: boolean, onClose: () => void,
                 <ScrollView style={{ maxHeight: 'calc(100vh - 200px)' }}>
                     <List.Section>
                         {
-                            filterList.map((filter) => (
-                                <React.Fragment key={filter.value}>
+                            filterList.map((filter, index) => (
+                                <React.Fragment key={filter.value + index}>
                                     <FilterRow headerText={filter.title} filterKey={filter.value} options={filter.options} onChange={handleFilterChange} value={filter.value} showSlider={filter.isSlider} sliderValue={undefined} onSliderValueChange={undefined} multiSelect={filter.isMultiselect} 
                                     type={filter.type}
                                     />

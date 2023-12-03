@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 const ListingController = require("../controllers/listing.controller");
+const VisitController = require("../controllers/visit.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
 const ImgurStorage = require("multer-storage-imgur");
@@ -48,6 +49,8 @@ router.get("/", ListingController.getListings);
 //Obtener listing por realtor
 router.get("/realtor/:realtorId", ListingController.getListingsByRealtorId);
 
+
+
 //Obtener listing por id
 router.get("/:id", ListingController.getListingById);
 
@@ -71,5 +74,10 @@ router.delete(
   ],
   ListingController.deleteListing
 );
+
+router.get("/:listingId/visits/", VisitController.getVisitsByListingId);
+router.post("/:listingId/visits/", VisitController.createVisit);
+router.put("/:listingId/visits/:visitId", VisitController.updateVisit);
+router.delete("/:listingId/visits/:visitId", VisitController.deleteVisit);
 
 module.exports = router;
