@@ -90,16 +90,4 @@ router.delete(
 //Obtiene detalles del realtor por id
 router.get("/:realtorId", RealtorController.getRealtorById);
 
-// Agrega review a realtor (post reserva)
-router.post(
-  "/:realtorId/reviews",
-  [
-    check("rating").not().isEmpty(),
-    check("comment").not().isEmpty(),
-    check("userId").not().isEmpty(),
-    checkFields,
-  ],
-  RealtorController.addReview
-);
-
 module.exports = router;

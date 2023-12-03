@@ -3,6 +3,7 @@ const {
   ConflictError,
   InternalServerError,
   UnauthorizedError,
+  NotFoundError,
 } = require("../middlewares/errorHandler");
 const ReservationModel = require("../models/Reservation");
 const mongoose = require("mongoose");
@@ -18,6 +19,21 @@ class ReservationService {
         throw new BadRequestError("Error en validaciones de Mongoose.");
       }
       throw new InternalServerError("Error en createReservation Service");
+    }
+  }
+
+  async getReservationById(reservationId) {
+    try {
+      const reservation = await ReservationModel.findOne({
+        _id: reservationId,
+      });
+      if (!reservation) {
+        throw new NotFoundError("La reserva no existe");
+      }
+      return reservation;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en getReservationById Service");
     }
   }
 
@@ -77,6 +93,15 @@ class ReservationService {
       console.error(err);
       throw new InternalServerError("Error en deleteReservation Service");
     }
+  }
+
+  async markAsReviewed(reservationId) {
+    const reservation = await ReservationModel.findOne({ _id: reservationId });
+    if (!reservation) {
+      throw new NotFoundError("La reserva no existe");
+    }
+    reservation.wasReviewed = true;
+    reservation.save();
   }
 }
 

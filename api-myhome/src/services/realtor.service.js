@@ -7,11 +7,13 @@ const {
   NotFoundError,
 } = require("../middlewares/errorHandler");
 const RealtorModel = require("../models/Realtor");
+const UserModel = require("../models/User");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const ValidationError = mongoose.Error.ValidationError;
 const ReservationService = require("../services/reservation.service");
 const ListingService = require("../services/listings.service");
+const { find, findById } = require("../models/Listing");
 
 class RealtorService {
   async getRealtors() {
@@ -225,23 +227,24 @@ class RealtorService {
 
   async addReview(realtorId, review) {
     try {
-      const realtor = await RealtorModel.findById(realtorId);
+      const user = await UserModel.findById(review.userId);
+      const realtor = await this.getRealtorById(realtorId);
       if (!realtor) {
-        throw new Error("Realtor not found");
+        throw new NotFoundError("Realtor not found");
+      }
+      if (!user) {
+        throw new NotFoundError("User not found");
       }
 
-      const newReview = {
-        date: new Date(),
-        rating: review.rating,
-        comment: review.comment,
-        userId: review.userId,
+      review.userId = undefined;
+      review.user = {
+        name: user.name,
+        avatar: user.avatar,
       };
 
-      realtor.reviews.push(newReview);
+      realtor.reviews.push(review);
 
       await realtor.save();
-
-      return realtor;
     } catch (err) {
       console.error(err);
       throw new InternalServerError("Error in addReview Service");

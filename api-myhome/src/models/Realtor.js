@@ -19,10 +19,13 @@ const RealtorSchema = new Schema(
     logo: String,
     reviews: [
       {
-        date: Date,
-        rating: Number,
-        comment: String,
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        date: { type: Date, required: true, default: Date.now },
+        rating: { type: Number, required: true },
+        comment: { type: String, required: true },
+        user: {
+          name: { type: String, required: true },
+          avatar: String,
+        },
       },
     ],
     phone: { type: String, required: true },
