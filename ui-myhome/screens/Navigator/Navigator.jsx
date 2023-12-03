@@ -30,7 +30,6 @@ import { useUserContext } from "../../contexts/UserContext";
 import ForgotPassword from "../Login/ForgotPassword/ForgotPassword";
 import PasswordRecovery from "../Login/PasswordRecovery/PasswordRecovery";
 import EditProfile from "../UserProfile/EditProfile";
-import ProfileEdit from "../ProfileEdit/ProfileEdit";
 import TermsAndConditions from "../Settings/TermsAndConditions/TermsAndConditions";
 
 const Tab = createMaterialBottomTabNavigator();
@@ -152,7 +151,6 @@ const MyAccountScreenRoutes = () => {
       <Stack.Screen name="Privacidad" component={PrivacyPolicy} />
       <Stack.Screen name="Terms" component={TermsAndConditions} />
       <Stack.Screen name="MisReservas" component={Reservations} />
-      <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
