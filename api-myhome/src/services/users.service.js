@@ -4,6 +4,7 @@ const UserModel = require("../models/User");
 const {
   InternalServerError,
   BadRequestError,
+  NotFoundError,
 } = require("../middlewares/errorHandler");
 
 class UserService {
@@ -50,6 +51,24 @@ class UserService {
         throw new Error("Invalid input data.");
       }
       throw new Error("Error en createUser Service");
+    }
+  }
+
+  async updateUserById(userId, user) {
+    try {
+      const updateUser = await UserModel.findOneAndUpdate({ _id: userId }, 
+        user, {
+        new: true,
+      });
+      if (!updateUser) {
+        throw new NotFoundError("No se encontró al usuario");
+      }
+    } catch (err) {
+      console.error(err);
+      if (err instanceof ValidationError) {
+        throw new BadRequestError("Error en validaciones de Mongoose.");
+      }
+      throw new InternalServerError("Error en updateUserById Service");
     }
   }
 

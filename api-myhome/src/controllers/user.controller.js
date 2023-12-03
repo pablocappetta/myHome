@@ -49,6 +49,18 @@ class UserController {
     }
   }
 
+  async updateUserById(req, res, next) {
+    try {
+      const userId = req.params.id;
+      const user = req.body;
+      const updatedUser = await UserService.updateUserById(userId, user);
+      return res.status(200).json(updatedUser);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+
   async googleLogin(req, res, next) {
     try {
       const googleData = req.body;

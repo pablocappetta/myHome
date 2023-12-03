@@ -697,6 +697,27 @@ paths:
                 $ref: "#/components/schemas/User"
         "401":
           description: Unauthorized access
+    put:
+      summary: Update user's profile
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized access
     delete:
       summary: Delete current user's profile
       tags:
