@@ -86,19 +86,20 @@ npx expo start
 3. Presione la tecla 'A' en la consola para iniciar la instancia de desarrollo.
 
 
-## Screenshots
+## Capturas de Pantalla
 
 ![Captura1](https://i.imgur.com/nzpqnXm.png)
 ![Captura2](https://i.imgur.com/FuflmUd.png)
 ![Captura3](https://i.imgur.com/jHwdoC0.png)
 
 
-## Tech Stack
+## Tecnologías
 
 **Client:** React Native, React Native Paper, Expo, TailwindCSS
 
 **Server:** Node, Express, MongoDB, Atlas, Amazon EC2
-## License
+
+## Licencia
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
