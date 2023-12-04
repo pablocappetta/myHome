@@ -75,6 +75,7 @@ class ReservationService {
         reservation,
         {
           new: true,
+          runValidators: true,
         }
       );
     } catch (err) {
@@ -88,7 +89,11 @@ class ReservationService {
 
   async deleteReservation(reservationId) {
     try {
-      return await ReservationModel.deleteOne({ _id: reservationId });
+      const reservation = await this.getReservationById(reservationId);
+      await ReservationModel.deleteOne({
+        _id: reservationId,
+      });
+      return reservation;
     } catch (err) {
       console.error(err);
       throw new InternalServerError("Error en deleteReservation Service");

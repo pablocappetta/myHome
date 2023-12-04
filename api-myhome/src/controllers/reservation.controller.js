@@ -3,6 +3,7 @@ require("dotenv").config();
 const ReservationService = require("../services/reservation.service");
 const RealtorService = require("../services/realtor.service");
 const ListingService = require("../services/listings.service");
+const UserService = require("../services/users.service");
 const { BadRequestError } = require("../middlewares/errorHandler");
 
 class ReservationController {
@@ -90,8 +91,17 @@ class ReservationController {
       if (!listing.status === "disponible") {
         throw new BadRequestError("La propiedad no esta disponible");
       }
+
       const reservation = await ReservationService.createReservation(body);
+
       await ListingService.markAsReserved(body.listingId);
+
+      const user = await UserService.getUserById(reservation.userId);
+      RealtorService.addNotification(reservation.realtorId, {
+        message: `El usuario ${user.name} reservó ${listing.title} Contacto: ${user.email}`,
+        listingId: reservation.listingId,
+      });
+
       return res.status(201).json(reservation);
     } catch (err) {
       console.error(err);
@@ -107,6 +117,9 @@ class ReservationController {
         reservationId,
         reservation
       );
+      if (updatedReservation.status === "Cancelada") {
+        await ListingService.markAsAvailable(updatedReservation.listingId);
+      }
       return res.status(200).json(updatedReservation);
     } catch (err) {
       console.error(err);
@@ -117,7 +130,10 @@ class ReservationController {
   async deleteReservation(req, res, next) {
     const { reservationId } = req.params;
     try {
-      await ReservationService.deleteReservation(reservationId);
+      const reservation = await ReservationService.deleteReservation(
+        reservationId
+      );
+      await ListingService.markAsAvailable(reservation.listingId);
       return res.status(204).json();
     } catch (err) {
       console.error(err);
