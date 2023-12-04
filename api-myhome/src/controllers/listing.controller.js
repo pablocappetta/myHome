@@ -87,9 +87,6 @@ class ListingController {
     try {
       const listing = req.body;
       const { id } = req.params;
-
-      console.log(id);
-      console.log(listing);
       const updatedListing = await ListingService.updateListing(id, listing);
       return res.status(200).json(updatedListing);
     } catch (err) {

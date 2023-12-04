@@ -49,8 +49,6 @@ router.get("/", ListingController.getListings);
 //Obtener listing por realtor
 router.get("/realtor/:realtorId", ListingController.getListingsByRealtorId);
 
-
-
 //Obtener listing por id
 router.get("/:id", ListingController.getListingById);
 
@@ -61,7 +59,6 @@ router.put(
     check("id", "El id de la publicación es obligatorio").not().isEmpty(),
     checkFields,
   ],
-  upload.array("images", 10),
   ListingController.updateListing
 );
 

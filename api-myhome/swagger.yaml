@@ -352,12 +352,16 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: "#/components/schemas/Listing"
       responses:
         "200":
           description: Listing details updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
         "400":
           description: Invalid input data
         "404":

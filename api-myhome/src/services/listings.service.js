@@ -23,7 +23,6 @@ class ListingService {
 
   async updateListing(id, listing) {
     try {
-      console.log(listing);
       listing.property.geoLocation.type = "Point";
       const updateListing = await ListingModel.findOneAndUpdate(
         { _id: id, realtorId: listing.realtorId },
