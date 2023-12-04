@@ -1173,12 +1173,12 @@ export const ListingPost = ({ navigation, ...props }) => {
                       })
                     }
                     style={{
-                      width: listing.type === "alquiler" ? "48%" : "100%",
+                      width: "48%",
                     }}
                   >
                     Contactar
                   </Button>
-                  {listing.type === "alquiler" && (
+
                     <Button
                       mode="contained-tonal"
                       icon={"comment-eye"}
@@ -1188,9 +1188,9 @@ export const ListingPost = ({ navigation, ...props }) => {
                     >
                       Agendar visita
                     </Button>
-                  )}
+        
                 </View>
-                <Button
+                {listing?.type === "alquiler" && (<Button
                   icon={"calendar-clock"}
                   mode="contained"
                   disabled={listing.status !== "disponible"}
@@ -1206,7 +1206,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                   }}
                 >
                   Reservar
-                </Button>
+                </Button>)}
               </View>
             )}
           </View>

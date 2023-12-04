@@ -80,8 +80,9 @@ const Login = ({ navigation }) => {
               };
               setUser(user);
               setUserDataToAsyncStorage(user);
+              navigation.navigate("tabMiCuenta");
               navigation.navigate("MiCuenta");
-              navigation.navigate("tabBuscar");
+              navigation.navigate("Home");
               ToastAndroid.show(
                 "Usuario logueado con Google",
                 ToastAndroid.SHORT
@@ -137,7 +138,6 @@ const Login = ({ navigation }) => {
       .then((response) => response.json())
       .then((json) => {
         if (json.realtor) {
-          console.log("HOLA BRO");
           const user = { ...json.realtor, isRealtor: true, token: json.token };
           setUser(user);
           setUserDataToAsyncStorage(user);
@@ -217,7 +217,7 @@ const Login = ({ navigation }) => {
                   marginBottom: 16,
                 }}
               >
-                ¿Sos propietario?
+                ¿Sos una inmobiliaria?
               </Text>
               <Formik
                 initialValues={{ email: "", password: "" }}

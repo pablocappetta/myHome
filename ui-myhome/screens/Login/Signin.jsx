@@ -43,7 +43,7 @@ const Signin = ({ navigation }) => {
 
       <View className="gap-[20px] mt-[10px]">
         <Text className="font-medium text-center text-[25px]">
-          ¿Sos propietario?
+        ¿Sos una inmobiliaria?
         </Text>
         <View className="flex-row border-[1px] items-center px-6 border-[#c4c4c4] bg-[#e7e7e7] rounded-[10px] w-[300px] h-[50px] ">
           <Icon name="mail" size={22} color="#2e2e2e" />
