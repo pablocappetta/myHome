@@ -56,13 +56,17 @@ class UserService {
 
   async updateUserById(userId, user) {
     try {
-      const updateUser = await UserModel.findOneAndUpdate({ _id: userId }, 
-        user, {
-        new: true,
-      });
+      const updateUser = await UserModel.findOneAndUpdate(
+        { _id: userId },
+        user,
+        {
+          new: true,
+        }
+      );
       if (!updateUser) {
         throw new NotFoundError("No se encontró al usuario");
       }
+      return updateUser;
     } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {

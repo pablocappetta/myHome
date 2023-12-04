@@ -4,6 +4,7 @@ import { Card, IconButton, Text, Dialog, Button } from "react-native-paper";
 import commaNumber from "comma-number";
 import { useTheme } from "../../../contexts/ThemeContext";
 import { upperCaseFirst } from "../../../helpers/helpers";
+import { useUserContext } from "../../../contexts/UserContext";
 
 const ListingReservationCard = ({
   navigation,
@@ -18,6 +19,8 @@ const ListingReservationCard = ({
   });
 
   const { theme } = useTheme();
+
+  const { user } = useUserContext();
 
   return (
     <Card>
@@ -49,18 +52,15 @@ const ListingReservationCard = ({
               >
                 {upperCaseFirst(reservation.listingDetails.type)}
               </Button>
-              <IconButton
-                icon="star"
-                size={16}
-                onPress={() =>
-                  navigation.navigate(
-                    "Review",
-                    reservation._id
-                  )
-                }
-                mode="contained"
-                style={{ margin: 0, padding: 0 }}
-              />
+              {!user.isRealtor && (
+                <IconButton
+                  icon="star"
+                  size={16}
+                  onPress={() => navigation.navigate("Review", reservation._id)}
+                  mode="contained"
+                  style={{ margin: 0, padding: 0 }}
+                />
+              )}
             </View>
             <View
               style={{
@@ -108,10 +108,15 @@ const ListingReservationCard = ({
           >
             <IconButton icon={"calendar"} size={18} />
             <Text variant="bodySmall" numberOfLines={1}>
-              {reservation.reservationEndDate ? 
-                new Date(reservation.reservationEndDate).toLocaleDateString("es-AR") :
-                new Date(new Date(reservation.reservationDate).setMonth(new Date(reservation.reservationDate).getMonth() + 1)).toLocaleDateString("es-AR")
-              }
+              {reservation.reservationEndDate
+                ? new Date(reservation.reservationEndDate).toLocaleDateString(
+                    "es-AR"
+                  )
+                : new Date(
+                    new Date(reservation.reservationDate).setMonth(
+                      new Date(reservation.reservationDate).getMonth() + 1
+                    )
+                  ).toLocaleDateString("es-AR")}
             </Text>
           </View>
         </View>

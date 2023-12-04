@@ -17,7 +17,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: "#/components/schemas/Realtor"
       responses:
@@ -94,7 +94,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: "#/components/schemas/Realtor"
       responses:
@@ -352,12 +352,16 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: "#/components/schemas/Listing"
       responses:
         "200":
           description: Listing details updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
         "400":
           description: Invalid input data
         "404":
@@ -707,6 +711,12 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/User"
       responses:
         "200":
           description: User profile updated successfully
