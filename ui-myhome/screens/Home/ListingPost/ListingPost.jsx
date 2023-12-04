@@ -384,43 +384,88 @@ export const ListingPost = ({ navigation, ...props }) => {
     setBalcon(!balcon);
   };
 
-  // property PUT request
-  function updateProperty() {
-    let formData = new FormData();
 
-    formData.append("title", encabezado);
-    formData.append("description", description);
-    formData.append("property[age]", parseInt(antiguedad));
-    formData.append("property[address][state]", provincia);
-    formData.append("property[address][city]", ciudad);
-    formData.append("property[address][neighborhood]", barrio);
-    formData.append("property[address][zipCode]", CP);
-    formData.append("property[address][street]", calle);
-    formData.append("property[address][number]", parseInt(numero));
-    formData.append("property[type]", property);
-    formData.append("property[sqm][covered]", parseInt(cubiertos));
-    formData.append("property[sqm][uncovered]", parseInt(descubiertos));
-    formData.append("property[cardinalOrientation]", orAbsoluta);
-    formData.append("property[relativeOrientation]", orRelativa);
-    formData.append("property[rooms]", parseInt(dormitorios));
-    formData.append("property[bathrooms]", parseInt(baños));
-    formData.append("property[hasTerrace]", terraza);
-    formData.append("property[hasBalcony]", balcon);
-    formData.append("property[expensesPrice][amount]", parseInt(expenses));
-    formData.append("type", type);
-    formData.append("price[amount]", parseInt(price));
+
+  // property PUT request
+  async function updateProperty() {
+
+
+    const params = {
+      city: ciudad,
+      state: provincia,
+      street: calle + " " + numero,
+      country: "Argentina",
+      format: "json",
+      limit: 1,
+    };
+    const baseUrl = "https://nominatim.openstreetmap.org/search";
+    const url = `${baseUrl}?${new URLSearchParams(params).toString()}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Error al obtener coordenadas");
+    }
+    const data = await response.json();
+    const propertyData = {
+      title: encabezado,
+      description: description,
+      property: {
+        age: parseInt(antiguedad),
+        address: {
+          state: provincia,
+          city: ciudad,
+          neighborhood: barrio,
+          zipCode: CP,
+          street: calle,
+          number: parseInt(numero),
+        },
+        type: property,
+        sqm: {
+          covered: parseInt(cubiertos),
+          uncovered: parseInt(descubiertos),
+        },
+        cardinalOrientation: orAbsoluta,
+        relativeOrientation: orRelativa,
+        rooms: parseInt(dormitorios),
+        bathrooms: parseInt(baños),
+        hasTerrace: terraza,
+        hasBalcony: balcon,
+        expensesPrice: {
+          currrency: listing?.price?.currency,
+          amount: parseInt(expenses),
+        },
+        geoLocation: {
+          coordinates: [
+            data[0]?.lat,
+            data[0]?.lon,
+          ],
+        },
+        photos: listing?.property?.photos,
+      },
+      type: type,
+      price: {
+        currency: listing?.price?.currency,
+        amount: parseInt(price),
+      },
+      realtorId: user?._id,
+    };
 
     fetch(`http://3.144.94.74:8000/api/listings/${listing._id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
-      body: formData,
+      body: JSON.stringify(propertyData),
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("data:", data);
-        ToastAndroid.show("Propiedad actualizada", ToastAndroid.LONG);
+        if (data.type) {
+          ToastAndroid.show("Propiedad actualizada", ToastAndroid.LONG);
+        }
+        else {
+          ToastAndroid.show("Error al actualizar la propiedad", ToastAndroid.LONG);
+        }
+
       })
       .catch((err) => {
         console.log(err);
@@ -800,7 +845,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                   }}
                 >
                   {listingRealtorAvatar &&
-                  isStringALink(listingRealtorAvatar) ? (
+                    isStringALink(listingRealtorAvatar) ? (
                     <Avatar.Image
                       source={{ uri: listingRealtorAvatar }}
                       size={40}
