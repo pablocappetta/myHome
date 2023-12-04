@@ -3,16 +3,22 @@ const { check } = require("express-validator");
 const RealtorController = require("../controllers/realtor.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
+const ImgurStorage = require("multer-storage-imgur");
+const multer = require("multer");
+
+const upload = multer({
+  storage: ImgurStorage({ clientId: process.env.IMGUR_CLIENT_ID }),
+});
 
 const router = Router();
 
 //Valida JWT del sessionStorage
 router.post("/jwt", checkJwt);
 
-//Crea un usuario
-router.post("/", RealtorController.createRealtor); //POST USUARIOS
+//Crea un realtor
+router.post("/", upload.single("logo"), RealtorController.createRealtor);
 
-//Loguea un usuario
+//Loguea un realtor
 router.post(
   "/login",
   [
@@ -62,20 +68,13 @@ router.delete(
 //Actualiza un realtor
 router.put(
   "/:realtorId",
+  upload.single("logo"),
   [
     check("realtorId", "El id del realtor es obligatorio").not().isEmpty(),
     checkFields,
   ],
   RealtorController.updateRealtor
 );
-
-//ESTO LO COMENTO PORQUE NO ESTA ANDANDO. atte Mateo
-//Cambia el logo del realtor
-// router.post(
-//   "/:realtorId/image",
-//   upload.array("image", 10),
-//   RealtorController.changeRealtorLogo
-// );
 
 // Borra un realtor, listings y reservas
 router.delete(
