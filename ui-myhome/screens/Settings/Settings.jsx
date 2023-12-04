@@ -31,6 +31,7 @@ const Settings = ({ navigation }) => {
   };
 
   const handleDeleteAccount = () => {
+    const apiUser = !user.isRealtor ? "users" : "realtors";
     Alert.alert(
       "Eliminar cuenta",
       "¿Estás seguro de que quieres eliminar tu cuenta?",
@@ -43,7 +44,7 @@ const Settings = ({ navigation }) => {
         {
           text: "Eliminar",
           onPress: () => {
-            fetch("http://3.144.94.74:8000/api/users/" + user._id, {
+            fetch(`http://3.144.94.74:8000/api/${apiUser}/` + user._id, {
               method: "DELETE",
             })
               .then(() => {
