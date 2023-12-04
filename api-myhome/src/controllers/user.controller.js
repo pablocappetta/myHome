@@ -53,6 +53,7 @@ class UserController {
     try {
       const userId = req.params.id;
       const user = req.body;
+      user.avatar = req.file ? req.file.link : user.avatar;
       const updatedUser = await UserService.updateUserById(userId, user);
       return res.status(200).json(updatedUser);
     } catch (err) {

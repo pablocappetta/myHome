@@ -23,6 +23,7 @@ class ListingService {
 
   async updateListing(id, listing) {
     try {
+      listing.property.geoLocation.type = "Point";
       const updateListing = await ListingModel.findOneAndUpdate(
         { _id: id, realtorId: listing.realtorId },
         listing,
@@ -34,6 +35,7 @@ class ListingService {
       if (!updateListing) {
         throw new NotFoundError("No se encontró la publicación");
       }
+      return updateListing;
     } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
