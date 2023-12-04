@@ -26,7 +26,7 @@ const ListingSchema = new Schema(
         enum: [
           "Casa",
           "Departamento",
-          "PH",
+          "Ph",
           "Terreno",
           "Local",
           "Oficina",
