@@ -108,9 +108,10 @@ const ListingReservationCard = ({
           >
             <IconButton icon={"calendar"} size={18} />
             <Text variant="bodySmall" numberOfLines={1}>
-              {new Date(reservation.reservationEndDate).toLocaleDateString(
-                "es-AR"
-              )}
+              {reservation.reservationEndDate ? 
+                new Date(reservation.reservationEndDate).toLocaleDateString("es-AR") :
+                new Date(new Date(reservation.reservationDate).setMonth(new Date(reservation.reservationDate).getMonth() + 1)).toLocaleDateString("es-AR")
+              }
             </Text>
           </View>
         </View>
