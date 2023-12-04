@@ -15,6 +15,7 @@ import {
   Avatar,
   Button,
   Divider,
+  Icon,
   IconButton,
   List,
   Switch,
@@ -482,22 +483,48 @@ export const ListingPost = ({ navigation, ...props }) => {
 
         <View style={styles.listingDetailsContainer}>
           {!edit ? (
-            <View className="flex flex-row justify-between items-center">
-              <View className="pt-4 pl-4 flex flex-row items-center gap-4">
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingTop: 16,
+                paddingHorizontal: 24,
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
                 <View
-                  className={`rounded-full h-2 w-2 bg-green-500 ${
+                  className={`rounded-full h-2 w-2 bg-gray-500 ${
                     listing?.status == "disponible" && "bg-green-500"
                   }
-                  ${listing?.status == "reservada" && "bg-yellow-500"}
-                  ${listing?.status == "vendida" && "bg-red-500"}
-                  ${listing?.status == "cancelada" && "bg-gray-500"}
-  `}
-                ></View>
-                <Text>{listing?.status || "Disponible"}</Text>
+                ${listing?.status == "reservada" && "bg-yellow-500"}
+                ${listing?.status == "vendida" && "bg-red-500"}
+                ${listing?.status == "cancelada" && "bg-gray-500"}
+`}
+                />
+                <Text>{upperCaseFirst(listing?.status) || "Disponible"}</Text>
               </View>
-              <View className="pt-4 pr-2 flex flex-row items-center">
-                <Text>{date}</Text>
-                <IconButton icon="calendar" size={18} />
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Icon source="calendar" size={16} />
+                <Text>
+                  {new Date(listing?.creationDate).toLocaleDateString() ||
+                    "N/A"}
+                </Text>
               </View>
             </View>
           ) : null}
@@ -575,10 +602,6 @@ export const ListingPost = ({ navigation, ...props }) => {
                 <IconButton
                   icon="share-variant"
                   onPress={() => handleSharePress()}
-                />
-                <IconButton
-                  icon="calendar-month"
-                  onPress={() => handleSchedulePress()}
                 />
               </View>
             )}
@@ -777,29 +800,35 @@ export const ListingPost = ({ navigation, ...props }) => {
                 Publicado por
               </List.Subheader>
               <View style={styles.containerListingOwner}>
-                {listingRealtorAvatar && isStringALink(listingRealtorAvatar) ? (
-                  <Avatar.Image
-                    source={{ uri: listingRealtorAvatar }}
-                    size={36}
-                  />
-                ) : (
-                  <Avatar.Icon icon="account" size={36} />
-                )}
-                <Text variant="titleMedium">
-                  {listingRealtorName || "Realtor name"}
-                </Text>
-                {listingRealtorReviewScore ? (
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <IconButton icon="star" onPress={() => {}} />
-                    <Text variant="labelLarge">
-                      {listingRealtorReviewScore.toFixed(1)}{" "}
-                    </Text>
-                    <IconButton
-                      style={{ marginLeft: 38 }}
-                      icon="comment"
-                      onPress={() => handleCommentsPress()}
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 16,
+                  }}
+                >
+                  {listingRealtorAvatar &&
+                  isStringALink(listingRealtorAvatar) ? (
+                    <Avatar.Image
+                      source={{ uri: listingRealtorAvatar }}
+                      size={40}
                     />
-                  </View>
+                  ) : (
+                    <Avatar.Icon icon="account" size={40} />
+                  )}
+                  <Text variant="titleMedium">
+                    {listingRealtorName || "Realtor name"}
+                  </Text>
+                </View>
+                {listingRealtorReviewScore ? (
+                  <Button
+                    onPress={handleCommentsPress}
+                    icon={"star"}
+                    mode="contained-tonal"
+                  >
+                    {listingRealtorReviewScore.toFixed(1)}
+                  </Button>
                 ) : (
                   <Text variant="labelLarge">Sin reseñas</Text>
                 )}
@@ -1086,44 +1115,63 @@ export const ListingPost = ({ navigation, ...props }) => {
               <View
                 style={{
                   display: "flex",
-                  flexDirection: "row",
-                  gap: 24,
-                  justifyContent: "center",
+                  flexDirection: "column",
+                  gap: 16,
+                  paddingHorizontal: 16,
                 }}
               >
-                <Button
-                  mode="outlined"
-                  onPress={() =>
-                    navigation.navigate("SendQuestion", {
-                      params: {
-                        realtorId: listing.realtorId,
-                        listingId: listing._id,
-                      },
-                    })
-                  }
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    gap: 13,
+                  }}
                 >
-                  Contactar
-                </Button>
-                {listing.type === "alquiler" && (
                   <Button
-                    mode="contained"
-                    onPress={() => {
-                      navigation.navigate("Booking", {
-                        screen: "Info",
+                    mode="outlined"
+                    onPress={() =>
+                      navigation.navigate("SendQuestion", {
                         params: {
                           realtorId: listing.realtorId,
                           listingId: listing._id,
-                          listing: listing,
                         },
-                      });
+                      })
+                    }
+                    style={{
+                      width: listing.type === "alquiler" ? "48%" : "100%",
                     }}
-                    disabled={listing?.status !== "disponible" || false}
-                    icon={"calendar-clock"}
-                    width={width / 2 - 16}
                   >
-                    Reservar
+                    Contactar
                   </Button>
-                )}
+                  {listing.type === "alquiler" && (
+                    <Button
+                      mode="contained-tonal"
+                      icon={"comment-eye"}
+                      width={width / 2 - 16}
+                      onPress={handleSchedulePress}
+                      style={{ width: "48%" }}
+                    >
+                      Agendar visita
+                    </Button>
+                  )}
+                </View>
+                <Button
+                  icon={"calendar-clock"}
+                  mode="contained"
+                  onPress={() => {
+                    navigation.navigate("Booking", {
+                      screen: "Info",
+                      params: {
+                        realtorId: listing.realtorId,
+                        listingId: listing._id,
+                        listing: listing,
+                      },
+                    });
+                  }}
+                >
+                  Reservar
+                </Button>
               </View>
             )}
           </View>
@@ -1194,6 +1242,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     marginBottom: 16,
+    justifyContent: "space-between",
   },
   description: {
     textAlign: "justify",
