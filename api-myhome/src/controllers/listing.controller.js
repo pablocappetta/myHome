@@ -85,16 +85,11 @@ class ListingController {
 
   async updateListing(req, res, next) {
     try {
-      const { id } = req.params;
       const listing = req.body;
-      const images = req.files;
+      const { id } = req.params;
 
-      if (typeof listing.property == "string")
-        listing.property = JSON.parse(listing.property);
-      if (typeof listing.price == "string")
-        listing.price = JSON.parse(listing.price);
-      listing.property.photos = images.map((image) => image.link);
-
+      console.log(id);
+      console.log(listing);
       const updatedListing = await ListingService.updateListing(id, listing);
       return res.status(200).json(updatedListing);
     } catch (err) {
@@ -132,6 +127,5 @@ class ListingController {
     }
   }
 }
-
 
 module.exports = ListingController.getInstance();
