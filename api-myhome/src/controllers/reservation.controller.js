@@ -99,6 +99,7 @@ class ReservationController {
       const user = await UserService.getUserById(reservation.userId);
       RealtorService.addNotification(reservation.realtorId, {
         message: `El usuario ${user.name} reservó ${listing.title} Contacto: ${user.email}`,
+        listingId: reservation.listingId,
       });
 
       return res.status(201).json(reservation);

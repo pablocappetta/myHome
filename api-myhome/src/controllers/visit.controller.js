@@ -1,6 +1,6 @@
 let instance = null;
 require("dotenv").config();
-const realtorService = require("../services/realtor.service");
+const RealtorService = require("../services/realtor.service");
 const VisitService = require("../services/visit.service");
 const ListingService = require("../services/listings.service");
 const UserService = require("../services/users.service");
@@ -31,8 +31,9 @@ class VisitController {
       const visit = await VisitService.createVisit(body);
 
       const date = new Date(visit.date).toLocaleDateString();
-      realtorService.addNotification(listing.realtorId, {
+      RealtorService.addNotification(listing.realtorId, {
         message: `El usuario ${user.name} programó una visita: Fecha: ${date} Turno: ${visit.time} Contacto: ${user.email}`,
+        listingId: listingId,
       });
 
       const transporter = nodemailer.createTransport({
