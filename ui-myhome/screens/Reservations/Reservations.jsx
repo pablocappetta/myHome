@@ -31,9 +31,18 @@ const Reservations = ({ navigation }) => {
   }, []);
 
   const getReservations = async () => {
+    const apiUser = !user.isRealtor
+      ? "reservations/user/"
+      : "reservations/realtor/";
+
     const response = await fetch(
-      "http://3.144.94.74:8000/api/" + "reservations/user/" + user._id
+      "http://3.144.94.74:8000/api/" + apiUser + user._id,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
     );
+
     const data = await response.json();
     return data;
   };
