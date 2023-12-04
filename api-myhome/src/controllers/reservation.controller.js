@@ -107,6 +107,9 @@ class ReservationController {
         reservationId,
         reservation
       );
+      if (updatedReservation.status === "Cancelada") {
+        await ListingService.markAsAvailable(updatedReservation.listingId);
+      }
       return res.status(200).json(updatedReservation);
     } catch (err) {
       console.error(err);
@@ -117,7 +120,10 @@ class ReservationController {
   async deleteReservation(req, res, next) {
     const { reservationId } = req.params;
     try {
-      await ReservationService.deleteReservation(reservationId);
+      const reservation = await ReservationService.deleteReservation(
+        reservationId
+      );
+      await ListingService.markAsAvailable(reservation.listingId);
       return res.status(204).json();
     } catch (err) {
       console.error(err);

@@ -23,19 +23,27 @@ class ListingService {
 
   async updateListing(id, listing) {
     try {
-      listing.property.geoLocation.type = "Point";
-      const updateListing = await ListingModel.findOneAndUpdate(
+      const existingListing = await ListingModel.findOne({
+        _id: id,
+        realtorId: listing.realtorId,
+      });
+
+      if (!existingListing) {
+        throw new NotFoundError("No se encontró la publicación");
+      }
+
+      const mergedListing = this.mergeDeep(existingListing, listing);
+
+      const updatedListing = await ListingModel.findOneAndUpdate(
         { _id: id, realtorId: listing.realtorId },
-        listing,
+        mergedListing,
         {
           new: true,
           runValidators: true,
         }
       );
-      if (!updateListing) {
-        throw new NotFoundError("No se encontró la publicación");
-      }
-      return updateListing;
+
+      return updatedListing;
     } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
@@ -46,6 +54,28 @@ class ListingService {
       }
       throw new InternalServerError("Error en updateListing Service");
     }
+  }
+
+  isObject(item) {
+    return item && typeof item === "object" && !Array.isArray(item);
+  }
+
+  mergeDeep(target, ...sources) {
+    if (!sources.length) return target;
+    const source = sources.shift();
+
+    if (this.isObject(target) && this.isObject(source)) {
+      for (const key in source) {
+        if (this.isObject(source[key])) {
+          if (!target[key]) Object.assign(target, { [key]: {} });
+          this.mergeDeep(target[key], source[key]);
+        } else {
+          Object.assign(target, { [key]: source[key] });
+        }
+      }
+    }
+
+    return this.mergeDeep(target, ...sources);
   }
 
   async getListings() {
@@ -149,6 +179,17 @@ class ListingService {
     try {
       const listing = await this.getListingById(listingId);
       listing.status = "reservada";
+      listing.save();
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerError("Error en markAsReserved Service");
+    }
+  }
+
+  async markAsAvailable(listingId) {
+    try {
+      const listing = await this.getListingById(listingId);
+      listing.status = "disponible";
       listing.save();
     } catch (err) {
       console.error(err);
