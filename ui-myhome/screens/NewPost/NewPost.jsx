@@ -99,7 +99,6 @@ const NewPost = ({ navigation }) => {
   };
 
   const getGeoLocation = async () => {
-    try {
       const params = {
         city: ciudad,
         state: provincia,
@@ -120,13 +119,11 @@ const NewPost = ({ navigation }) => {
 
       setLatitude(data[0]?.lat);
       setLongitude(data[0]?.lon);
-    } catch (error) {
-      console.error(error);
-    }
+      return data;
   };
 
   const handleAddProperty = async () => {
-    await getGeoLocation();
+    const location = await getGeoLocation();
     const body = {
       realtorId: user._id,
       title: encabezado,
@@ -144,7 +141,7 @@ const NewPost = ({ navigation }) => {
           apartment: "",
         },
         geoLocation: {
-          coordinates: [latitude, longitude],
+          coordinates: [location[0]?.lat ? location[0]?.lat : 0, location[0]?.lon ? location[0]?.lon : 0],
         },
         type:
           tipoPropiedad.charAt(0).toUpperCase() +

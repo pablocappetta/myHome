@@ -66,14 +66,21 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     if (location === null) {
-      Location.getCurrentPositionAsync().then((location) => {
-        console.log(location);
-        setLocation(location);
-      });
+      getGeoLocation();
     } else {
       getNearbyListings();
     }
   }, []);
+
+  const getGeoLocation = async () => {                                                                                                                      
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      ToastAndroid.show("No se pudo obtener tu ubicación", ToastAndroid.LONG);          
+      return;
+    }                                           
+    let location = await Location.getCurrentPositionAsync({});              
+    setLocation(location);
+  };
 
   const handleButtonFilterChange = (listingType) => {
     setFilterSelection(listingType);
@@ -93,8 +100,14 @@ const Home = ({ navigation }) => {
   const getNearbyListings = async () => {
     console.log(location);
     if (!location?.coords?.latitude || !location?.coords?.longitude) {
-      ToastAndroid.show("No se pudo obtener tu ubicación", ToastAndroid.LONG);
-      return;
+      try{
+        await getGeoLocation();
+      }
+      catch(error){
+        console.log(error);
+        ToastAndroid.show("No se pudo obtener tu ubicación", ToastAndroid.LONG);
+        return;
+      }
     }
     setLoadingRecent(true);
     await fetch(

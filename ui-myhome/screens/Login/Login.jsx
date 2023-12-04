@@ -144,7 +144,7 @@ const Login = ({ navigation }) => {
           navigation.navigate("MiCuenta");
           navigation.navigate("tabHome");
         } else {
-          throw new Error("Usuario o contraseña incorrectos");
+          ToastAndroid.show("Usuario o contraseña incorrectos", ToastAndroid.LONG);
         }
       })
       .catch((error) => {
