@@ -26,7 +26,7 @@ for (const language in languageMap) {
   registerTranslation(language, languageMap[language]);
 }
 
-const bookingTitle = "Reservar propiedad";
+const bookingTitle = "Agendar visita";
 
 export const BookingDate = ({ navigation, route }) => {
   const [date, onChangeDate] = useState(undefined);
@@ -34,7 +34,7 @@ export const BookingDate = ({ navigation, route }) => {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
 
-  const {user} = useUserContext();
+  const { user } = useUserContext();
 
   const onTimeChange = useCallback((value) => {
     setSelectedTime(value);
@@ -47,15 +47,23 @@ export const BookingDate = ({ navigation, route }) => {
         time: selectedTime,
       };
       console.log(request);
-      fetch(`http://3.144.94.74:8000/api/listings/${route?.params?.listingId}/visits`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(request),
-      }).then((response) => {
-        if (response.status === 200 || response.status === 201 || response.status === 204 ) {
+      fetch(
+        `http://3.144.94.74:8000/api/listings/${route?.params?.listingId}/visits`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(request),
+        }
+      ).then((response) => {
+        if (
+          response.status === 200 ||
+          response.status === 201 ||
+          response.status === 204
+        ) {
           setShowSuccessDialog(true);
+          navigation.goBack();
         } else {
           setShowErrorDialog(true);
         }
@@ -115,7 +123,7 @@ export const BookingDate = ({ navigation, route }) => {
             mode="contained"
             disabled={!date} // Disable the button if no date is selected
           >
-            Agendar Visita
+            Agendar
           </Button>
         </View>
       </View>
@@ -123,7 +131,10 @@ export const BookingDate = ({ navigation, route }) => {
         <Dialog visible={showSuccessDialog} onDismiss={handleReturn}>
           <Dialog.Title>¡Visita agendada!</Dialog.Title>
           <Dialog.Content>
-            <Text>La visita ha sido agendada exitosamente. La inmobiliaria te contactara con mas detalles.</Text>
+            <Text>
+              La visita ha sido agendada exitosamente. La inmobiliaria te
+              contactara con mas detalles.
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={handleReturn}>Volver</Button>

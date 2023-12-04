@@ -96,8 +96,25 @@ class RealtorController {
   async createRealtor(req, res, next) {
     try {
       const { body } = req;
+      body.logo = req.file ? req.file.link : body.logo;
       const realtor = await RealtorService.createRealtor(body);
       return res.status(201).json(realtor);
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+
+  async updateRealtor(req, res, next) {
+    try {
+      const { realtorId } = req.params;
+      const realtor = req.body;
+      realtor.logo = req.file ? req.file.link : realtor.logo;
+      const updatedRealtor = await RealtorService.updateRealtor(
+        realtorId,
+        realtor
+      );
+      return res.status(200).json(updatedRealtor);
     } catch (err) {
       console.error(err);
       next(err);
@@ -115,33 +132,6 @@ class RealtorController {
 
       await RealtorService.deleteRealtor(realtorId);
       return res.status(200).json();
-    } catch (err) {
-      console.error(err);
-      next(err);
-    }
-  }
-
-  async updateRealtor(req, res, next) {
-    try {
-      const { realtorId } = req.params;
-      const realtor = req.body;
-      const updatedRealtor = await RealtorService.updateRealtor(
-        realtorId,
-        realtor
-      );
-      return res.status(200).json(updatedRealtor);
-    } catch (err) {
-      console.error(err);
-      next(err);
-    }
-  }
-
-  async changeRealtorLogo(req, res, next) {
-    const { id } = req.params;
-    const image = req.files;
-    try {
-      const realtor = await RealtorService.changeRealtorLogo(id, image);
-      return res.status(200).json(realtor);
     } catch (err) {
       console.error(err);
       next(err);

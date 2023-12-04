@@ -107,7 +107,7 @@ const NewPost = ({ navigation }) => {
         country: "Argentina",
         format: "json",
         limit: 1,
-      }
+      };
       const baseUrl = "https://nominatim.openstreetmap.org/search";
       const url = `${baseUrl}?${new URLSearchParams(params).toString()}`;
       const response = await fetch(url);
@@ -500,8 +500,6 @@ const NewPost = ({ navigation }) => {
               ></TextInput>
             </View>
           </View>
-
-          <Button onPress={() => getGeoLocation()}>Obtener coordenadas</Button>
 
           <Text className="text-[25px] mt-4 font-bold my-4">
             Características

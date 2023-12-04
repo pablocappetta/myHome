@@ -110,30 +110,19 @@ class RealtorService {
 
   async updateRealtor(realtorId, updatedRealtor) {
     try {
-      return await RealtorModel.findOneAndUpdate(
+      const realtor = await RealtorModel.findOneAndUpdate(
         { _id: realtorId },
         updatedRealtor,
         { new: true }
       );
+      realtor.password = undefined;
+      return realtor;
     } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
         throw new BadRequestError("Error en validaciones de Mongoose.");
       }
       throw new InternalServerError("Error en updateRealtorById Service");
-    }
-  }
-
-  async changeRealtorLogo(realtorId, image) {
-    const realtorFromDb = await this.getRealtorById(realtorId);
-    const imageLink = image.link;
-
-    try {
-      realtorFromDb.realtor.logo = imageLink;
-      return await this.updateRealtor(realtorFromDb);
-    } catch (err) {
-      console.error(err);
-      throw new Error("Error en changeRealtorLogo Service");
     }
   }
 
@@ -250,7 +239,6 @@ class RealtorService {
       throw new InternalServerError("Error in addReview Service");
     }
   }
-
 }
 
 module.exports = new RealtorService();

@@ -1,5 +1,11 @@
 import React, { useRef } from "react";
-import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import {
   Switch,
   List,
@@ -25,22 +31,35 @@ const Settings = ({ navigation }) => {
   };
 
   const handleDeleteAccount = () => {
-    // Call API to delete account
-    const userId = user._id;
-    // Replace `API_ENDPOINT` with the actual endpoint for deleting an account
-    fetch(`http://3.144.94.74:8000/api/realtors/${userId}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Handle success response
-        wipeUserData();
-        navigation.navigate("tabBuscar");
-      })
-      .catch((error) => {
-        // Handle error
-        console.error("Error deleting account:", error);
-      });
+    Alert.alert(
+      "Eliminar cuenta",
+      "¿Estás seguro de que quieres eliminar tu cuenta?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: () => {
+            fetch("http://3.144.94.74:8000/api/users/" + user._id, {
+              method: "DELETE",
+            })
+              .then(() => {
+                // Handle success response
+                wipeUserData();
+                navigation.navigate("tabBuscar");
+              })
+              .catch((error) => {
+                // Handle error
+                console.error("Error deleting account:", error);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const ref = useRef(null);

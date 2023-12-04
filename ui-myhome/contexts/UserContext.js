@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const UserContext = createContext();
 
@@ -26,7 +25,6 @@ export const UserProvider = ({ children }) => {
     try {
       await AsyncStorage.setItem("user", stringifiedCredentials);
       console.log("Datos de login guardados correctamente");
-      
     } catch (error) {
       console.error("Error al guardar los datos de login:", error);
     }

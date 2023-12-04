@@ -3,6 +3,12 @@ const { check } = require("express-validator");
 const UserController = require("../controllers/user.controller");
 const checkFields = require("../middlewares/validateFields");
 const checkJwt = require("../middlewares/jwtValidator");
+const ImgurStorage = require("multer-storage-imgur");
+const multer = require("multer");
+
+const upload = multer({
+  storage: ImgurStorage({ clientId: process.env.IMGUR_CLIENT_ID }),
+});
 
 const router = Router();
 
@@ -19,7 +25,7 @@ router.post("/login", UserController.googleLogin);
 router.get("/:id", UserController.getUserById); //GET USUARIOS BY ID
 
 //Modifica un usuario por id
-router.put("/:id", UserController.updateUserById);
+router.put("/:id", upload.single("avatar"), UserController.updateUserById);
 
 //Elimina un usuario por id
 router.delete("/:id", UserController.deleteUser);
