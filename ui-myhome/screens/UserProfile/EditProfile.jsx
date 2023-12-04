@@ -107,7 +107,7 @@ export default function EditProfile({ navigation }) {
         setUser(userAppend);
         setUserDataToAsyncStorage(userAppend);
 
-        ToastAndroid.show("Usuario actualizada", ToastAndroid.LONG);
+        ToastAndroid.show("Usuario actualizado", ToastAndroid.LONG);
         navigation.navigate("Perfil");
       })
       .catch((err) => {
@@ -156,7 +156,7 @@ export default function EditProfile({ navigation }) {
         setUser(userAppend);
         setUserDataToAsyncStorage(userAppend);
 
-        ToastAndroid.show("Usuario actualizada", ToastAndroid.LONG);
+        ToastAndroid.show("Usuario actualizado", ToastAndroid.LONG);
         navigation.navigate("Perfil");
       })
       .catch((err) => {
