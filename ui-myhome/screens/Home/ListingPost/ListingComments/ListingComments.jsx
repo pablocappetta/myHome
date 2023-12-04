@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import { IconButton, useTheme, List, Modal, Text, Avatar, Divider } from 'react-native-paper';
+import React from "react";
+import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import {
+  IconButton,
+  useTheme,
+  List,
+  Modal,
+  Text,
+  Avatar,
+  Divider,
+} from "react-native-paper";
 
 const ListingComments = ({ isModalOpen, onClose, comments }) => {
   const theme = useTheme();
-  const windowWidth = Dimensions.get('window').width;
+  const windowWidth = Dimensions.get("window").width;
 
   const styles = StyleSheet.create({
     modal: {
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
-      top: '20%',
+      top: "20%",
       padding: 16,
-      height: '80%',
       bottom: 0,
-      position: 'absolute',
+      position: "absolute",
       backgroundColor: theme.colors.background, // Use the theme's background color
       width: windowWidth,
     },
     userContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginTop: 8,
+      gap: 16,
     },
     userImage: {
       width: 40,
@@ -44,42 +52,71 @@ const ListingComments = ({ isModalOpen, onClose, comments }) => {
       visible={isModalOpen}
       onDismiss={onClose}
       animationType="slide"
-      contentContainerStyle={[styles.modal, { backgroundColor: theme.colors.background }]}
+      contentContainerStyle={[
+        styles.modal,
+        { backgroundColor: theme.colors.background },
+      ]}
       onSwipeDown={handleSwipeDown} // Dismiss the modal on swipe down
     >
       <View style={styles.modal}>
         <Text
-          variant='titleLarge'
-          style={{ fontWeight: 'bold', marginBottom: 8, width: '100%', textAlign: 'center', marginTop: -68}}
-        >Comentarios</Text>
+          variant="titleLarge"
+          style={{
+            fontWeight: "bold",
+            marginBottom: 8,
+            width: "100%",
+            textAlign: "center",
+            marginTop: -68,
+          }}
+        >
+          Comentarios
+        </Text>
         <ScrollView>
           <List.Section>
             {comments?.map((comment, index) => (
-              <View style={{
-                marginTop: 16,
-              }} key={index}>
+              <View
+                style={{
+                  marginTop: 16,
+                }}
+                key={index}
+              >
                 <View style={styles.userContainer}>
-                  {/* User image URL */}
-                  <Avatar.Image source={{ uri: comment?.user?.avatar || defaultImage }} size={40} />
-                  <Text>  {comment?.user?.name ?? "Usuario"}</Text>
+                  <Avatar.Image
+                    source={{ uri: comment?.user?.avatar || defaultImage }}
+                    size={36}
+                  />
+                  <Text>{comment?.user?.name ?? "Usuario"}</Text>
                 </View>
 
-                <View style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginTop: 8
-                }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: 8,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingHorizontal: 16,
+                    }}
+                  >
                     <Text>{comment.comment}</Text>
                   </View>
-                  <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                  }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                    }}
+                  >
                     <Text>{comment.rating}</Text>
-                    <IconButton icon="star" onPress={() => { }} />
+                    <IconButton
+                      icon="star"
+                      iconColor={theme.colors.secondary}
+                    />
                   </View>
                 </View>
                 <Divider />
