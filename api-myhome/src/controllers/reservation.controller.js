@@ -3,6 +3,7 @@ require("dotenv").config();
 const ReservationService = require("../services/reservation.service");
 const RealtorService = require("../services/realtor.service");
 const ListingService = require("../services/listings.service");
+const UserService = require("../services/users.service");
 const { BadRequestError } = require("../middlewares/errorHandler");
 
 class ReservationController {
@@ -90,8 +91,16 @@ class ReservationController {
       if (!listing.status === "disponible") {
         throw new BadRequestError("La propiedad no esta disponible");
       }
+
       const reservation = await ReservationService.createReservation(body);
+
       await ListingService.markAsReserved(body.listingId);
+
+      const user = await UserService.getUserById(reservation.userId);
+      RealtorService.addNotification(reservation.realtorId, {
+        message: `El usuario ${user.name} reservó ${listing.title} Contacto: ${user.email}`,
+      });
+
       return res.status(201).json(reservation);
     } catch (err) {
       console.error(err);
