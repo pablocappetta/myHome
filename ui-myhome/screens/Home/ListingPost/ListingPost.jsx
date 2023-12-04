@@ -439,6 +439,9 @@ export const ListingPost = ({ navigation, ...props }) => {
       });
   }
 
+  const dateObject = new Date(listing.creationDate);
+  const date = dateObject.toLocaleDateString();
+
   return (
     <View style={styles.container}>
       <Appbar.Header>
@@ -479,18 +482,23 @@ export const ListingPost = ({ navigation, ...props }) => {
 
         <View style={styles.listingDetailsContainer}>
           {!edit ? (
-            <View className="pt-4 pl-4 flex flex-row items-center gap-4">
-              {console.log(listing)}
-              <View
-                className={`rounded-full h-2 w-2 bg-gray-500 ${
-                  listing?.status == "disponible" && "bg-green-500"
-                }
-                ${listing?.status == "reservada" && "bg-yellow-500"}
-                ${listing?.status == "vendida" && "bg-red-500"}
-                ${listing?.status == "cancelada" && "bg-gray-500"}
-`}
-              ></View>
-              <Text>{listing?.status || "Cancelada"}</Text>
+            <View className="flex flex-row justify-between items-center">
+              <View className="pt-4 pl-4 flex flex-row items-center gap-4">
+                <View
+                  className={`rounded-full h-2 w-2 bg-green-500 ${
+                    listing?.status == "disponible" && "bg-green-500"
+                  }
+                  ${listing?.status == "reservada" && "bg-yellow-500"}
+                  ${listing?.status == "vendida" && "bg-red-500"}
+                  ${listing?.status == "cancelada" && "bg-gray-500"}
+  `}
+                ></View>
+                <Text>{listing?.status || "Disponible"}</Text>
+              </View>
+              <View className="pt-4 pr-2 flex flex-row items-center">
+                <Text>{date}</Text>
+                <IconButton icon="calendar" size={18} />
+              </View>
             </View>
           ) : null}
           <View style={styles.topListingDetailsContainer}>
@@ -1109,6 +1117,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                         },
                       });
                     }}
+                    disabled={listing?.status !== "disponible" || false}
                     icon={"calendar-clock"}
                     width={width / 2 - 16}
                   >
