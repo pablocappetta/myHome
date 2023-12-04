@@ -619,15 +619,17 @@ export const ListingPost = ({ navigation, ...props }) => {
               </View>
             ) : (
               <View style={styles.actionButtonsContainer}>
-                <IconButton
-                  icon={
-                    user?.favoriteListings?.includes(listing._id)
-                      ? "heart"
-                      : "heart-outline"
-                  }
-                  mode={like && "contained"}
-                  onPress={handleLikePress}
-                />
+                {!isOwner && user.name !== null && (
+                  <IconButton
+                    icon={
+                      user?.favoriteListings?.includes(listing._id)
+                        ? "heart"
+                        : "heart-outline"
+                    }
+                    mode={like && "contained"}
+                    onPress={handleLikePress}
+                  />
+                )}
                 <IconButton
                   icon="share-variant"
                   onPress={() => handleSharePress()}
@@ -1143,7 +1145,7 @@ export const ListingPost = ({ navigation, ...props }) => {
               )}
             </View>
 
-            {!isOwner && (
+            {!isOwner && user.name !== null && (
               <View
                 style={{
                   display: "flex",
