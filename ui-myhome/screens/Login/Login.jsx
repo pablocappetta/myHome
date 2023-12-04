@@ -72,13 +72,15 @@ const Login = ({ navigation }) => {
             .then((response) => response.json())
             .then((json) => {
               setLoading(false);
-              const user = {...json.user,
+              const user = {
+                ...json.user,
                 profilePicture: userCredential?.user?.photoURL,
                 isRealtor: false,
                 token: json.token,
-              }
+              };
               setUser(user);
               setUserDataToAsyncStorage(user);
+              navigation.navigate("MiCuenta");
               navigation.navigate("Home", { screen: "Home" });
               ToastAndroid.show(
                 "Usuario logueado con Google",
@@ -133,10 +135,7 @@ const Login = ({ navigation }) => {
       .then((response) => response.json())
       .then((json) => {
         if (json.realtor) {
-          const user = {...json.realtor,
-            isRealtor: true,
-            token: json.token,
-          }
+          const user = { ...json.realtor, isRealtor: true, token: json.token };
           setUser(user);
           setUserDataToAsyncStorage(user);
           navigation.navigate("MiCuenta");

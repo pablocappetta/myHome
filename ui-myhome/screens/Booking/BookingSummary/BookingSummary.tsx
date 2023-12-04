@@ -156,11 +156,12 @@ export const BookingSummary = ({
                  bookingInfo?.paymentMethod === "mercado-pago" ? "MercadoPago" : ""}
               </Text>
             <Button
-              onPress={() => navigation.navigate("Review")}
+              onPress={() => navigation.goBack()}
               accessibilityLabel="Cambiar el método de pago"
-              mode="text"
+              mode="outlined"
+              className="mt-8"
             >
-              Cambiar
+              Cambiar método de pago
             </Button>
           </View>
           <View style={styles.bottomButton}>
@@ -191,7 +192,6 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     padding: 20,
-    marginBottom: 20,
   },
   header: {
     flexDirection: "row",
@@ -200,10 +200,8 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
-    marginTop: 20,
   },
   section: {
-    marginTop: 20,
   },
   bottomButton: {
     marginTop: 20,

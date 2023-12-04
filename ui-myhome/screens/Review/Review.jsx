@@ -31,7 +31,10 @@ const Review = ({ navigation, route }) => {
     try {
       const reservationId = route.params;
       const response = await fetch(
-        "http://3.144.94.74:8000/api/" + "reservations/" + reservationId + "/review",
+        "http://3.144.94.74:8000/api/" +
+          "reservations/" +
+          reservationId +
+          "/review",
         {
           method: "POST",
           body: JSON.stringify({
@@ -101,7 +104,14 @@ const Review = ({ navigation, route }) => {
               <Paragraph>Gracias por tu reseña!</Paragraph>
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={hideDialog}>Volver</Button>
+              <Button
+                onPress={() => {
+                  hideDialog;
+                  navigation.goBack();
+                }}
+              >
+                Volver
+              </Button>
             </Dialog.Actions>
           </Dialog>
           <Dialog visible={errorDialogVisible} onDismiss={hideErrorDialog}>

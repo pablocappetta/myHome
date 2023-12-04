@@ -39,13 +39,9 @@ const Home = ({ navigation }) => {
 
   const [isQueryActive, setIsQueryActive] = useState(false);
 
-  const [highlightedListings, setHighlightedListing] = useState(
-    [].concat(mockedHighlightedListings)
-  );
+  const [highlightedListings, setHighlightedListing] = useState([]);
 
-  const [recentListings, setRecentListings] = useState(
-    [].concat(mockedRecentListings)
-  );
+  const [recentListings, setRecentListings] = useState([]);
 
   const [nearListings, setNearListings] = useState([]);
 
@@ -226,14 +222,6 @@ const Home = ({ navigation }) => {
                   !
                 </Text>
               </TouchableOpacity>
-              <View>
-                <SegmentedButtons
-                  buttons={segmentedButtons}
-                  value={filterSelection}
-                  onValueChange={handleButtonFilterChange}
-                  style={styles.segmentedButtons}
-                />
-              </View>
 
               <View style={styles.searchBarContainer}>
                 <Searchbar

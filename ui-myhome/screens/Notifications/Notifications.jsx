@@ -25,7 +25,7 @@ const Notifications = ({ navigation }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.notifications);
+        // console.log(data.notifications);
         setNotificaciones(data.notifications);
         setRefreshing(false);
       })
