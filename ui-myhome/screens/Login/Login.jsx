@@ -125,6 +125,8 @@ const Login = ({ navigation }) => {
       password: values.password,
     };
 
+    console.log(requestBody, "III");
+
     fetch("http://3.144.94.74:8000/api/" + "realtors/login", {
       method: "POST",
       headers: {
@@ -135,6 +137,7 @@ const Login = ({ navigation }) => {
       .then((response) => response.json())
       .then((json) => {
         if (json.realtor) {
+          console.log("HOLA BRO");
           const user = { ...json.realtor, isRealtor: true, token: json.token };
           setUser(user);
           setUserDataToAsyncStorage(user);

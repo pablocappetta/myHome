@@ -15,7 +15,7 @@ const Notification = ({ noti }) => {
     <View className="flex flex-row gap-6 px-4 py-6 justify-between">
       <View className="flex gap-1 items-center">
         <IconButton
-          icon={noti.type === "Consulta" ? "message-badge" : "check-circle"}
+          icon={"bell-outline"}
           mode="contained"
           style={{ padding: 0, margin: 0 }}
         />
@@ -28,7 +28,7 @@ const Notification = ({ noti }) => {
               color: theme.dark ? MD3Colors.primary80 : MD3Colors.primary20,
             }}
           >
-            {noti?.type || "Consulta"}
+            Mensaje
           </Text>
         </View>
         <Text className="cursor-vertical-text overflow-hidden line-clamp-2 max-h-[35px]">

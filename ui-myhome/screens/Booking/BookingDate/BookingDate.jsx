@@ -33,12 +33,41 @@ export const BookingDate = ({ navigation, route }) => {
   const [selectedTime, setSelectedTime] = useState("Mañana");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [alreadyBooked, setAlreadyBooked] = useState(false);
 
   const { user } = useUserContext();
 
   const onTimeChange = useCallback((value) => {
     setSelectedTime(value);
   }, []);
+
+  const visitAlreadyScheduled = () => {
+    fetch(
+      "http://3.144.94.74:8000/api/listings/" +
+        route?.params?.listingId +
+        "/visits",
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        data.forEach((visit) => {
+          if (visit.userId === user._id) {
+            setAlreadyBooked(true);
+          }
+        });
+      })
+      .catch((error) => console.error(error));
+  };
+
+  visitAlreadyScheduled();
+
+  console.log(alreadyBooked, "VEAMOS");
+
   const handleAgendar = () => {
     try {
       const request = {
@@ -46,7 +75,6 @@ export const BookingDate = ({ navigation, route }) => {
         userId: user?._id,
         time: selectedTime,
       };
-      console.log(request);
       fetch(
         `http://3.144.94.74:8000/api/listings/${route?.params?.listingId}/visits`,
         {
@@ -63,7 +91,6 @@ export const BookingDate = ({ navigation, route }) => {
           response.status === 204
         ) {
           setShowSuccessDialog(true);
-          navigation.goBack();
         } else {
           setShowErrorDialog(true);
         }
@@ -76,6 +103,7 @@ export const BookingDate = ({ navigation, route }) => {
   const handleReturn = () => {
     setShowSuccessDialog(false);
     setShowErrorDialog(false);
+    navigation.goBack();
   };
 
   return (
@@ -121,9 +149,9 @@ export const BookingDate = ({ navigation, route }) => {
             onPress={handleAgendar}
             accessibilityLabel="Continuar a la siguiente pantalla para editar datos de contacto"
             mode="contained"
-            disabled={!date} // Disable the button if no date is selected
+            disabled={!date || alreadyBooked} // Disable the button if no date is selected
           >
-            Agendar
+            {alreadyBooked ? "Ya agendaste una visita" : "Agendar"}
           </Button>
         </View>
       </View>

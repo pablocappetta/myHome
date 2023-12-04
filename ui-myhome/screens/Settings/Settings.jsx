@@ -27,7 +27,7 @@ const Settings = ({ navigation }) => {
 
   const handleLogout = () => {
     wipeUserData();
-    navigation.navigate("tabBuscar");
+    navigation.navigate("MiCuenta");
   };
 
   const handleDeleteAccount = () => {
@@ -49,7 +49,7 @@ const Settings = ({ navigation }) => {
               .then(() => {
                 // Handle success response
                 wipeUserData();
-                navigation.navigate("tabBuscar");
+                navigation.navigate("MiCuenta");
               })
               .catch((error) => {
                 // Handle error

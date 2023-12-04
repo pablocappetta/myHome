@@ -1,5 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ToastAndroid,
+} from "react-native";
 import { Text, Dialog, Button, MD3Colors, Icon } from "react-native-paper";
 import { Appbar } from "react-native-paper";
 import ListingReservationCard from "./ListingReservationCard/ListingReservationCard";
@@ -60,6 +66,7 @@ const Reservations = ({ navigation }) => {
   const handleRemoveFromReservationAction = async () => {
     try {
       // Call API to remove the listing
+
       await removeListing(listingToRemove._id);
 
       // Filter listing to remove from listings
@@ -70,8 +77,11 @@ const Reservations = ({ navigation }) => {
       setListingToRemove(null);
       setListings(newListings);
       setDialogVisible(false);
+
+      ToastAndroid.show("Reserva cancelada", ToastAndroid.SHORT);
     } catch (error) {
       console.error("Error removing listing:", error);
+      ToastAndroid.show("Error al cancelar la reserva", ToastAndroid.SHORT);
     }
   };
 

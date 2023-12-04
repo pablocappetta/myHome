@@ -102,6 +102,7 @@ const SearchScreenRoutes = () => {
       <Stack.Screen name="SendQuestion" component={SendQuestion} />
       <Stack.Screen name="Review" component={Review} />
       <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Perfil" component={UserProfile} />
     </Stack.Navigator>
   );
 };

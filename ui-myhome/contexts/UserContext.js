@@ -96,11 +96,14 @@ export const UserProvider = ({ children }) => {
   }, [AsyncStorage]);
 
   const [notificaciones, setNotificaciones] = useState();
+
   useEffect(() => {
     console.log(
       "Datos de usuario actualizados:",
       getUserDataFromAsyncStorage()
     );
+
+    if (!user._id || !user.isRealtor) return;
 
     fetch(`http://3.144.94.74:8000/api/realtors/${user._id}`, {
       method: "GET",
