@@ -384,12 +384,8 @@ export const ListingPost = ({ navigation, ...props }) => {
     setBalcon(!balcon);
   };
 
-
-
   // property PUT request
   async function updateProperty() {
-
-
     const params = {
       city: ciudad,
       state: provincia,
@@ -435,10 +431,7 @@ export const ListingPost = ({ navigation, ...props }) => {
           amount: parseInt(expenses),
         },
         geoLocation: {
-          coordinates: [
-            data[0]?.lat,
-            data[0]?.lon,
-          ],
+          coordinates: [data[0]?.lat, data[0]?.lon],
         },
         photos: listing?.property?.photos,
       },
@@ -461,11 +454,12 @@ export const ListingPost = ({ navigation, ...props }) => {
       .then((data) => {
         if (data.type) {
           ToastAndroid.show("Propiedad actualizada", ToastAndroid.LONG);
+        } else {
+          ToastAndroid.show(
+            "Error al actualizar la propiedad",
+            ToastAndroid.LONG
+          );
         }
-        else {
-          ToastAndroid.show("Error al actualizar la propiedad", ToastAndroid.LONG);
-        }
-
       })
       .catch((err) => {
         console.log(err);
@@ -845,7 +839,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                   }}
                 >
                   {listingRealtorAvatar &&
-                    isStringALink(listingRealtorAvatar) ? (
+                  isStringALink(listingRealtorAvatar) ? (
                     <Avatar.Image
                       source={{ uri: listingRealtorAvatar }}
                       size={40}

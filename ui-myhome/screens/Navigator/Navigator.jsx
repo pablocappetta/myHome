@@ -51,6 +51,7 @@ const HomeScreenRoutes = () => {
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="NewPost" component={NewPost} />
       <Stack.Screen name="EditProf" component={EditProfile} />
+      <Stack.Screen name="Favoritos" component={Favorites} />
     </Stack.Navigator>
   );
 };
@@ -103,6 +104,8 @@ const SearchScreenRoutes = () => {
       <Stack.Screen name="Review" component={Review} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Perfil" component={UserProfile} />
+      <Stack.Screen name="EditProf" component={EditProfile} />
+      <Stack.Screen name="Favoritos" component={Favorites} />
     </Stack.Navigator>
   );
 };
