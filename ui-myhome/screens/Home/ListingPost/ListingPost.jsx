@@ -518,25 +518,26 @@ export const ListingPost = ({ navigation, ...props }) => {
                   alignItems: "center",
                   marginTop: 6,
                 }}
-                buttonTextStyle={{ color: "#6750a4" }}
-                renderDropdownIcon={() => {
-                  return <AntDesign name="down" size={24} color="#6750a4" />;
-                }}
-                dropdownIconPosition={"right"}
-                dropdownStyle={{
-                  width: 200,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: "#6750a4",
-                }}
-                rowStyle={{
-                  width: 200,
-                  height: 50,
-                  borderWidth: 1,
-                  borderColor: "#6750a4",
-                }}
-                rowTextStyle={{ color: "#6750a4" }}
-                defaultValueByIndex={0}
+                dropdownStyle={{ borderRadius: 4 }}
+                renderCustomizedButtonChild={() => (
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignContent: "center",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "100%",
+                      height: "100%",
+                      paddingLeft: 16,
+                    }}
+                  >
+                    <Text style={{ fontSize: 16, color: "#000000" }}>
+                      {type !== "" ? type : "Operación"}
+                    </Text>
+                    <IconButton icon="chevron-down" size={24} />
+                  </View>
+                )}
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem;
                 }}
@@ -608,27 +609,26 @@ export const ListingPost = ({ navigation, ...props }) => {
                       alignItems: "center",
                       marginTop: 6,
                     }}
-                    buttonTextStyle={{ color: "#6750a4" }}
-                    renderDropdownIcon={() => {
-                      return (
-                        <AntDesign name="down" size={24} color="#6750a4" />
-                      );
-                    }}
-                    dropdownIconPosition={"right"}
-                    dropdownStyle={{
-                      width: 200,
-                      borderRadius: 10,
-                      borderWidth: 1,
-                      borderColor: "#6750a4",
-                    }}
-                    rowStyle={{
-                      width: 200,
-                      height: 50,
-                      borderWidth: 1,
-                      borderColor: "#6750a4",
-                    }}
-                    rowTextStyle={{ color: "#6750a4" }}
-                    defaultValueByIndex={0}
+                    dropdownStyle={{ borderRadius: 4 }}
+                    renderCustomizedButtonChild={() => (
+                      <View
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignContent: "center",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          width: "100%",
+                          height: "100%",
+                          paddingLeft: 16,
+                        }}
+                      >
+                        <Text style={{ fontSize: 16, color: "#000000" }}>
+                          {property !== "" ? property : "Propiedad"}
+                        </Text>
+                        <IconButton icon="chevron-down" size={24} />
+                      </View>
+                    )}
                     buttonTextAfterSelection={(selectedItem, index) => {
                       return selectedItem;
                     }}
