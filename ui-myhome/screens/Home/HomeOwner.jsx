@@ -60,7 +60,7 @@ const HomeOwner = ({ navigation }) => {
         }
         data={DATA}
         renderItem={({ item }) => (
-          <View className="mt-10 min-h-[680px]">
+          <View className="min-h-[680px]">
             <TouchableOpacity
               style={styles.userHomeWelcomeHeader}
               onPress={() =>
@@ -99,7 +99,7 @@ const HomeOwner = ({ navigation }) => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 paddingHorizontal: 24,
-                marginTop: 32,
+                marginTop: 10,
                 marginBottom: 0,
               }}
             >
@@ -120,7 +120,11 @@ const HomeOwner = ({ navigation }) => {
                   <ActivityIndicator size="large" color="#6750a4" />
                 </View>
               ) : (
-                <View horizontal style={styles.listingCardsContainer}>
+                <View
+                  className="pb-24"
+                  horizontal
+                  style={styles.listingCardsContainer}
+                >
                   {ownerListings.length > 0 ? (
                     ownerListings.map((item, index) => (
                       <TouchableOpacity

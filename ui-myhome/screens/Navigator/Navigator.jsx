@@ -50,6 +50,7 @@ const HomeScreenRoutes = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Post" component={ListingPost} />
       <Stack.Screen name="NewPost" component={NewPost} />
+      <Stack.Screen name="EditProf" component={EditProfile} />
     </Stack.Navigator>
   );
 };

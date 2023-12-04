@@ -6,10 +6,10 @@ import * as ImagePicker from "expo-image-picker";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function EditProfile({ navigation }) {
-  const { user, setUser } = useUserContext();
+  const { user, setUser, setUserDataToAsyncStorage } = useUserContext();
 
   // Manejo de imagen
-  const [image, setImage] = React.useState("");
+  const [image, setImage] = React.useState([]);
 
   useEffect(() => {
     (async () => {
@@ -36,12 +36,13 @@ export default function EditProfile({ navigation }) {
       setImage(result.assets);
     }
   };
+  console.log(image);
 
   function handlePasswordRecovery() {
     const requestBody = {
       email: user.loginEmail,
     };
-    console.log(requestBody);
+    // console.log(requestBody);
     fetch("http://3.144.94.74:8000/api/" + "realtors/password-reset", {
       method: "POST",
       headers: {
@@ -72,33 +73,40 @@ export default function EditProfile({ navigation }) {
   const [contactEmail, setContactEmail] = useState();
   const [phone, setPhone] = useState();
 
-  function handleChangesUser() {
-    const requestBody = {
-      name: name || user.name,
-      phone: phone || user.phone,
-      avatar: image[0]?.uri || user.avatar,
-    };
+  const handleChangesUser = async () => {
+    let formData = new FormData();
 
-    fetch("http://3.144.94.74:8000/api/" + "users/" + user._id, {
+    formData.append("name", name || user.name);
+    formData.append("phone", phone || user.phone);
+    if (image.length > 0) {
+      formData.append("avatar", {
+        uri: image[0].uri,
+        type: "image/jpeg",
+        name: "avatar.jpg",
+      });
+    }
+
+    await fetch("http://3.144.94.74:8000/api/" + "users/" + user._id, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
-      body: JSON.stringify(requestBody),
+      body: formData,
     })
-      .then((res) => {
-        console.log("json", res.json());
-        let token = user.token;
-        setUser({
-          name: name || user.name,
-          email: user.email,
-          profilePicture:
-            image[0]?.uri || user?.avatar || user?.profilePicture || user?.logo,
-          isVerified: user.isVerified || null,
+      .then(async (res) => {
+        const newUser = await res.json();
+        const userAppend = {
+          ...user,
+          name: newUser.name,
+          profilePicture: newUser.avatar,
+          avatar: null,
+          logo: null,
+          phone: newUser.phone,
           isRealtor: false,
-          token: token,
-          _id: user._id,
-        });
+        };
+        setUser(userAppend);
+        setUserDataToAsyncStorage(userAppend);
+
         ToastAndroid.show("Usuario actualizada", ToastAndroid.LONG);
         navigation.navigate("Perfil");
       })
@@ -109,32 +117,45 @@ export default function EditProfile({ navigation }) {
           ToastAndroid.LONG
         );
       });
-  }
+  };
 
-  function handleChangesRealtor() {
-    const requestBody = {
-      name: name || user.name,
-      contactEmail: contactEmail || user.contactEmail,
-      phone: phone || user.phone,
-      logo: image[0]?.uri || user.logo,
-    };
+  const handleChangesRealtor = async () => {
+    let formData = new FormData();
 
-    fetch("http://3.144.94.74:8000/api/" + "realtors/" + user._id, {
+    formData.append("name", name || user.name);
+    formData.append("contactEmail", contactEmail || user.contactEmail);
+    formData.append("phone", phone || user.phone);
+    if (image.length > 0) {
+      formData.append("logo", {
+        uri: image[0].uri,
+        type: "image/jpeg",
+        name: "logo.jpg",
+      });
+    }
+
+    await fetch("http://3.144.94.74:8000/api/" + "realtors/" + user._id, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
-      body: JSON.stringify(requestBody),
+      body: formData,
     })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-        let token = user.token;
-        setUser({
-          ...json,
+      .then(async (res) => {
+        const newUser = await res.json();
+        console.log("logoo:", newUser);
+        const userAppend = {
+          ...user,
+          name: newUser.name,
+          email: newUser.contactEmail,
+          profilePicture: newUser.logo,
+          avatar: null,
+          logo: null,
+          phone: newUser.phone,
           isRealtor: true,
-          token: token,
-        });
+        };
+        setUser(userAppend);
+        setUserDataToAsyncStorage(userAppend);
+
         ToastAndroid.show("Usuario actualizada", ToastAndroid.LONG);
         navigation.navigate("Perfil");
       })
@@ -145,7 +166,7 @@ export default function EditProfile({ navigation }) {
           ToastAndroid.LONG
         );
       });
-  }
+  };
 
   return (
     <View>

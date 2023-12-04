@@ -333,7 +333,7 @@ export const ListingPost = ({ navigation, ...props }) => {
   };
 
   const handleExpenses = (e) => {
-    setExpenses(e);
+    setExpenses(Number(e));
   };
 
   const handleDescription = (e) => {
@@ -386,45 +386,36 @@ export const ListingPost = ({ navigation, ...props }) => {
 
   // property PUT request
   function updateProperty() {
-    const requestBody = {
-      title: encabezado,
-      description: description,
-      property: {
-        age: parseInt(antiguedad),
-        address: {
-          state: provincia,
-          city: ciudad,
-          neighborhood: barrio,
-          zipCode: CP,
-          street: calle,
-          number: parseInt(numero),
-        },
-        type: property,
-        sqm: {
-          covered: parseInt(cubiertos),
-          uncovered: parseInt(descubiertos),
-        },
-        cardinalOrientation: orAbsoluta,
-        relativeOrientation: orRelativa,
-        rooms: parseInt(dormitorios),
-        bathrooms: parseInt(baños),
-        hasTerrace: terraza,
-        hasBalcony: balcon,
-        expensesPrice: {
-          amount: parseInt(expenses),
-        },
-      },
-      type: type,
-      price: {
-        amount: parseInt(price),
-      },
-    };
+    let formData = new FormData();
+
+    formData.append("title", encabezado);
+    formData.append("description", description);
+    formData.append("property[age]", parseInt(antiguedad));
+    formData.append("property[address][state]", provincia);
+    formData.append("property[address][city]", ciudad);
+    formData.append("property[address][neighborhood]", barrio);
+    formData.append("property[address][zipCode]", CP);
+    formData.append("property[address][street]", calle);
+    formData.append("property[address][number]", parseInt(numero));
+    formData.append("property[type]", property);
+    formData.append("property[sqm][covered]", parseInt(cubiertos));
+    formData.append("property[sqm][uncovered]", parseInt(descubiertos));
+    formData.append("property[cardinalOrientation]", orAbsoluta);
+    formData.append("property[relativeOrientation]", orRelativa);
+    formData.append("property[rooms]", parseInt(dormitorios));
+    formData.append("property[bathrooms]", parseInt(baños));
+    formData.append("property[hasTerrace]", terraza);
+    formData.append("property[hasBalcony]", balcon);
+    formData.append("property[expensesPrice][amount]", parseInt(expenses));
+    formData.append("type", type);
+    formData.append("price[amount]", parseInt(price));
+
     fetch(`http://3.144.94.74:8000/api/listings/${listing._id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
-      body: JSON.stringify(requestBody),
+      body: formData,
     })
       .then((res) => res.json())
       .then((data) => {
@@ -502,13 +493,12 @@ export const ListingPost = ({ navigation, ...props }) => {
                 }}
               >
                 <View
-                  className={`rounded-full h-2 w-2 bg-gray-500 ${
-                    listing?.status == "disponible" && "bg-green-500"
-                  }
-                ${listing?.status == "reservada" && "bg-yellow-500"}
-                ${listing?.status == "vendida" && "bg-red-500"}
-                ${listing?.status == "cancelada" && "bg-gray-500"}
-`}
+                  className={`rounded-full h-2 w-2 bg-green-500 
+                  ${listing?.status == "disponible" && "bg-green-500"}
+                  ${listing?.status == "reservada" && "bg-yellow-500"}
+                  ${listing?.status == "vendida" && "bg-red-500"}
+                  ${listing?.status == "cancelada" && "bg-gray-500"}
+                  `}
                 />
                 <Text>{upperCaseFirst(listing?.status) || "Disponible"}</Text>
               </View>
@@ -707,7 +697,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                     defaultValue={commaNumber(listing?.price?.amount) || "Mock"}
                     className="rounded-t-md w-[100px]"
                     label={"Precio"}
-                    onChange={(price) => handlePrice(price)}
+                    onChangeText={(price) => handlePrice(price)}
                     mode="outlined"
                   />
                 ) : (
@@ -722,7 +712,8 @@ export const ListingPost = ({ navigation, ...props }) => {
                     }
                     className="rounded-t-md w-[100px] mt-2"
                     label={"Expensas"}
-                    onChange={(expenses) => handleExpenses(expenses)}
+                    keyboardType="numeric"
+                    onChangeText={(expenses) => handleExpenses(expenses)}
                     mode="outlined"
                   />
                 ) : (
@@ -847,7 +838,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 className="rounded-t-md w-[95%] ml-[10px] "
                 multiline
                 label={"Descripcion"}
-                onChange={(description) => handleDescription(description)}
+                onChangeText={(description) => handleDescription(description)}
                 mode="outlined"
               />
             ) : (
@@ -875,7 +866,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 defaultValue={"" + listing?.property.sqm.covered}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Metros"}
-                onChange={(cubiertos) => handleCubiertos(cubiertos)}
+                onChangeText={(cubiertos) => handleCubiertos(cubiertos)}
                 mode="outlined"
               />
             ) : (
@@ -892,7 +883,9 @@ export const ListingPost = ({ navigation, ...props }) => {
                 defaultValue={"" + listing?.property?.sqm?.uncovered}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Descubiertos"}
-                onChange={(descubiertos) => handleDescubiertos(descubiertos)}
+                onChangeText={(descubiertos) =>
+                  handleDescubiertos(descubiertos)
+                }
                 mode="outlined"
               />
             ) : (
@@ -909,7 +902,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 defaultValue={"" + listing?.property?.rooms}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Ambientes"}
-                onChange={(ambientes) => handleAmbientes(ambientes)}
+                onChangeText={(ambientes) => handleAmbientes(ambientes)}
                 mode="outlined"
               />
             ) : (
@@ -926,7 +919,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 defaultValue={"" + listing?.property?.rooms}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Dormitorios"}
-                onChange={(dormitorios) => handleDormitorios(dormitorios)}
+                onChangeText={(dormitorios) => handleDormitorios(dormitorios)}
                 mode="outlined"
               />
             ) : (
@@ -945,7 +938,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 defaultValue={"" + listing?.property?.bathrooms}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Baños"}
-                onChange={(baños) => handleBaños(baños)}
+                onChangeText={(baños) => handleBaños(baños)}
                 mode="outlined"
               />
             ) : (
@@ -962,7 +955,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 defaultValue={"" + listing?.property?.age}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Antiguedad"}
-                onChange={(antiguedad) => handleAntiguedad(antiguedad)}
+                onChangeText={(antiguedad) => handleAntiguedad(antiguedad)}
                 mode="outlined"
               />
             ) : (
@@ -979,7 +972,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 defaultValue={listing?.property?.cardinalOrientation}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Or. Absoluta"}
-                onChange={(orAbsoluta) => handleOrAbsoluta(orAbsoluta)}
+                onChangeText={(orAbsoluta) => handleOrAbsoluta(orAbsoluta)}
                 mode="outlined"
               />
             ) : (
@@ -996,7 +989,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 defaultValue={listing?.property?.relativeOrientation}
                 className="rounded-t-md w-[170px] ml-[8px] mb-2"
                 label={"Or. Relativa"}
-                onChange={(orRelativa) => handleOrRelativa(orRelativa)}
+                onChangeText={(orRelativa) => handleOrRelativa(orRelativa)}
                 mode="outlined"
               />
             ) : (
@@ -1159,6 +1152,7 @@ export const ListingPost = ({ navigation, ...props }) => {
                 <Button
                   icon={"calendar-clock"}
                   mode="contained"
+                  disabled={listing.status !== "disponible"}
                   onPress={() => {
                     navigation.navigate("Booking", {
                       screen: "Info",
